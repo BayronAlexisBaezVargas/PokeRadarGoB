@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!--
+  Radar de Campo · Pokémon GO
+  Datos de incursiones y apariciones silvestres.
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Radar de Campo · Pokémon GO</title>
+<meta name="description" content="Incursiones activas, próximas rotaciones y apariciones silvestres en Pokémon GO." />
+<meta name="theme-color" content="#0a0f0d" />
+<meta property="og:title" content="Radar de Campo · Pokémon GO" />
+<meta property="og:description" content="Jefes de incursión activos, rotaciones programadas y apariciones silvestres en Pokémon GO." />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_CL" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Radar de Campo · Pokémon GO" />
+<meta name="twitter:description" content="Incursiones activas, próximas rotaciones y apariciones silvestres en Pokémon GO." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+<link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-seg="all">
+
+<header class="hud">
+  <div class="hud-brand">
+    <svg class="hud-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" stroke-width="1.4"/><circle class="core" cx="16" cy="16" r="3"/><line x1="16" y1="1" x2="16" y2="6" stroke="currentColor" stroke-width="1.4"/><line x1="16" y1="26" x2="16" y2="31" stroke="currentColor" stroke-width="1.4"/></svg>
+    <span class="hud-word">Pokémon GO<small>Radar de campo</small></span>
+  </div>
+  <nav class="hud-nav" aria-label="Navegación principal">
+    <a href="index.html" class="hud-nav-link active">Radar</a>
+    <a href="noticias.html" class="hud-nav-link">Noticias y Eventos <span class="nav-badge">Nuevo</span></a>
+  </nav>
+  <div class="hud-status">
+    <span class="live"><span class="live-dot"></span>EN VIVO</span>
+    <span class="hud-date">· Santiago, CL</span>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-text">
+      <span class="kicker">Panel operativo</span>
+      <h1 class="title">Rotaciones e Incursiones <span class="hl">en Tiempo Real</span>.</h1>
+      <p class="lede">Jefes de incursión activos, próximas rotaciones confirmadas y especies con tasa de aparición aumentada en Pokémon GO.</p>
+      <dl class="hud-readouts">
+        <div class="readout"><dt>Jefes activos</dt><dd id="statRaids">—</dd></div>
+        <div class="readout"><dt>Silvestres activas</dt><dd id="statWild">—</dd></div>
+        <div class="readout"><dt>Temporada actual</dt><dd style="font-size:1.05rem;">Forever Forward</dd></div>
+      </dl>
+    </div>
+    <div class="hero-visual">
+      <svg class="reticle" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+        <circle class="ring-outer" cx="100" cy="100" r="90"/>
+        <circle class="ring-mid" cx="100" cy="100" r="64"/>
+        <circle class="ring-core" cx="100" cy="100" r="5"/>
+        <g class="ticks">
+          <line x1="100" y1="2" x2="100" y2="16"/>
+          <line x1="100" y1="184" x2="100" y2="198"/>
+          <line x1="2" y1="100" x2="16" y2="100"/>
+          <line x1="184" y1="100" x2="198" y2="100"/>
+        </g>
+        <g class="brk">
+          <polyline points="44,58 44,44 58,44"/>
+          <polyline points="142,44 156,44 156,58"/>
+          <polyline points="44,142 44,156 58,156"/>
+          <polyline points="156,142 156,156 142,156"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <div class="today-banner">
+    <span class="badge" style="color:var(--alert);border-color:rgba(255,90,68,.4);background:rgba(255,90,68,.15);font-size:.7rem;padding:3px 8px;">AVISO</span>
+    <p><strong>Hora de Incursión · 18:00 a 19:00 (hora local)</strong><br>Frecuencia incrementada de incursiones 5★ de Regirock, Regice y Registeel en gimnasios. <a href="noticias.html" style="color:var(--signal);margin-left:6px;text-decoration:underline;">Consultar calendario de eventos</a></p>
+  </div>
+
+  <div class="controls">
+    <div class="segment" role="group" aria-label="Filtrar por sección">
+      <button class="seg-btn active" data-seg="all">Todo</button>
+      <button class="seg-btn" data-seg="raids">Incursiones</button>
+      <button class="seg-btn" data-seg="wild">Silvestres</button>
+    </div>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar por nombre (ej. Gyarados)" autocomplete="off">
+    </div>
+    <div class="type-chips" id="typeChips"></div>
+  </div>
+
+  <section id="incursiones" class="seg-raids">
+    <div class="section-title"><h2>Incursiones activas</h2></div>
+    <p class="section-sub">Jefes disponibles por nivel, incursiones sombra y combates Dinamax. Seleccione un nivel para navegar directamente.</p>
+    <nav class="tier-nav" id="tierNav" aria-label="Nivel de incursión"></nav>
+    <div id="raidGroups"></div>
+
+    <div class="upcoming-raids-section" id="upcomingRaidsSection">
+      <div class="section-title" style="margin-top:var(--sp-8);border-top:1px solid var(--line);padding-top:var(--sp-6);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="tier-pill" style="color:var(--signal);border-color:rgba(61,242,196,.35);background:rgba(61,242,196,.08);">PROGRAMACIÓN</span>
+          <h3 style="font-size:1.25rem;">Próximas rotaciones en incursiones</h3>
+        </div>
+      </div>
+      <p class="section-sub">Jefes programados para las próximas semanas con fechas de inicio y estimación de combate.</p>
+      <div id="upcomingRaidGroups"></div>
+    </div>
+  </section>
+
+  <section id="silvestres" class="seg-wild">
+    <div class="section-title" style="margin-top:var(--sp-8);border-top:1px solid var(--line);padding-top:var(--sp-6);">
+      <h2>Apariciones silvestres activas</h2>
+    </div>
+    <p class="section-sub">Especies con frecuencia de aparición aumentada durante el periodo vigente.</p>
+    <div id="wildGroups"></div>
+    <div class="upcoming">
+      <h3>Siguiente rotación silvestre (28 de agosto)</h3>
+      <p class="sub">Grupo de apariciones para la fase principal del evento:</p>
+      <div class="mini-row" id="upcomingWild"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal de Información Rápida -->
+<div id="monModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="modalClose" aria-label="Cerrar modal">&times;</button>
+    <div class="modal-header">
+      <div class="modal-art-wrap">
+        <div class="modal-art-glow" id="modalGlow"></div>
+        <img id="modalImg" class="modal-art" src="" alt="" />
+      </div>
+      <div class="modal-header-info">
+        <div class="modal-dex-row">
+          <span id="modalDex"></span>
+          <span id="modalShiny" class="modal-shiny-tag" style="display:none;">Variocolor disponible</span>
+        </div>
+        <h3 id="modalName" class="modal-title"></h3>
+        <div id="modalTag" class="modal-tag"></div>
+        <div id="modalTypes" class="modal-types"></div>
+      </div>
+    </div>
+    
+    <div class="modal-body">
+      <div id="modalGoStats" class="modal-grid"></div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Debilidades (Multiplicadores)</div>
+        <div id="modalWeak" class="modal-badges-wrap"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Resistencias e Inmunidades</div>
+        <div id="modalResist" class="modal-badges-wrap"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Registro de Pokédex</div>
+        <div class="modal-pokedex-box">
+          <p id="modalFlavor">Consultando datos...</p>
+          <div class="modal-pokedex-meta">
+            <span id="modalGenus">—</span>
+            <span id="modalHeight">—</span>
+            <span id="modalWeight">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-col">
+      <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
+      <div class="foot-meta">
+        <span class="foot-version">v1.1.2</span>
+        <span class="foot-sep">·</span>
+        <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
+      </div>
+    </div>
+    <div class="foot-links">
+      <div class="foot-links-group">
+        <span class="foot-links-title">Fuentes de datos</span>
+        <a href="https://leekduck.com/raid-bosses/" target="_blank" rel="noopener">Leek Duck</a>
+        <a href="https://pokemongohub.net/" target="_blank" rel="noopener">GO Hub</a>
+        <a href="https://pokeapi.co/" target="_blank" rel="noopener">PokéAPI</a>
+      </div>
+      <div class="foot-links-group">
+        <span class="foot-links-title">Proyecto</span>
+        <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener">GitHub</a>
+        <a href="index.html">Radar de Incursiones</a>
+        <a href="noticias.html">Noticias y Eventos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>
