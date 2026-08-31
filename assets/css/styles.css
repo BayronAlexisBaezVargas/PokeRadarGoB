@@ -463,3 +463,15 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-8);padding:var(--sp-
   background:var(--signal);color:#04211a;border-color:var(--signal);
 }
 
+
+/* ============ Loader de Sincronizacion ============ */
+.sync-loader{display:flex;align-items:center;gap:12px;padding:var(--sp-6) 0;color:var(--signal-dim);font-family:var(--font-mono);font-size:.85rem;letter-spacing:.05em;animation:pulse .8s infinite alternate;} 
+.spinner{width:16px;height:16px;border:2px solid rgba(61,242,196,.2);border-top-color:var(--signal);border-radius:50%;animation:spin 1s linear infinite;} 
+@keyframes spin{to{transform:rotate(360deg);}} 
+@keyframes pulse{from{opacity:.6;}to{opacity:1;}}
+
+/* ============ Scrollbar ============ */
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--panel-2);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-dim);}

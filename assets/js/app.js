@@ -92,35 +92,7 @@
   ];
 
   /* ============ Datos: Próximas Incursiones ============ */
-  var UPCOMING_RAID_GROUPS = [
-    {
-      id:'u-5s', tier:'5★', title:'Incursiones 5★ · Próximas',
-      note:'Rotación de Septiembre',
-      start:new Date(2026,8,8,10,0),
-      mons:[
-        mon({name:'Kyogre', dex:'382', types:['water'], cp:[2260,2351], cpBoost:[2825,2939], weather:['rainy'], weak:['electric','grass'], shiny:true, note:'8 – 18 de septiembre'}),
-        mon({name:'Groudon', dex:'383', types:['ground'], cp:[2260,2351], cpBoost:[2825,2939], weather:['sunny'], weak:['water','grass','ice'], shiny:true, note:'18 – 28 de septiembre'}),
-        mon({name:'Rayquaza', dex:'384', types:['dragon','flying'], cp:[2102,2191], cpBoost:[2627,2739], weather:['windy'], weak:['ice','dragon','fairy','rock'], shiny:true, note:'Incursión Élite de fin de semana'})
-      ]
-    },
-    {
-      id:'u-mega', tier:'MEGA', title:'Megaincursiones · Próximas',
-      note:'Rotación de Septiembre',
-      start:new Date(2026,8,8,10,0),
-      mons:[
-        mon({name:'Absol', tag:'Mega', dex:'359', types:['dark'], cp:[1370,1443], cpBoost:[1712,1805], weather:['fog'], weak:['bug','fairy','fighting'], shiny:true, note:'8 – 18 de septiembre'}),
-        mon({name:'Houndoom', tag:'Mega', dex:'229', types:['dark','fire'], cp:[1432,1505], cpBoost:[1790,1882], weather:['fog','sunny'], weak:['water','fighting','ground','rock'], shiny:true, note:'18 – 28 de septiembre'})
-      ]
-    },
-    {
-      id:'u-shadow', tier:'SOMBRA', title:'Incursiones 5★ Sombra · Próximas',
-      note:'Fines de semana',
-      start:new Date(2026,8,12,6,0),
-      mons:[
-        mon({name:'Mewtwo', tag:'Sombra', dex:'150', types:['psychic'], cp:[2294,2387], cpBoost:[2868,2984], weather:['windy'], weak:['bug','ghost','dark'], shiny:true, note:'Exclusivo fines de semana'})
-      ]
-    }
-  ];
+  var UPCOMING_RAID_GROUPS = [];
 
   /* ============ Datos: Silvestres ============ */
   var WILD_GROUPS = [
@@ -177,6 +149,9 @@
   }
 
   function orbStyle(types){
+    if(!types || types.length === 0){
+      return 'background:radial-gradient(circle at 32% 26%, '+rgba('#ffffff',.5)+', #B4AE96 45%, '+shade('#B4AE96',-35)+' 100%); box-shadow:0 0 22px '+rgba('#B4AE96',.42)+', inset 0 0 12px rgba(0,0,0,.35);';
+    }
     if(types.length===1){
       var c=TYPE_COLORS[types[0]];
       return 'background:radial-gradient(circle at 32% 26%, '+rgba('#ffffff',.5)+', '+c+' 45%, '+shade(c,-35)+' 100%); box-shadow:0 0 22px '+rgba(c,.42)+', inset 0 0 12px rgba(0,0,0,.35);';
@@ -577,7 +552,78 @@
 
   var upcomingRaidGroupsEl = document.getElementById('upcomingRaidGroups');
   if(upcomingRaidGroupsEl){
-    UPCOMING_RAID_GROUPS.forEach(function(g){ upcomingRaidGroupsEl.appendChild(renderUpcomingRaidGroup(g)); });
+    fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
+      .then(function(res){ return res.json(); })
+      .then(function(data){
+        var now = new Date();
+        var g5 = { id:'u-5s', tier:'5★', title:'Incursiones 5★ · Próximas', mons:[] };
+        var gMega = { id:'u-mega', tier:'MEGA', title:'Megaincursiones · Próximas', mons:[] };
+        var gShadow = { id:'u-shadow', tier:'SOMBRA', title:'Incursiones Sombra · Próximas', mons:[] };
+        
+        var promises = [];
+
+        data.forEach(function(e){
+          var start = new Date(e.start);
+          if(start <= now) return;
+          if(!e.extraData || !e.extraData.raidbattles || !e.extraData.raidbattles.bosses) return;
+          if(e.eventType === 'raid-hour') return;
+
+          var isMega = e.name.toLowerCase().indexOf('mega') !== -1;
+          var isShadow = e.name.toLowerCase().indexOf('shadow') !== -1;
+
+          e.extraData.raidbattles.bosses.forEach(function(b){
+            var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
+            var dex = dexMatch ? dexMatch[1] : '000';
+            var m = {
+              name: b.name,
+              dex: dex,
+              types: [],
+              shiny: b.canBeShiny,
+              image: b.image,
+              note: 'Inicia: ' + start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+            };
+            
+            var p = fetch('https://pokeapi.co/api/v2/pokemon/' + parseInt(dex, 10))
+              .then(function(r){ return r.ok ? r.json() : null; })
+              .then(function(pd){
+                if(pd && pd.types) {
+                  m.types = pd.types.map(function(t){ return t.type.name; });
+                } else {
+                  m.types = ['normal'];
+                }
+                if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
+                else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
+                else { g5.mons.push(mon(m)); }
+              })
+              .catch(function(){
+                m.types = ['normal'];
+                if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
+                else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
+                else { g5.mons.push(mon(m)); }
+              });
+              
+            promises.push(p);
+          });
+        });
+
+        Promise.all(promises).then(function(){
+          upcomingRaidGroupsEl.innerHTML = '';
+          if(g5.mons.length) UPCOMING_RAID_GROUPS.push(g5);
+          if(gMega.mons.length) UPCOMING_RAID_GROUPS.push(gMega);
+          if(gShadow.mons.length) UPCOMING_RAID_GROUPS.push(gShadow);
+
+          UPCOMING_RAID_GROUPS.forEach(function(g){ 
+            var el = renderUpcomingRaidGroup(g);
+            upcomingRaidGroupsEl.appendChild(el); 
+            if(typeof io !== 'undefined') { io.observe(el); }
+            else { el.classList.add('in'); }
+          });
+        });
+      })
+      .catch(function(err){
+        console.error('Error fetching upcoming raids', err);
+        upcomingRaidGroupsEl.innerHTML = '<p class="empty-note" style="display:block;color:var(--alert);">Hubo un error al sincronizar las próximas incursiones.</p>';
+      });
   }
 
   var wildGroupsEl = document.getElementById('wildGroups');
