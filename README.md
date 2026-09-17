@@ -2,7 +2,7 @@
 
 Panel técnico de telemetría y consulta en tiempo real para Pokémon GO. Proporciona información sobre rotaciones de incursiones, apariciones silvestres activas, calendario de eventos y cálculo dinámico de multiplicadores de daño.
 
-**Versión:** 1.1.2  
+**Versión:** 1.3.1  
 **Autor:** [BayronAlexisBaezVargas](https://github.com/BayronAlexisBaezVargas)
 
 ---
@@ -11,9 +11,10 @@ Panel técnico de telemetría y consulta en tiempo real para Pokémon GO. Propor
 
 ### 1. Radar de Incursiones y Silvestres (`index.html`)
 - **Monitoreo por niveles:** Incursiones 1★, 3★, 5★ Legendarias, Megaincursiones, Batallas Dinamax e Incursiones Sombra.
+- **Sincronización en vivo:** La rotación de las incursiones activas se descarga dinámicamente mediante la API, manteniendo la información siempre actualizada sin necesidad de editar el código.
 - **Parámetros de combate:** Rangos de CP de captura, CP potenciado por clima y lista de debilidades elementales.
 - **Apariciones silvestres:** Frecuencia de aparición clasificada por nivel de señal y previsiones de rotación.
-- **Filtros e interfaz reactiva:** Filtrado simultáneo por nombre de especie y tipos elementales.
+- **Filtros e interfaz reactiva:** Filtrado simultáneo por nombre de especie y tipos elementales, reconstruido de manera reactiva tras cada actualización de la API.
 - **Ficha técnica Pokédex:** Modal interactivo con cálculo automático de efectividades, debilidades, resistencias y consulta asíncrona a la PokéAPI.
 
 ### 2. Centro de Noticias y Eventos (`noticias.html`)

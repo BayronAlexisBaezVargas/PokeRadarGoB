@@ -550,6 +550,113 @@
   var raidGroupsEl = document.getElementById('raidGroups');
   RAID_GROUPS.forEach(function(g){ raidGroupsEl.appendChild(renderRaidGroup(g)); });
 
+  fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json')
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      var t1 = RAID_GROUPS.find(function(g){ return g.id === 't1'; });
+      var t3 = RAID_GROUPS.find(function(g){ return g.id === 't3'; });
+      var t5 = RAID_GROUPS.find(function(g){ return g.id === 't5'; });
+      var tm = RAID_GROUPS.find(function(g){ return g.id === 'tm'; });
+      var ts = RAID_GROUPS.find(function(g){ return g.id === 'ts'; });
+
+      if (t1) t1.mons = [];
+      if (t3) t3.mons = [];
+      if (t5) t5.mons = [];
+      if (tm) tm.mons = [];
+      if (ts) ts.subgroups = [
+        { label:'1★ Sombra', mons:[] },
+        { label:'3★ Sombra', mons:[] },
+        { label:'5★ Sombra', mons:[] }
+      ];
+
+      data.forEach(function(b){
+        var isShadow = b.name.toLowerCase().indexOf('shadow') !== -1;
+        var cleanName = b.name.replace(/^Shadow /i, '');
+        var tag = '';
+        if (cleanName.indexOf('Mega ') === 0) { tag = 'Mega'; cleanName = cleanName.replace(/^Mega /i, ''); }
+        else if (cleanName.indexOf('Primal ') === 0) { tag = 'Primigenio'; cleanName = cleanName.replace(/^Primal /i, ''); }
+        else if (isShadow) { tag = 'Sombra'; }
+
+        var pMatch = cleanName.match(/\((.*?)\)/);
+        if (pMatch) {
+          if (!tag) tag = pMatch[1];
+          else tag += ' (' + pMatch[1] + ')';
+          cleanName = cleanName.replace(/\s*\(.*?\)/, '');
+        }
+
+        var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
+        var dex = dexMatch ? dexMatch[1] : '000';
+
+        var m = {
+          name: cleanName,
+          tag: tag,
+          dex: dex,
+          types: b.types.map(function(t){ return t.name; }),
+          shiny: b.canBeShiny,
+          image: b.image,
+          cp: b.combatPower ? [b.combatPower.normal.min, b.combatPower.normal.max] : null,
+          cpBoost: b.combatPower ? [b.combatPower.boosted.min, b.combatPower.boosted.max] : null,
+          weather: b.boostedWeather ? b.boostedWeather.map(function(w){ return w.name; }) : []
+        };
+        
+        if (isShadow) {
+          if (b.tier === '1-Star Raids' && ts) ts.subgroups[0].mons.push(mon(m));
+          else if (b.tier === '3-Star Raids' && ts) ts.subgroups[1].mons.push(mon(m));
+          else if (b.tier === '5-Star Raids' && ts) ts.subgroups[2].mons.push(mon(m));
+        } else {
+          if (b.tier === '1-Star Raids' && t1) t1.mons.push(mon(m));
+          else if (b.tier === '3-Star Raids' && t3) t3.mons.push(mon(m));
+          else if (b.tier === '5-Star Raids' && t5) t5.mons.push(mon(m));
+          else if (b.tier === 'Mega Raids' && tm) tm.mons.push(mon(m));
+        }
+      });
+      
+      if (ts) ts.subgroups = ts.subgroups.filter(function(sg){ return sg.mons.length > 0; });
+      
+      raidGroupsEl.innerHTML = '';
+      RAID_GROUPS.forEach(function(g){ 
+        var hasMons = g.subgroups ? g.subgroups.length > 0 : (g.mons && g.mons.length > 0);
+        if(hasMons) { 
+          var el = renderRaidGroup(g);
+          raidGroupsEl.appendChild(el); 
+          if(typeof io !== 'undefined') { io.observe(el); }
+          else { el.classList.add('in'); }
+        }
+      });
+
+      var totalRaids = RAID_GROUPS.reduce(function(n,g){
+        return n + (g.subgroups ? g.subgroups.reduce(function(x,sg){return x+sg.mons.length;},0) : (g.mons?g.mons.length:0));
+      },0);
+      var statRaidsEl = document.getElementById('statRaids');
+      if (statRaidsEl) statRaidsEl.innerHTML = '<span>'+totalRaids+'</span>';
+
+      var tierNavEl = document.getElementById('tierNav');
+      if(tierNavEl) {
+        tierNavEl.innerHTML = RAID_GROUPS.filter(function(g){
+          return g.subgroups ? g.subgroups.length > 0 : (g.mons && g.mons.length > 0);
+        }).map(function(g){ return '<a href="#'+g.id+'" class="tier-chip">'+g.tier+'</a>'; }).join('') +
+          '<a href="#upcomingRaidsSection" class="tier-chip" style="color:var(--signal);border-color:rgba(61,242,196,.35);">Próximas</a>';
+        
+        tierNavEl.querySelectorAll('a').forEach(function(a){
+          a.addEventListener('click', function(e){
+            e.preventDefault();
+            var target = document.getElementById(a.getAttribute('href').slice(1));
+            if(!target) return;
+            target.scrollIntoView({behavior: motionOK ? 'smooth' : 'auto', block:'start'});
+            if(motionOK){
+              var head = target.querySelector('.section-head') || target;
+              head.classList.add('flash');
+              setTimeout(function(){ head.classList.remove('flash'); }, 900);
+            }
+          });
+        });
+      }
+
+      buildTypeChips();
+      filterAll();
+    })
+    .catch(console.error);
+
   var upcomingRaidGroupsEl = document.getElementById('upcomingRaidGroups');
   if(upcomingRaidGroupsEl){
     fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
@@ -618,6 +725,8 @@
             if(typeof io !== 'undefined') { io.observe(el); }
             else { el.classList.add('in'); }
           });
+          buildTypeChips();
+          filterAll();
         });
       })
       .catch(function(err){
@@ -677,7 +786,7 @@
   /* Chips de tipo */
   var activeTypes = new Set();
   var typeChipsEl = document.getElementById('typeChips');
-  (function buildTypeChips(){
+  function buildTypeChips(){
     var used = new Set();
     RAID_GROUPS.forEach(function(g){
       var list = g.subgroups ? g.subgroups.reduce(function(a,sg){return a.concat(sg.mons);},[]) : g.mons;
@@ -688,9 +797,11 @@
       list.forEach(function(m){ m.types.forEach(function(t){ used.add(t); }); });
     });
     WILD_GROUPS.forEach(function(g){ g.mons.forEach(function(m){ m.types.forEach(function(t){ used.add(t); }); }); });
+    UPCOMING_WILD.forEach(function(m){ m.types.forEach(function(t){ used.add(t); }); });
     var order = Object.keys(TYPE_COLORS).filter(function(t){ return used.has(t); });
     typeChipsEl.innerHTML = order.map(function(t){
-      return '<button class="chip type-chip" data-type="'+t+'" style="--tc:'+TYPE_COLORS[t]+'">'+TYPE_LABELS[t]+'</button>';
+      var activeCls = activeTypes.has(t) ? ' active' : '';
+      return '<button class="chip type-chip'+activeCls+'" data-type="'+t+'" style="--tc:'+TYPE_COLORS[t]+'">'+TYPE_LABELS[t]+'</button>';
     }).join('');
     typeChipsEl.querySelectorAll('.type-chip').forEach(function(btn){
       btn.addEventListener('click', function(){
@@ -700,7 +811,8 @@
         filterAll();
       });
     });
-  })();
+  }
+  buildTypeChips();
 
   /* Búsqueda + filtro */
   var searchInput = document.getElementById('searchInput');
