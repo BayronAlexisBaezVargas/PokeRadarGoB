@@ -515,11 +515,31 @@
     } else if(item.raw.eventType === 'max-mondays'){
       descText = 'Los Nodos Dinamax contarán con una densidad de combate intensificada para la especie protagonista. Obtén Partículas Max e interactúa con entrenadores cercanos.';
     }
-    modalDesc.textContent = descText;
+    modalDesc.innerHTML = '';
+    modalDesc.classList.add('typing-cursor');
+    var tid = Math.random();
+    modalDesc.dataset.tid = tid;
+    var i = 0;
+    function type() {
+      if(modalDesc.dataset.tid != tid) return;
+      if(i < descText.length){
+        modalDesc.innerHTML += descText.charAt(i);
+        i++;
+        setTimeout(type, 15);
+      } else {
+        modalDesc.classList.remove('typing-cursor');
+      }
+    }
+    type();
 
     if(item.raw.link){
       modalGuideLink.href = item.raw.link;
+      modalGuideLink.textContent = 'Ver Noticia Completa ↗';
       modalGuideLink.style.display = 'inline-flex';
+      modalGuideLink.style.background = 'var(--signal)';
+      modalGuideLink.style.color = 'var(--void)';
+      modalGuideLink.style.padding = '10px 20px';
+      modalGuideLink.style.fontWeight = 'bold';
     } else {
       modalGuideLink.style.display = 'none';
     }
@@ -642,6 +662,69 @@
     if(statActive) statActive.innerHTML = '<span>' + activeCount + '</span>';
     if(statWeek) statWeek.innerHTML = '<span>' + weekCount + '</span>';
     if(statTotal) statTotal.innerHTML = '<span>' + totalCount + '</span>';
+
+    updateCurrentSeasonReadout(eventsList);
+  }
+
+  /* ============ Detección Dinámica de Temporada ============ */
+  function resolveSeason(eventsList) {
+    var now = Date.now();
+    var foundSeason = null;
+
+    if (Array.isArray(eventsList)) {
+      for (var i = 0; i < eventsList.length; i++) {
+        var ev = eventsList[i];
+        var isSeasonType = (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season') || (ev.name && ev.name.toLowerCase().indexOf('temporada') !== -1);
+        if (isSeasonType) {
+          var s = ev.start ? new Date(ev.start).getTime() : 0;
+          var e = ev.end ? new Date(ev.end).getTime() : 0;
+          if (s && e && now >= s && now <= e) {
+            foundSeason = ev.name;
+            break;
+          }
+        }
+      }
+
+      if (!foundSeason) {
+        var seasons = eventsList.filter(function(ev){
+          return (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season');
+        });
+        if (seasons.length > 0) {
+          seasons.sort(function(a, b){
+            return (b.start ? new Date(b.start).getTime() : 0) - (a.start ? new Date(a.start).getTime() : 0);
+          });
+          foundSeason = seasons[0].name;
+        }
+      }
+    }
+
+    if (!foundSeason) {
+      try {
+        foundSeason = localStorage.getItem('pgo_active_season');
+      } catch (err) {}
+    }
+
+    if (foundSeason) {
+      foundSeason = foundSeason.replace(/^(?:Season|Temporada):\s*/i, '').trim();
+      try {
+        localStorage.setItem('pgo_active_season', foundSeason);
+      } catch (err) {}
+    }
+
+    return foundSeason;
+  }
+
+  function updateCurrentSeasonReadout(eventsList) {
+    var seasonName = resolveSeason(eventsList);
+    var seasonEl = document.getElementById('statSeason');
+    var readoutBox = document.getElementById('seasonReadout');
+
+    if (seasonName) {
+      if (seasonEl) seasonEl.textContent = seasonName;
+      if (readoutBox) readoutBox.style.display = '';
+    } else {
+      if (readoutBox) readoutBox.style.display = 'none';
+    }
   }
 
   /* ============ Renderizado de la Colección de Eventos ============ */
@@ -679,7 +762,7 @@
         entries.forEach(function(entry){
           if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
         });
-      }, {threshold:.1});
+      }, {threshold: 0.01, rootMargin: '60px'});
       grid.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
     } else {
       grid.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
@@ -813,6 +896,10 @@
       });
     }
   }
+
+  window.addEventListener('pageshow', function(){
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  });
 
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);

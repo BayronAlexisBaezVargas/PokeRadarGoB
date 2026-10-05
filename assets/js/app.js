@@ -1,6 +1,40 @@
 (function(){
   "use strict";
 
+  /* ============ Telemetría de Audio ============ */
+  var audioCtx = null;
+  function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+  function playClickSound() {
+    if(!audioCtx) return;
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+  }
+  function playScanSound() {
+    if(!audioCtx) return;
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+    osc.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+  }
+
+  // Activar audio con la primera interacción del usuario
+  document.addEventListener('click', initAudio, { once: true });
+
+
   /* ============ Tipos ============ */
   var TYPE_COLORS = {
     normal:'#B4AE96', fire:'#FF7A45', water:'#4C9FE8', electric:'#F3D23B', grass:'#6FBE5A',
@@ -255,6 +289,25 @@
 
   var currentOpenDex = null;
 
+  function runTypewriter(el, text) {
+    el.innerHTML = '';
+    el.classList.add('typing-cursor');
+    var tid = Math.random();
+    el.dataset.tid = tid;
+    var i = 0;
+    function type() {
+      if (el.dataset.tid != tid) return;
+      if (i < text.length) {
+        el.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(type, 10);
+      } else {
+        el.classList.remove('typing-cursor');
+      }
+    }
+    type();
+  }
+
   function fetchPokeApiDetails(dexStr){
     var dexNum = parseInt(dexStr, 10);
     currentOpenDex = dexNum;
@@ -265,14 +318,14 @@
 
     if(speciesCache[dexNum]){
       var cached = speciesCache[dexNum];
-      flavorEl.textContent = cached.flavor || 'Sin descripción disponible en Pokédex.';
+      runTypewriter(flavorEl, cached.flavor || 'Sin descripción disponible en Pokédex.');
       genusEl.textContent = cached.genus ? 'Especie: ' + cached.genus : 'Especie Pokémon';
       heightEl.textContent = cached.height ? 'Altura: ' + cached.height + ' m' : '';
       weightEl.textContent = cached.weight ? 'Peso: ' + cached.weight + ' kg' : '';
       return;
     }
 
-    flavorEl.textContent = 'Consultando registro...';
+    runTypewriter(flavorEl, 'Analizando base de datos...');
     genusEl.textContent = 'Cargando datos...';
     heightEl.textContent = '';
     weightEl.textContent = '';
@@ -302,7 +355,7 @@
 
       speciesCache[dexNum] = entry;
 
-      flavorEl.textContent = entry.flavor || 'Sin descripción disponible en Pokédex.';
+      runTypewriter(flavorEl, entry.flavor || 'Sin descripción disponible en Pokédex.');
       genusEl.textContent = entry.genus ? 'Especie: ' + entry.genus : 'Especie Pokémon';
       heightEl.textContent = entry.height ? 'Altura: ' + entry.height + ' m' : '';
       weightEl.textContent = entry.weight ? 'Peso: ' + entry.weight + ' kg' : '';
@@ -618,9 +671,9 @@
         var hasMons = g.subgroups ? g.subgroups.length > 0 : (g.mons && g.mons.length > 0);
         if(hasMons) { 
           var el = renderRaidGroup(g);
+          el.classList.add('in');
           raidGroupsEl.appendChild(el); 
           if(typeof io !== 'undefined') { io.observe(el); }
-          else { el.classList.add('in'); }
         }
       });
 
@@ -657,11 +710,76 @@
     })
     .catch(console.error);
 
+  /* ============ Detección Dinámica de Temporada ============ */
+  function resolveSeason(eventsList) {
+    var now = Date.now();
+    var foundSeason = null;
+
+    if (Array.isArray(eventsList)) {
+      for (var i = 0; i < eventsList.length; i++) {
+        var ev = eventsList[i];
+        var isSeasonType = (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season') || (ev.name && ev.name.toLowerCase().indexOf('temporada') !== -1);
+        if (isSeasonType) {
+          var s = ev.start ? new Date(ev.start).getTime() : 0;
+          var e = ev.end ? new Date(ev.end).getTime() : 0;
+          if (s && e && now >= s && now <= e) {
+            foundSeason = ev.name;
+            break;
+          }
+        }
+      }
+
+      if (!foundSeason) {
+        var seasons = eventsList.filter(function(ev){
+          return (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season');
+        });
+        if (seasons.length > 0) {
+          seasons.sort(function(a, b){
+            return (b.start ? new Date(b.start).getTime() : 0) - (a.start ? new Date(a.start).getTime() : 0);
+          });
+          foundSeason = seasons[0].name;
+        }
+      }
+    }
+
+    if (!foundSeason) {
+      try {
+        foundSeason = localStorage.getItem('pgo_active_season');
+      } catch (err) {}
+    }
+
+    if (foundSeason) {
+      foundSeason = foundSeason.replace(/^(?:Season|Temporada):\s*/i, '').trim();
+      try {
+        localStorage.setItem('pgo_active_season', foundSeason);
+      } catch (err) {}
+    }
+
+    return foundSeason;
+  }
+
+  function updateCurrentSeasonReadout(eventsList) {
+    var seasonName = resolveSeason(eventsList);
+    var seasonEl = document.getElementById('statSeason');
+    var readoutBox = document.getElementById('seasonReadout');
+
+    if (seasonName) {
+      if (seasonEl) seasonEl.textContent = seasonName;
+      if (readoutBox) readoutBox.style.display = '';
+    } else {
+      if (readoutBox) readoutBox.style.display = 'none';
+    }
+  }
+
+  // Cargar de inmediato si hay temporada en caché
+  updateCurrentSeasonReadout();
+
   var upcomingRaidGroupsEl = document.getElementById('upcomingRaidGroups');
   if(upcomingRaidGroupsEl){
     fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
       .then(function(res){ return res.json(); })
       .then(function(data){
+        updateCurrentSeasonReadout(data);
         var now = new Date();
         var g5 = { id:'u-5s', tier:'5★', title:'Incursiones 5★ · Próximas', mons:[] };
         var gMega = { id:'u-mega', tier:'MEGA', title:'Megaincursiones · Próximas', mons:[] };
@@ -721,9 +839,9 @@
 
           UPCOMING_RAID_GROUPS.forEach(function(g){ 
             var el = renderUpcomingRaidGroup(g);
+            el.classList.add('in');
             upcomingRaidGroupsEl.appendChild(el); 
             if(typeof io !== 'undefined') { io.observe(el); }
-            else { el.classList.add('in'); }
           });
           buildTypeChips();
           filterAll();
@@ -845,10 +963,16 @@
 
   /* Modal Event Listeners */
   document.addEventListener('click', function(e){
+    var isInteractive = e.target.closest('button, a, .card, .seg-btn, .tier-chip');
+    if (isInteractive) {
+      playClickSound();
+    }
+
     var target = e.target.closest('[data-mon-key]');
     if(target){
       var key = target.getAttribute('data-mon-key');
       if(MON_REGISTRY[key]){
+        playScanSound();
         openMonModal(MON_REGISTRY[key]);
       }
     }
@@ -881,9 +1005,14 @@
       entries.forEach(function(entry){
         if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
       });
-    }, {threshold:.12});
+    }, {threshold: 0.01, rootMargin: '60px'});
     document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
   } else {
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
   }
+
+  // Garantizar visibilidad en bfcache o al volver a la pestaña/página
+  window.addEventListener('pageshow', function(){
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  });
 })();
