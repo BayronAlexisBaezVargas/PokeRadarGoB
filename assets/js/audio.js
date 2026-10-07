@@ -38,7 +38,7 @@
   // Global listener for interactive elements
   document.addEventListener('click', function(e){
     initAudio();
-    var isInteractive = e.target.closest('button, a, .card, .seg-btn, .tier-chip, .event-item, .event-card');
+    var isInteractive = e.target.closest('button, a, .card, .seg-btn, .tier-chip, .event-item, .event-card, .day-card');
     if (isInteractive) {
       window.playClickSound();
     }

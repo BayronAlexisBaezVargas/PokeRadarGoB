@@ -1,29 +1,7 @@
 (function(){
   "use strict";
 
-  /* ============ Telemetría de Audio ============ */
-  var audioCtx = null;
-  function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-  function playClickSound() {
-    if(!audioCtx) return;
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-  }
-
-  document.addEventListener('click', function(e){
-    initAudio();
-    if (e.target.closest('button, a, .day-card')) {
-      playClickSound();
-    }
-  });
+  // Telemetría de Audio manejada por audio.js
 
   /* ============ Lógica Semanal ============ */
   var weekContainer = document.getElementById('weekContainer');
@@ -160,7 +138,7 @@
               var idx = parsedEvents.indexOf(e);
 
               return '<div class="event-item ' + getEventTypeClass(e.title) + '" data-idx="' + idx + '" style="cursor:pointer;">' +
-                '<img src="' + e.image + '" class="event-icon" alt="">' +
+                '<img src="' + e.image + '" class="event-icon" loading="lazy" alt="">' +
                 '<div class="event-info">' +
                   '<span class="event-title">' + e.title + '</span>' +
                   '<span class="event-time">' + timeStr + '</span>' +

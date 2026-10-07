@@ -1,38 +1,7 @@
 (function(){
   "use strict";
 
-  /* ============ Telemetría de Audio ============ */
-  var audioCtx = null;
-  function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-  function playClickSound() {
-    if(!audioCtx) return;
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-  }
-  function playScanSound() {
-    if(!audioCtx) return;
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-    osc.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.15);
-    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-  }
-
-  // Activar audio con la primera interacción del usuario
-  document.addEventListener('click', initAudio, { once: true });
+  // Telemetría de Audio manejada por audio.js
 
 
   /* ============ Tipos ============ */
@@ -298,7 +267,7 @@
     function type() {
       if (el.dataset.tid != tid) return;
       if (i < text.length) {
-        el.innerHTML += text.charAt(i);
+        el.textContent += text.charAt(i);
         i++;
         setTimeout(type, 10);
       } else {
@@ -710,76 +679,17 @@
     })
     .catch(console.error);
 
-  /* ============ Detección Dinámica de Temporada ============ */
-  function resolveSeason(eventsList) {
-    var now = Date.now();
-    var foundSeason = null;
 
-    if (Array.isArray(eventsList)) {
-      for (var i = 0; i < eventsList.length; i++) {
-        var ev = eventsList[i];
-        var isSeasonType = (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season') || (ev.name && ev.name.toLowerCase().indexOf('temporada') !== -1);
-        if (isSeasonType) {
-          var s = ev.start ? new Date(ev.start).getTime() : 0;
-          var e = ev.end ? new Date(ev.end).getTime() : 0;
-          if (s && e && now >= s && now <= e) {
-            foundSeason = ev.name;
-            break;
-          }
-        }
-      }
-
-      if (!foundSeason) {
-        var seasons = eventsList.filter(function(ev){
-          return (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season');
-        });
-        if (seasons.length > 0) {
-          seasons.sort(function(a, b){
-            return (b.start ? new Date(b.start).getTime() : 0) - (a.start ? new Date(a.start).getTime() : 0);
-          });
-          foundSeason = seasons[0].name;
-        }
-      }
-    }
-
-    if (!foundSeason) {
-      try {
-        foundSeason = localStorage.getItem('pgo_active_season');
-      } catch (err) {}
-    }
-
-    if (foundSeason) {
-      foundSeason = foundSeason.replace(/^(?:Season|Temporada):\s*/i, '').trim();
-      try {
-        localStorage.setItem('pgo_active_season', foundSeason);
-      } catch (err) {}
-    }
-
-    return foundSeason;
-  }
-
-  function updateCurrentSeasonReadout(eventsList) {
-    var seasonName = resolveSeason(eventsList);
-    var seasonEl = document.getElementById('statSeason');
-    var readoutBox = document.getElementById('seasonReadout');
-
-    if (seasonName) {
-      if (seasonEl) seasonEl.textContent = seasonName;
-      if (readoutBox) readoutBox.style.display = '';
-    } else {
-      if (readoutBox) readoutBox.style.display = 'none';
-    }
-  }
 
   // Cargar de inmediato si hay temporada en caché
-  updateCurrentSeasonReadout();
+  window.updateCurrentSeasonReadout();
 
   var upcomingRaidGroupsEl = document.getElementById('upcomingRaidGroups');
   if(upcomingRaidGroupsEl){
     fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
       .then(function(res){ return res.json(); })
       .then(function(data){
-        updateCurrentSeasonReadout(data);
+        window.updateCurrentSeasonReadout(data);
         var now = new Date();
         var g5 = { id:'u-5s', tier:'5★', title:'Incursiones 5★ · Próximas', mons:[] };
         var gMega = { id:'u-mega', tier:'MEGA', title:'Megaincursiones · Próximas', mons:[] };
@@ -963,16 +873,11 @@
 
   /* Modal Event Listeners */
   document.addEventListener('click', function(e){
-    var isInteractive = e.target.closest('button, a, .card, .seg-btn, .tier-chip');
-    if (isInteractive) {
-      playClickSound();
-    }
-
     var target = e.target.closest('[data-mon-key]');
     if(target){
       var key = target.getAttribute('data-mon-key');
       if(MON_REGISTRY[key]){
-        playScanSound();
+        if(window.playScanSound) window.playScanSound();
         openMonModal(MON_REGISTRY[key]);
       }
     }

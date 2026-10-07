@@ -10,6 +10,7 @@
 <title>Radar de Campo · Pokémon GO</title>
 <meta name="description" content="Incursiones activas, próximas rotaciones y apariciones silvestres en Pokémon GO." />
 <meta name="theme-color" content="#0a0f0d" />
+<meta name="view-transition" content="same-origin" />
 <meta property="og:title" content="Radar de Campo · Pokémon GO" />
 <meta property="og:description" content="Jefes de incursión activos, rotaciones programadas y apariciones silvestres en Pokémon GO." />
 <meta property="og:type" content="website" />
@@ -19,7 +20,10 @@
 <meta name="twitter:description" content="Incursiones activas, próximas rotaciones y apariciones silvestres en Pokémon GO." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com">
+<link rel="preconnect" href="https://pokeapi.co">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
 <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
@@ -34,12 +38,12 @@
       </div>
       <div class="hud-status">
         <span class="live"><span class="live-dot"></span>EN VIVO</span>
-        <span class="hud-date" id="userLocation">· Obteniendo ubicación...</span>
+        <span class="hud-date" id="userLocation">· Sincronizando red...</span>
       </div>
     </div>
     <nav class="hud-nav" aria-label="Navegación principal">
       <a href="index.html" class="hud-nav-link active">Radar</a>
-      <a href="noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span> <span class="nav-badge">Nuevo</span></a>
+      <a href="noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
       <a href="semana.html" class="hud-nav-link">Semana</a>
     </nav>
   </div>
@@ -203,8 +207,9 @@
   </div>
 </footer>
 
-<script src="assets/js/audio.js"></script>
-<script src="assets/js/app.js"></script>
-<script src="assets/js/location.js"></script>
+<script defer src="assets/js/audio.js"></script>
+<script defer src="assets/js/season.js"></script>
+<script defer src="assets/js/app.js"></script>
+<script defer src="assets/js/location.js"></script>
 </body>
 </html>

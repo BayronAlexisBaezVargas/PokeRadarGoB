@@ -54,7 +54,7 @@
     function type() {
       if (el.dataset.tid != tid) return;
       if (i < text.length) {
-        el.innerHTML += text.charAt(i);
+        el.textContent += text.charAt(i);
         i++;
         setTimeout(type, 15);
       } else {
@@ -70,8 +70,13 @@
     evtImg.src = e.image || '';
     evtType.textContent = e.heading || 'Evento de Pokémon GO';
     evtTitle.textContent = e.name || 'Evento Desconocido';
-    evtLink.href = e.link || '#';
-    evtLink.style.display = e.link ? 'inline-block' : 'none';
+    if (e.link && (e.link.startsWith('http://') || e.link.startsWith('https://'))) {
+      evtLink.href = e.link;
+      evtLink.style.display = 'inline-block';
+    } else {
+      evtLink.href = '#';
+      evtLink.style.display = 'none';
+    }
 
     // Dates formatting
     var datesStr = '';

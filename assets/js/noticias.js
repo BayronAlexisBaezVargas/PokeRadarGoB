@@ -398,7 +398,13 @@
     var countdown = getCountdownString(startDate, endDate);
     var perks = extractPerks(ev);
     var bosses = extractBosses(ev);
-    var evKey = ev.eventID || ('ev_' + Math.random().toString(36).substr(2, 9));
+    var randomId = '';
+    if (window.crypto && window.crypto.getRandomValues) {
+      randomId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+    } else {
+      randomId = Math.floor(Math.random() * 1000000000).toString(36);
+    }
+    var evKey = ev.eventID || ('ev_' + randomId);
     
     eventRegistry[evKey] = {
       raw: ev,
@@ -523,7 +529,7 @@
     function type() {
       if(modalDesc.dataset.tid != tid) return;
       if(i < descText.length){
-        modalDesc.innerHTML += descText.charAt(i);
+        modalDesc.textContent += descText.charAt(i);
         i++;
         setTimeout(type, 15);
       } else {
@@ -532,7 +538,7 @@
     }
     type();
 
-    if(item.raw.link){
+    if(item.raw.link && (item.raw.link.startsWith('http://') || item.raw.link.startsWith('https://'))){
       modalGuideLink.href = item.raw.link;
       modalGuideLink.textContent = 'Ver Noticia Completa ↗';
       modalGuideLink.style.display = 'inline-flex';
@@ -542,6 +548,7 @@
       modalGuideLink.style.fontWeight = 'bold';
     } else {
       modalGuideLink.style.display = 'none';
+      modalGuideLink.removeAttribute('href');
     }
 
     modal.classList.add('open');
@@ -663,69 +670,10 @@
     if(statWeek) statWeek.innerHTML = '<span>' + weekCount + '</span>';
     if(statTotal) statTotal.innerHTML = '<span>' + totalCount + '</span>';
 
-    updateCurrentSeasonReadout(eventsList);
+    window.updateCurrentSeasonReadout(eventsList);
   }
 
-  /* ============ Detección Dinámica de Temporada ============ */
-  function resolveSeason(eventsList) {
-    var now = Date.now();
-    var foundSeason = null;
 
-    if (Array.isArray(eventsList)) {
-      for (var i = 0; i < eventsList.length; i++) {
-        var ev = eventsList[i];
-        var isSeasonType = (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season') || (ev.name && ev.name.toLowerCase().indexOf('temporada') !== -1);
-        if (isSeasonType) {
-          var s = ev.start ? new Date(ev.start).getTime() : 0;
-          var e = ev.end ? new Date(ev.end).getTime() : 0;
-          if (s && e && now >= s && now <= e) {
-            foundSeason = ev.name;
-            break;
-          }
-        }
-      }
-
-      if (!foundSeason) {
-        var seasons = eventsList.filter(function(ev){
-          return (ev.eventType === 'season') || (ev.heading && ev.heading.toLowerCase() === 'season');
-        });
-        if (seasons.length > 0) {
-          seasons.sort(function(a, b){
-            return (b.start ? new Date(b.start).getTime() : 0) - (a.start ? new Date(a.start).getTime() : 0);
-          });
-          foundSeason = seasons[0].name;
-        }
-      }
-    }
-
-    if (!foundSeason) {
-      try {
-        foundSeason = localStorage.getItem('pgo_active_season');
-      } catch (err) {}
-    }
-
-    if (foundSeason) {
-      foundSeason = foundSeason.replace(/^(?:Season|Temporada):\s*/i, '').trim();
-      try {
-        localStorage.setItem('pgo_active_season', foundSeason);
-      } catch (err) {}
-    }
-
-    return foundSeason;
-  }
-
-  function updateCurrentSeasonReadout(eventsList) {
-    var seasonName = resolveSeason(eventsList);
-    var seasonEl = document.getElementById('statSeason');
-    var readoutBox = document.getElementById('seasonReadout');
-
-    if (seasonName) {
-      if (seasonEl) seasonEl.textContent = seasonName;
-      if (readoutBox) readoutBox.style.display = '';
-    } else {
-      if (readoutBox) readoutBox.style.display = 'none';
-    }
-  }
 
   /* ============ Renderizado de la Colección de Eventos ============ */
   function renderAllEvents(eventsList){
