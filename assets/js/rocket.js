@@ -93,7 +93,7 @@
 
   function rgba(hex, a){
     var h = hex.replace('#','');
-    var n = parseInt(h,16);
+    var n = Number.parseInt(h,16);
     return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
   }
 
@@ -144,9 +144,9 @@
         phase.mons.forEach(function(m) {
           var monDiv = document.createElement('div');
           monDiv.className = 'rocket-mon' + (m.shiny ? ' shiny-possible' : '');
-          monDiv.setAttribute('data-name', m.name);
-          monDiv.setAttribute('data-dex', m.dex);
-          monDiv.setAttribute('data-types', m.types.join(','));
+          monDiv.dataset.name = m.name;
+          monDiv.dataset.dex = m.dex;
+          monDiv.dataset.types = m.types.join(',');
           
           var img = document.createElement('img');
           img.src = getMonImage(m.dex);
@@ -213,9 +213,9 @@
       grunt.mons.forEach(function(m) {
         var monDiv = document.createElement('div');
         monDiv.className = 'rocket-mon';
-        monDiv.setAttribute('data-name', m.name);
-        monDiv.setAttribute('data-dex', m.dex);
-        monDiv.setAttribute('data-types', grunt.type);
+        monDiv.dataset.name = m.name;
+        monDiv.dataset.dex = m.dex;
+        monDiv.dataset.types = grunt.type;
         
         var img = document.createElement('img');
         img.src = getMonImage(m.dex);
@@ -239,9 +239,9 @@
 
   /* ============ Sistema de Modales Interactivo ============ */
   function openRocketModal(el) {
-    var name = el.getAttribute('data-name');
-    var dex = el.getAttribute('data-dex');
-    var typesStr = el.getAttribute('data-types');
+    var name = el.dataset.name;
+    var dex = el.dataset.dex;
+    var typesStr = el.dataset.types;
     var types = typesStr ? typesStr.split(',') : ['normal'];
     
     var modal = document.getElementById('monModal');

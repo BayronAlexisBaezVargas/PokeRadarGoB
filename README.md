@@ -2,7 +2,7 @@
 
 Panel técnico de telemetría y consulta en tiempo real para Pokémon GO. Proporciona información sobre rotaciones de incursiones, apariciones silvestres activas, calendario de eventos y cálculo dinámico de multiplicadores de daño.
 
-**Versión:** 1.5.4  
+**Versión:** 1.5.5  
 **Autor:** [BayronAlexisBaezVargas](https://github.com/BayronAlexisBaezVargas)
 
 ---
