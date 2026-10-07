@@ -125,7 +125,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, .card:focus-visible{
   }
   .hud-nav{
     display:grid;
-    grid-template-columns:repeat(3, 1fr);
+    grid-template-columns:repeat(4, 1fr);
     width:100%;
     background:rgba(20,31,27,.6);
     border:1px solid var(--line);

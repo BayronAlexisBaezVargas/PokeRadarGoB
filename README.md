@@ -2,7 +2,7 @@
 
 Panel técnico de telemetría y consulta en tiempo real para Pokémon GO. Proporciona información sobre rotaciones de incursiones, apariciones silvestres activas, calendario de eventos y cálculo dinámico de multiplicadores de daño.
 
-**Versión:** 1.4.0  
+**Versión:** 1.5.0  
 **Autor:** [BayronAlexisBaezVargas](https://github.com/BayronAlexisBaezVargas)
 
 ---
@@ -24,6 +24,18 @@ Panel técnico de telemetría y consulta en tiempo real para Pokémon GO. Propor
 - **Buscador instantáneo:** Búsqueda en vivo por nombre de evento o Pokémon protagonista.
 - **Detalle de bonificaciones:** Desglose de multiplicadores de PX, Polvo Estelar, ratios de variocolor y ataques exclusivos.
 
+### 3. Resumen Semanal (`semana.html`)
+- **Visualización en formato agenda:** Distribución clara de eventos por día (Lunes a Domingo).
+- **Destacados semanales:** Hora Destacada de los martes y Hora de Incursiones de los miércoles integrados automáticamente.
+
+### 4. Inteligencia Operativa: Team GO Rocket (`rocket.html`)
+- **Rastreo de Líderes:** Alineaciones confirmadas de Giovanni, Cliff, Sierra y Arlo organizadas por fases de combate.
+- **Base de datos de Reclutas (Grunts):** Clasificación por frases, tipo elemental y lista de posibles Pokémon oscuros de encuentro.
+
+### 5. Progressive Web App (PWA) & Optimización
+- **Service Worker:** Estrategia de caché "Stale-While-Revalidate" para acceso rápido y offline.
+- **Transiciones Nativas:** Implementación de la API de *View Transitions* para un cambio de página sin parpadeos y sin recargar el HUD.
+
 ---
 
 ## Estructura del Proyecto
@@ -37,9 +49,16 @@ pokegoapi/
 │   │   └── favicon.svg         # Favicon vectorial táctico
 │   └── js/
 │       ├── app.js              # Lógica del radar, cálculo de efectividades y PokéAPI
-│       └── noticias.js         # Sincronización de eventos, filtros y cuentas regresivas
+│       ├── noticias.js         # Sincronización de eventos, filtros y cuentas regresivas
+│       ├── semana.js           # Agrupamiento de eventos por día de la semana
+│       ├── rocket.js           # Base de datos de líderes y reclutas Rocket
+│       └── location.js         # Transiciones de página y navegación
 ├── index.html                  # Panel principal del radar de incursiones
-├── noticias.html               # Panel de eventos y calendario operativo
+├── noticias.html               # Panel de eventos y calendario
+├── semana.html                 # Vista agenda de eventos de los próximos 7 días
+├── rocket.html                 # Alineaciones del Team GO Rocket
+├── sw.js                       # Service Worker para PWA y caché
+├── manifest.json               # Manifiesto de la aplicación web (PWA)
 ├── .gitignore                  # Exclusiones de control de versiones
 └── README.md                   # Documentación del proyecto
 ```

@@ -4,6 +4,7 @@ const ASSETS_TO_CACHE = [
   './index.html',
   './noticias.html',
   './semana.html',
+  './rocket.html',
   './assets/css/styles.css',
   './assets/js/audio.js',
   './assets/js/season.js',
@@ -12,6 +13,7 @@ const ASSETS_TO_CACHE = [
   './assets/js/eventModal.js',
   './assets/js/noticias.js',
   './assets/js/semana.js',
+  './assets/js/rocket.js',
   './assets/img/favicon.svg'
 ];
 

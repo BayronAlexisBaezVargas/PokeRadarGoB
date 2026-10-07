@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Radar Team GO Rocket · Pokémon GO</title>
+<meta name="description" content="Alineaciones actuales de los líderes del Team GO Rocket, Giovanni y Reclutas." />
+<meta name="theme-color" content="#0a0f0d" />
+<meta name="view-transition" content="same-origin" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com">
+<link rel="preconnect" href="https://pokeapi.co">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+<link rel="stylesheet" href="assets/css/styles.css" />
+<style>
+  .rocket-hero {
+    background: radial-gradient(ellipse at center, rgba(165,95,209,0.12) 0%, transparent 60%);
+  }
+  .leader-card {
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-5);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .leader-card:hover {
+    transform: translateY(-4px);
+    border-color: #a55fd1;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(165,95,209,0.1);
+  }
+  .leader-card::before {
+    content: 'R';
+    position: absolute;
+    right: -10px;
+    bottom: -20px;
+    font-size: 160px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: rgba(165,95,209,0.03);
+    z-index: 0;
+    pointer-events: none;
+    line-height: 1;
+  }
+  .leader-header {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-4);
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px dashed rgba(165,95,209,0.25);
+    padding-bottom: var(--sp-4);
+  }
+  .leader-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid #a55fd1;
+    box-shadow: 0 0 15px rgba(165,95,209,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--panel), #1a1025);
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a55fd1;
+    flex-shrink: 0;
+  }
+  .leader-info h3 {
+    font-size: 1.5rem;
+    color: #eaf3ee;
+    margin: 0;
+    line-height: 1.1;
+  }
+  .leader-info p {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: #a55fd1;
+    margin: 0 0 2px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .leader-lineup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+  .lineup-phase {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .phase-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phase-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line-soft);
+  }
+  .phase-mons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .rocket-mon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    padding: 4px 10px 4px 4px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .rocket-mon:hover {
+    border-color: #a55fd1;
+    background: rgba(165,95,209,0.12);
+    transform: translateY(-2px);
+  }
+  .rocket-mon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    background: rgba(0,0,0,0.4);
+    border-radius: 50%;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  .rocket-mon.shiny-possible {
+    border-color: rgba(255,197,61,0.3);
+    background: linear-gradient(90deg, rgba(255,197,61,0.05), transparent);
+  }
+  .rocket-mon.shiny-possible::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 6px rgba(255,197,61,0.6);
+    margin-left: 2px;
+  }
+
+  /* --- Grunt Cards --- */
+  .grunt-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .grunt-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--line-soft);
+  }
+  .grunt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--sp-3);
+    padding-bottom: var(--sp-2);
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  .grunt-type {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .grunt-quote {
+    font-size: 0.92rem;
+    color: var(--ink-dim);
+    margin-bottom: var(--sp-4);
+    font-style: italic;
+    line-height: 1.4;
+    flex: 1;
+  }
+  .grunt-quote::before {
+    content: '"';
+    color: #a55fd1;
+    font-size: 1.1rem;
+    font-family: Georgia, serif;
+    margin-right: 2px;
+  }
+  .grunt-quote::after {
+    content: '"';
+    color: #a55fd1;
+    font-size: 1.1rem;
+    font-family: Georgia, serif;
+    margin-left: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header class="hud">
+  <div class="hud-inner">
+    <div class="hud-bar">
+      <div class="hud-brand">
+        <svg class="hud-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" stroke-width="1.4"/><circle class="core" cx="16" cy="16" r="3"/><line x1="16" y1="1" x2="16" y2="6" stroke="currentColor" stroke-width="1.4"/><line x1="16" y1="26" x2="16" y2="31" stroke="currentColor" stroke-width="1.4"/></svg>
+        <span class="hud-word">Pokémon GO<small>Radar Team GO Rocket</small></span>
+      </div>
+      <div class="hud-status">
+        <span class="live" style="color:#a55fd1;"><span class="live-dot" style="background:#a55fd1;box-shadow:0 0 8px #a55fd1;"></span>EN VIVO</span>
+        <span class="hud-date" id="userLocation">· Sincronizando red...</span>
+      </div>
+    </div>
+    <nav class="hud-nav" aria-label="Navegación principal">
+      <a href="index.html" class="hud-nav-link">Radar</a>
+      <a href="noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
+      <a href="semana.html" class="hud-nav-link">Semana</a>
+      <a href="rocket.html" class="hud-nav-link active">Rocket</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero rocket-hero">
+    <div class="hero-text">
+      <span class="kicker" style="color:#a55fd1;">Inteligencia Operativa (BETA)</span>
+      <h1 class="title">Radares del <span class="hl" style="color:#a55fd1;">Team GO Rocket</span>.</h1>
+      <p class="lede">Alineaciones actuales de los Líderes, el Jefe Giovanni y los reclutas. Prepárate para combatir y rescatar Pokémon oscuros.</p>
+    </div>
+    <div class="hero-visual" style="display:flex;align-items:center;justify-content:center;">
+      <div style="font-size:120px;font-family:var(--font-display);font-weight:700;color:#a55fd1;text-shadow:0 0 40px rgba(165,95,209,0.5);">R</div>
+    </div>
+  </section>
+
+  <section id="rocketLeaders" style="margin-top:var(--sp-4);">
+    <div class="section-title"><h2>Líderes y Giovanni</h2></div>
+    <p class="section-sub">El primer Pokémon de la alineación de un líder siempre puede ser variocolor (punto amarillo).</p>
+    
+    <div class="grid" id="leadersGrid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="sync-loader" id="rocketLoader">
+        <span class="spinner" style="border-top-color:#a55fd1;"></span> Desencriptando alineaciones de radar...
+      </div>
+    </div>
+  </section>
+  
+  <section id="rocketGrunts" style="margin-top:var(--sp-8);border-top:1px solid var(--line);padding-top:var(--sp-6);">
+    <div class="section-title"><h2>Reclutas (Grunts)</h2></div>
+    <p class="section-sub">Posibles encuentros de rescate según la frase del recluta en las Poképaradas y Globos.</p>
+    
+    <div class="grid" id="gruntsGrid">
+      <!-- Generado dinámicamente -->
+    </div>
+  </section>
+
+</main>
+
+<!-- El modal de info se cargará con eventModal o app, o podemos hacer uno simple aquí -->
+<div id="monModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="modalClose" aria-label="Cerrar modal">&times;</button>
+    <div class="modal-header">
+      <div class="modal-art-wrap">
+        <div class="modal-art-glow" id="modalGlow"></div>
+        <img id="modalImg" class="modal-art" src="" alt="" />
+      </div>
+      <div class="modal-header-info">
+        <div class="modal-dex-row">
+          <span id="modalDex"></span>
+          <span id="modalShiny" class="modal-shiny-tag" style="display:none;color:#a55fd1;border-color:rgba(165,95,209,.3);background:rgba(165,95,209,.12);">Sombra</span>
+        </div>
+        <h3 id="modalName" class="modal-title"></h3>
+        <div id="modalTag" class="modal-tag" style="color:#a55fd1;"></div>
+        <div id="modalTypes" class="modal-types"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="modalGoStats" class="modal-grid"></div>
+      <div class="modal-section">
+        <div class="modal-section-title">Debilidades (Daño Super Efectivo)</div>
+        <div id="modalWeak" class="modal-badges-wrap"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Resistencias</div>
+        <div id="modalResist" class="modal-badges-wrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-col">
+      <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
+      <div class="foot-meta">
+        <span class="foot-version">v1.5.0</span>
+        <span class="foot-sep">·</span>
+        <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
+      </div>
+    </div>
+    <div class="foot-links">
+      <div class="foot-links-group">
+        <span class="foot-links-title">Fuentes de datos</span>
+        <a href="https://leekduck.com/raid-bosses/" target="_blank" rel="noopener">Leek Duck</a>
+        <a href="https://github.com/bigfoott/ScrapedDuck" target="_blank" rel="noopener">ScrapedDuck API</a>
+        <a href="https://pokemongohub.net/" target="_blank" rel="noopener">GO Hub</a>
+        <a href="https://pokeapi.co/" target="_blank" rel="noopener">PokéAPI</a>
+      </div>
+      <div class="foot-links-group">
+        <span class="foot-links-title">Proyecto</span>
+        <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener">GitHub</a>
+        <a href="index.html">Radar de Incursiones</a>
+        <a href="noticias.html">Noticias y Eventos</a>
+        <a href="semana.html">Resumen Semanal</a>
+        <a href="rocket.html">Team GO Rocket</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script defer src="assets/js/audio.js"></script>
+<script defer src="assets/js/location.js"></script>
+<script defer src="assets/js/rocket.js"></script>
+</body>
+</html>
