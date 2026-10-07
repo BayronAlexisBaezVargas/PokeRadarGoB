@@ -402,7 +402,7 @@
     if (window.crypto && window.crypto.getRandomValues) {
       randomId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
     } else {
-      randomId = Math.floor(Math.random() * 1000000000).toString(36);
+      randomId = Date.now().toString(36);
     }
     var evKey = ev.eventID || ('ev_' + randomId);
     
@@ -523,7 +523,7 @@
     }
     modalDesc.innerHTML = '';
     modalDesc.classList.add('typing-cursor');
-    var tid = Math.random();
+    var tid = (window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967295).toString();
     modalDesc.dataset.tid = tid;
     var i = 0;
     function type() {

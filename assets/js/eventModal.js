@@ -48,7 +48,7 @@
   function typeWriter(el, text) {
     el.innerHTML = '';
     el.classList.add('typing-cursor');
-    var tid = Math.random();
+    var tid = (window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967295).toString();
     el.dataset.tid = tid;
     var i = 0;
     function type() {
