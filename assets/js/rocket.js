@@ -106,32 +106,66 @@
       var card = document.createElement('div');
       card.className = 'leader-card reveal';
       
-      var lineupHTML = leader.lineup.map(function(phase) {
-        var monsHTML = phase.mons.map(function(m) {
-          var shinyClass = m.shiny ? 'shiny-possible' : '';
-          var dataStr = 'data-name="'+m.name+'" data-dex="'+m.dex+'" data-types="'+m.types.join(',')+'"';
-          return '<div class="rocket-mon '+shinyClass+'" '+dataStr+'>' +
-            '<img src="'+getMonImage(m.dex)+'" alt="'+m.name+'" loading="lazy" />' +
-            '<span>'+m.name+'</span>' +
-          '</div>';
-        }).join('');
+      var header = document.createElement('div');
+      header.className = 'leader-header';
+      
+      var avatar = document.createElement('div');
+      avatar.className = 'leader-avatar';
+      avatar.textContent = leader.name.charAt(0);
+      
+      var info = document.createElement('div');
+      info.className = 'leader-info';
+      var roleP = document.createElement('p');
+      roleP.textContent = leader.role;
+      var nameH3 = document.createElement('h3');
+      nameH3.textContent = leader.name;
+      info.appendChild(roleP);
+      info.appendChild(nameH3);
+      
+      header.appendChild(avatar);
+      header.appendChild(info);
+      card.appendChild(header);
+      
+      var lineupDiv = document.createElement('div');
+      lineupDiv.className = 'leader-lineup';
+      
+      leader.lineup.forEach(function(phase) {
+        var phaseDiv = document.createElement('div');
+        phaseDiv.className = 'lineup-phase';
         
-        return '<div class="lineup-phase">' +
-          '<div class="phase-title">'+phase.phase+'</div>' +
-          '<div class="phase-mons">'+monsHTML+'</div>' +
-        '</div>';
-      }).join('');
-
-      card.innerHTML = 
-        '<div class="leader-header">' +
-          '<div class="leader-avatar">' + leader.name.charAt(0) + '</div>' +
-          '<div class="leader-info">' +
-            '<p>'+leader.role+'</p>' +
-            '<h3>'+leader.name+'</h3>' +
-          '</div>' +
-        '</div>' +
-        '<div class="leader-lineup">' + lineupHTML + '</div>';
+        var titleDiv = document.createElement('div');
+        titleDiv.className = 'phase-title';
+        titleDiv.textContent = phase.phase;
+        phaseDiv.appendChild(titleDiv);
         
+        var monsDiv = document.createElement('div');
+        monsDiv.className = 'phase-mons';
+        
+        phase.mons.forEach(function(m) {
+          var monDiv = document.createElement('div');
+          monDiv.className = 'rocket-mon' + (m.shiny ? ' shiny-possible' : '');
+          monDiv.setAttribute('data-name', m.name);
+          monDiv.setAttribute('data-dex', m.dex);
+          monDiv.setAttribute('data-types', m.types.join(','));
+          
+          var img = document.createElement('img');
+          img.src = getMonImage(m.dex);
+          img.alt = m.name;
+          img.loading = 'lazy';
+          
+          var span = document.createElement('span');
+          span.textContent = m.name;
+          
+          monDiv.appendChild(img);
+          monDiv.appendChild(span);
+          monsDiv.appendChild(monDiv);
+        });
+        
+        phaseDiv.appendChild(monsDiv);
+        lineupDiv.appendChild(phaseDiv);
+      });
+      
+      card.appendChild(lineupDiv);
       leadersGrid.appendChild(card);
     });
   }
@@ -147,23 +181,58 @@
       
       var c = TYPE_COLORS[grunt.type] || '#B4AE96';
       
-      var monsHTML = grunt.mons.map(function(m) {
-        return '<div class="rocket-mon" data-name="'+m.name+'" data-dex="'+m.dex+'" data-types="'+grunt.type+'">' +
-            '<img src="'+getMonImage(m.dex)+'" alt="'+m.name+'" loading="lazy" />' +
-            '<span>'+m.name+'</span>' +
-          '</div>';
-      }).join('');
-
-      card.innerHTML = 
-        '<div class="grunt-header">' +
-          '<span class="grunt-type" style="color:'+c+';">'+(TYPE_LABELS[grunt.type]||'Mixto')+'</span>' +
-        '</div>' +
-        '<div class="grunt-quote">'+grunt.phrase+'</div>' +
-        '<div class="lineup-phase" style="background:transparent;border:none;padding:0;">' +
-          '<div class="phase-title">Posibles Encuentros</div>' +
-          '<div class="phase-mons" style="gap:6px;">' + monsHTML + '</div>' +
-        '</div>';
+      var header = document.createElement('div');
+      header.className = 'grunt-header';
+      var typeSpan = document.createElement('span');
+      typeSpan.className = 'grunt-type';
+      typeSpan.style.color = c;
+      typeSpan.textContent = TYPE_LABELS[grunt.type] || 'Mixto';
+      header.appendChild(typeSpan);
+      card.appendChild(header);
+      
+      var quoteDiv = document.createElement('div');
+      quoteDiv.className = 'grunt-quote';
+      quoteDiv.textContent = grunt.phrase;
+      card.appendChild(quoteDiv);
+      
+      var phaseDiv = document.createElement('div');
+      phaseDiv.className = 'lineup-phase';
+      phaseDiv.style.background = 'transparent';
+      phaseDiv.style.border = 'none';
+      phaseDiv.style.padding = '0';
+      
+      var titleDiv = document.createElement('div');
+      titleDiv.className = 'phase-title';
+      titleDiv.textContent = 'Posibles Encuentros';
+      phaseDiv.appendChild(titleDiv);
+      
+      var monsDiv = document.createElement('div');
+      monsDiv.className = 'phase-mons';
+      monsDiv.style.gap = '6px';
+      
+      grunt.mons.forEach(function(m) {
+        var monDiv = document.createElement('div');
+        monDiv.className = 'rocket-mon';
+        monDiv.setAttribute('data-name', m.name);
+        monDiv.setAttribute('data-dex', m.dex);
+        monDiv.setAttribute('data-types', grunt.type);
         
+        var img = document.createElement('img');
+        img.src = getMonImage(m.dex);
+        img.alt = m.name;
+        img.loading = 'lazy';
+        
+        var span = document.createElement('span');
+        span.textContent = m.name;
+        
+        monDiv.appendChild(img);
+        monDiv.appendChild(span);
+        monsDiv.appendChild(monDiv);
+      });
+      
+      phaseDiv.appendChild(monsDiv);
+      card.appendChild(phaseDiv);
+      
       gruntsGrid.appendChild(card);
     });
   }
@@ -180,18 +249,24 @@
     var mDex = document.getElementById('modalDex');
     var mShiny = document.getElementById('modalShiny');
     var mImg = document.getElementById('modalImg');
-    var mGlow = document.getElementById('modalGlow');
     var mTypes = document.getElementById('modalTypes');
     
     mName.textContent = name;
     mDex.textContent = 'N.° ' + dex;
-    mShiny.style.display = 'inline-flex'; // Siempre asume "sombra"
+    mShiny.style.display = 'inline-flex';
     mImg.src = getMonImage(dex);
     
-    mTypes.innerHTML = types.map(function(t){
+    mTypes.innerHTML = '';
+    types.forEach(function(t){
       var c = TYPE_COLORS[t];
-      return '<span class="badge" style="color:'+c+';background:'+rgba(c,.16)+';border-color:'+rgba(c,.5)+'">'+TYPE_LABELS[t]+'</span>';
-    }).join('');
+      var badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.style.color = c;
+      badge.style.background = rgba(c, 0.16);
+      badge.style.borderColor = rgba(c, 0.5);
+      badge.textContent = TYPE_LABELS[t];
+      mTypes.appendChild(badge);
+    });
     
     document.getElementById('modalTag').textContent = 'Pokémon Oscuro';
     document.getElementById('modalGoStats').innerHTML = ''; // Limpiar stats de GO por ahora
