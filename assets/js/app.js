@@ -64,12 +64,6 @@
       ]
     },
     {
-      id:'tx', tier:'MAX', title:'Batallas Dinamax',
-      note:'Rotación activa en Puntos Energéticos',
-      end:null,
-      mons:[]
-    },
-    {
       id:'ts', tier:'SOMBRA', title:'Incursiones Sombra',
       note:'',
       end:new Date(2026,8,8,20,0),
@@ -572,26 +566,19 @@
   var raidGroupsEl = document.getElementById('raidGroups');
   RAID_GROUPS.forEach(function(g){ raidGroupsEl.appendChild(renderRaidGroup(g)); });
 
-  Promise.all([
-    fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json').then(function(res){ return res.ok ? res.json() : []; }),
-    fetch('assets/scratch_max_battles.json').then(function(res){ return res.ok ? res.json() : []; }).catch(function(){ return []; })
-  ])
-    .then(function(results){
-      var data = results[0];
-      var maxData = results[1];
-
+  fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json')
+    .then(function(res){ return res.json(); })
+    .then(function(data){
       var t1 = RAID_GROUPS.find(function(g){ return g.id === 't1'; });
       var t3 = RAID_GROUPS.find(function(g){ return g.id === 't3'; });
       var t5 = RAID_GROUPS.find(function(g){ return g.id === 't5'; });
       var tm = RAID_GROUPS.find(function(g){ return g.id === 'tm'; });
       var ts = RAID_GROUPS.find(function(g){ return g.id === 'ts'; });
-      var tx = RAID_GROUPS.find(function(g){ return g.id === 'tx'; });
 
       if (t1) t1.mons = [];
       if (t3) t3.mons = [];
       if (t5) t5.mons = [];
       if (tm) tm.mons = [];
-      if (tx) tx.mons = [];
       if (ts) ts.subgroups = [
         { label:'1★ Sombra', mons:[] },
         { label:'3★ Sombra', mons:[] },
@@ -639,12 +626,6 @@
           else if (b.tier === 'Mega Raids' && tm) tm.mons.push(mon(m));
         }
       });
-      
-      if (tx && maxData && maxData.length > 0) {
-        maxData.forEach(function(m){
-          tx.mons.push(mon(m));
-        });
-      }
 
       if (ts) ts.subgroups = ts.subgroups.filter(function(sg){ return sg.mons.length > 0; });
       
