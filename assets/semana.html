@@ -7,13 +7,13 @@
   <meta name="description" content="Agenda semanal de eventos de Pokémon GO.">
   <meta name="view-transition" content="same-origin" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://raw.githubusercontent.com">
   <link rel="preconnect" href="https://pokeapi.co">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="css/styles.css">
   <style>
     /* Estilos específicos para la vista semanal */
     .week-container {
@@ -148,10 +148,11 @@
       </div>
     </div>
     <nav class="hud-nav" aria-label="Navegación principal">
-      <a href="index.html" class="hud-nav-link">Radar</a>
+      <a href="../index.html" class="hud-nav-link">Radar</a>
       <a href="noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
       <a href="semana.html" class="hud-nav-link active">Semana</a>
       <a href="rocket.html" class="hud-nav-link">Rocket</a>
+      <a href="atacantes.html" class="hud-nav-link">Atacantes</a>
     </nav>
   </div>
 </header>
@@ -171,7 +172,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.5.5</span>
+        <span class="foot-version">v1.6.0</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -181,24 +182,26 @@
         <span class="foot-links-title">Fuentes de datos</span>
         <a href="https://leekduck.com/raid-bosses/" target="_blank" rel="noopener">Leek Duck</a>
         <a href="https://github.com/bigfoott/ScrapedDuck" target="_blank" rel="noopener">ScrapedDuck API</a>
+        <a href="https://db.pokemongohub.net/es/best/attackers-per-type" target="_blank" rel="noopener">GO Hub (Mejores Atacantes)</a>
         <a href="https://pokemongohub.net/" target="_blank" rel="noopener">GO Hub</a>
         <a href="https://pokeapi.co/" target="_blank" rel="noopener">PokéAPI</a>
       </div>
       <div class="foot-links-group">
         <span class="foot-links-title">Proyecto</span>
         <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener">GitHub</a>
-        <a href="index.html">Radar de Incursiones</a>
+        <a href="../index.html">Radar de Incursiones</a>
         <a href="noticias.html">Noticias y Eventos</a>
         <a href="semana.html">Resumen Semanal</a>
         <a href="rocket.html">Team GO Rocket</a>
+        <a href="atacantes.html">Top Atacantes</a>
       </div>
     </div>
   </div>
 </footer>
 
-<script defer src="assets/js/audio.js"></script>
-<script defer src="assets/js/eventModal.js"></script>
-<script defer src="assets/js/semana.js"></script>
-<script defer src="assets/js/location.js"></script>
+<script defer src="js/audio.js"></script>
+<script defer src="js/eventModal.js"></script>
+<script defer src="js/semana.js"></script>
+<script defer src="js/location.js"></script>
 </body>
 </html>

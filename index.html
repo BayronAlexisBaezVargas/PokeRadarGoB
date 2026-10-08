@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://raw.githubusercontent.com">
 <link rel="preconnect" href="https://pokeapi.co">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="assets/manifest.json" />
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
 <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
@@ -44,9 +44,10 @@
     </div>
     <nav class="hud-nav" aria-label="Navegación principal">
       <a href="index.html" class="hud-nav-link active">Radar</a>
-      <a href="noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
-      <a href="semana.html" class="hud-nav-link">Semana</a>
-      <a href="rocket.html" class="hud-nav-link">Rocket</a>
+      <a href="assets/noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
+      <a href="assets/semana.html" class="hud-nav-link">Semana</a>
+      <a href="assets/rocket.html" class="hud-nav-link">Rocket</a>
+      <a href="assets/atacantes.html" class="hud-nav-link">Atacantes</a>
     </nav>
   </div>
 </header>
@@ -134,7 +135,7 @@
 </main>
 
 <!-- Modal de Información Rápida -->
-<div id="monModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+<dialog id="monModal" class="modal-backdrop" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
     <button type="button" class="modal-close" id="modalClose" aria-label="Cerrar modal">&times;</button>
     <div class="modal-header">
@@ -147,7 +148,7 @@
           <span id="modalDex"></span>
           <span id="modalShiny" class="modal-shiny-tag" style="display:none;">Variocolor disponible</span>
         </div>
-        <h3 id="modalName" class="modal-title"></h3>
+        <h3 id="modalName" class="modal-title">Pokémon</h3>
         <div id="modalTag" class="modal-tag"></div>
         <div id="modalTypes" class="modal-types"></div>
       </div>
@@ -179,14 +180,14 @@
       </div>
     </div>
   </div>
-</div>
+</dialog>
 
 <footer>
   <div class="foot-inner">
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.5.5</span>
+        <span class="foot-version">v1.6.0</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -196,6 +197,7 @@
         <span class="foot-links-title">Fuentes de datos</span>
         <a href="https://leekduck.com/raid-bosses/" target="_blank" rel="noopener">Leek Duck</a>
         <a href="https://github.com/bigfoott/ScrapedDuck" target="_blank" rel="noopener">ScrapedDuck API</a>
+        <a href="https://db.pokemongohub.net/es/best/attackers-per-type" target="_blank" rel="noopener">GO Hub (Mejores Atacantes)</a>
         <a href="https://pokemongohub.net/" target="_blank" rel="noopener">GO Hub</a>
         <a href="https://pokeapi.co/" target="_blank" rel="noopener">PokéAPI</a>
       </div>
@@ -203,9 +205,10 @@
         <span class="foot-links-title">Proyecto</span>
         <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener">GitHub</a>
         <a href="index.html">Radar de Incursiones</a>
-        <a href="noticias.html">Noticias y Eventos</a>
-        <a href="semana.html">Resumen Semanal</a>
-        <a href="rocket.html">Team GO Rocket</a>
+        <a href="assets/noticias.html">Noticias y Eventos</a>
+        <a href="assets/semana.html">Resumen Semanal</a>
+        <a href="assets/rocket.html">Team GO Rocket</a>
+        <a href="assets/atacantes.html">Top Atacantes</a>
       </div>
     </div>
   </div>

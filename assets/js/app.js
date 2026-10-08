@@ -65,11 +65,9 @@
     },
     {
       id:'tx', tier:'MAX', title:'Batallas Dinamax',
-      note:'Punto Energético semanal',
-      end:new Date(2026,7,31,18,0),
-      mons:[
-        mon({name:'Hitmontop', tag:'Dinamax', dex:'237', types:['fighting'], cp:[1114,1232], cpBoost:[1393,1540], weather:['cloudy'], weak:['fairy','flying','psychic']})
-      ]
+      note:'Rotación activa en Puntos Energéticos',
+      end:null,
+      mons:[]
     },
     {
       id:'ts', tier:'SOMBRA', title:'Incursiones Sombra',
@@ -134,7 +132,7 @@
   ];
 
   /* ============ Helpers de color ============ */
-  function hexToRgb(hex){ var h=hex.replace('#',''); var n=parseInt(h,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+  function hexToRgb(hex){ var h=hex.replace('#',''); var n=Number.parseInt(h,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
   function rgba(hex,a){ var c=hexToRgb(hex); return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
   function shade(hex,percent){
     var c=hexToRgb(hex); var t=percent<0?0:255; var p=Math.abs(percent)/100;
@@ -166,7 +164,7 @@
   /* ============ Helper de imágenes ============ */
   function getMonImage(m){
     if(m.image) return m.image;
-    var dexNum = parseInt(m.dex, 10);
+    var dexNum = Number.parseInt(m.dex, 10);
     if(m.name === 'Gyarados' && m.tag && m.tag.indexOf('Mega') !== -1){
       return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10041.png';
     }
@@ -278,7 +276,7 @@
   }
 
   function fetchPokeApiDetails(dexStr){
-    var dexNum = parseInt(dexStr, 10);
+    var dexNum = Number.parseInt(dexStr, 10);
     currentOpenDex = dexNum;
     var flavorEl = document.getElementById('modalFlavor');
     var genusEl = document.getElementById('modalGenus');
@@ -344,7 +342,7 @@
     var modalWeak = document.getElementById('modalWeak');
     var modalResist = document.getElementById('modalResist');
 
-    var dexNum = parseInt(m.dex, 10);
+    var dexNum = Number.parseInt(m.dex, 10);
     modalName.textContent = m.name;
     modalDex.textContent = 'N.° ' + m.dex;
     if(m.tag){
@@ -407,16 +405,18 @@
     // Fetch live Pokédex lore
     fetchPokeApiDetails(m.dex);
 
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
+    modal.showModal();
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
   }
 
   function closeMonModal(){
     var modal = document.getElementById('monModal');
     if(!modal) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
+    modal.close();
+    document.documentElement.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
   }
 
@@ -437,7 +437,7 @@
     ) : '';
     var searchable = norm(m.name+' '+(m.tag||''));
     var imgSrc = getMonImage(m);
-    var dexNum = parseInt(m.dex, 10);
+    var dexNum = Number.parseInt(m.dex, 10);
     var monKey = registerMon(m);
     return (
       '<article class="card" data-mon-key="'+monKey+'" data-name="'+searchable+'" data-types="'+m.types.join(' ')+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
@@ -572,19 +572,26 @@
   var raidGroupsEl = document.getElementById('raidGroups');
   RAID_GROUPS.forEach(function(g){ raidGroupsEl.appendChild(renderRaidGroup(g)); });
 
-  fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json')
-    .then(function(res){ return res.json(); })
-    .then(function(data){
+  Promise.all([
+    fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json').then(function(res){ return res.ok ? res.json() : []; }),
+    fetch('assets/scratch_max_battles.json').then(function(res){ return res.ok ? res.json() : []; }).catch(function(){ return []; })
+  ])
+    .then(function(results){
+      var data = results[0];
+      var maxData = results[1];
+
       var t1 = RAID_GROUPS.find(function(g){ return g.id === 't1'; });
       var t3 = RAID_GROUPS.find(function(g){ return g.id === 't3'; });
       var t5 = RAID_GROUPS.find(function(g){ return g.id === 't5'; });
       var tm = RAID_GROUPS.find(function(g){ return g.id === 'tm'; });
       var ts = RAID_GROUPS.find(function(g){ return g.id === 'ts'; });
+      var tx = RAID_GROUPS.find(function(g){ return g.id === 'tx'; });
 
       if (t1) t1.mons = [];
       if (t3) t3.mons = [];
       if (t5) t5.mons = [];
       if (tm) tm.mons = [];
+      if (tx) tx.mons = [];
       if (ts) ts.subgroups = [
         { label:'1★ Sombra', mons:[] },
         { label:'3★ Sombra', mons:[] },
@@ -633,6 +640,12 @@
         }
       });
       
+      if (tx && maxData && maxData.length > 0) {
+        maxData.forEach(function(m){
+          tx.mons.push(mon(m));
+        });
+      }
+
       if (ts) ts.subgroups = ts.subgroups.filter(function(sg){ return sg.mons.length > 0; });
       
       raidGroupsEl.innerHTML = '';
@@ -718,7 +731,7 @@
               note: 'Inicia: ' + start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
             };
             
-            var p = fetch('https://pokeapi.co/api/v2/pokemon/' + parseInt(dex, 10))
+            var p = fetch('https://pokeapi.co/api/v2/pokemon/' + Number.parseInt(dex, 10))
               .then(function(r){ return r.ok ? r.json() : null; })
               .then(function(pd){
                 if(pd && pd.types) {
@@ -767,7 +780,7 @@
   WILD_GROUPS.forEach(function(g){ wildGroupsEl.appendChild(renderWildGroup(g)); });
 
   document.getElementById('upcomingWild').innerHTML = UPCOMING_WILD.map(function(m){
-    var dexNum = parseInt(m.dex, 10);
+    var dexNum = Number.parseInt(m.dex, 10);
     var imgUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png';
     var monKey = registerMon(m);
     return '<div class="mini-chip" data-mon-key="'+monKey+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">' +
@@ -899,10 +912,26 @@
     }
   });
 
-  document.getElementById('modalClose').addEventListener('click', closeMonModal);
-  document.getElementById('monModal').addEventListener('click', function(e){
-    if(e.target === this) closeMonModal();
-  });
+  var monModalEl = document.getElementById('monModal');
+  if(monModalEl){
+    var mcEl = document.getElementById('modalClose');
+    if(mcEl){
+      mcEl.addEventListener('click', closeMonModal);
+      mcEl.addEventListener('pointerup', closeMonModal);
+    }
+    monModalEl.addEventListener('click', function(e){
+      if(e.target === this) closeMonModal();
+    });
+    monModalEl.addEventListener('cancel', function(e){
+      e.preventDefault();
+      closeMonModal();
+    });
+    monModalEl.addEventListener('close', function(){
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    });
+  }
 
   /* Scroll reveal */
   if(motionOK && 'IntersectionObserver' in window){

@@ -1,20 +1,22 @@
-const CACHE_NAME = 'pokego-radar-v1';
+const CACHE_NAME = 'pokego-radar-v1.6.2';
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './noticias.html',
-  './semana.html',
-  './rocket.html',
-  './assets/css/styles.css',
-  './assets/js/audio.js',
-  './assets/js/season.js',
-  './assets/js/location.js',
-  './assets/js/app.js',
-  './assets/js/eventModal.js',
-  './assets/js/noticias.js',
-  './assets/js/semana.js',
-  './assets/js/rocket.js',
-  './assets/img/favicon.svg'
+  '../../',
+  '../../index.html',
+  '../noticias.html',
+  '../semana.html',
+  '../rocket.html',
+  '../atacantes.html',
+  '../css/styles.css',
+  './audio.js',
+  './season.js',
+  './location.js',
+  './app.js',
+  './eventModal.js',
+  './noticias.js',
+  './semana.js',
+  './rocket.js',
+  './atacantes.js',
+  '../img/favicon.svg'
 ];
 
 self.addEventListener('install', (event) => {

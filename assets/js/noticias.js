@@ -551,16 +551,18 @@
       modalGuideLink.removeAttribute('href');
     }
 
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
+    modal.showModal();
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
   }
 
   function closeEventModal(){
     var modal = document.getElementById('eventDetailModal');
     if(!modal) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
+    modal.close();
+    document.documentElement.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
   }
 
@@ -804,6 +806,20 @@
       });
     }
 
+    
+    var eventModal = document.getElementById('eventDetailModal');
+    if (eventModal) {
+      eventModal.addEventListener('click', function(e) {
+        if (e.target === eventModal) {
+          closeEventModal();
+        }
+      });
+      eventModal.addEventListener('cancel', function(e) {
+        e.preventDefault();
+        closeEventModal();
+      });
+    }
+
     // Delegación de clic en tarjetas para abrir modal
     document.addEventListener('click', function(e){
       var card = e.target.closest('[data-ev-key]');
@@ -834,13 +850,28 @@
 
     var modalCloseBtn = document.getElementById('eventModalClose');
     if(modalCloseBtn){
-      modalCloseBtn.addEventListener('click', closeEventModal);
+      modalCloseBtn.addEventListener('click', function(e) { e.preventDefault(); closeEventModal(); });
+    }
+
+    var modalBottomCloseBtn = document.getElementById('eventModalBottomClose');
+    if(modalBottomCloseBtn){
+      modalBottomCloseBtn.addEventListener('click', closeEventModal);
+      modalBottomCloseBtn.addEventListener('pointerup', closeEventModal);
     }
 
     var modalBackdrop = document.getElementById('eventDetailModal');
     if(modalBackdrop){
       modalBackdrop.addEventListener('click', function(e){
         if(e.target === this) closeEventModal();
+      });
+      modalBackdrop.addEventListener('cancel', function(e){
+        e.preventDefault();
+        closeEventModal();
+      });
+      modalBackdrop.addEventListener('close', function(){
+        document.documentElement.classList.remove('modal-open');
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
       });
     }
   }

@@ -2,7 +2,7 @@
 
 Panel técnico de telemetría y consulta en tiempo real para Pokémon GO. Proporciona información sobre rotaciones de incursiones, apariciones silvestres activas, calendario de eventos y cálculo dinámico de multiplicadores de daño.
 
-**Versión:** 1.5.5  
+**Versión:** 1.6.0  
 **Autor:** [BayronAlexisBaezVargas](https://github.com/BayronAlexisBaezVargas)
 
 ---
@@ -47,18 +47,20 @@ pokegoapi/
 │   │   └── styles.css          # Estilos globales, variables y componentes
 │   ├── img/
 │   │   └── favicon.svg         # Favicon vectorial táctico
-│   └── js/
-│       ├── app.js              # Lógica del radar, cálculo de efectividades y PokéAPI
-│       ├── noticias.js         # Sincronización de eventos, filtros y cuentas regresivas
-│       ├── semana.js           # Agrupamiento de eventos por día de la semana
-│       ├── rocket.js           # Base de datos de líderes y reclutas Rocket
-│       └── location.js         # Transiciones de página y navegación
+│   ├── js/
+│   │   ├── app.js              # Lógica del radar, cálculo de efectividades y PokéAPI
+│   │   ├── noticias.js         # Sincronización de eventos, filtros y cuentas regresivas
+│   │   ├── semana.js           # Agrupamiento de eventos por día de la semana
+│   │   ├── rocket.js           # Base de datos de líderes y reclutas Rocket
+│   │   ├── atacantes.js        # Lógica y renderizado del Top Meta PvE
+│   │   ├── location.js         # Transiciones de página y navegación
+│   │   └── sw.js               # Service Worker para PWA y caché
+│   ├── noticias.html           # Panel de eventos y calendario
+│   ├── semana.html             # Vista agenda de eventos de los próximos 7 días
+│   ├── rocket.html             # Alineaciones del Team GO Rocket
+│   ├── atacantes.html          # Ranking de Mejores Atacantes PvE
+│   └── manifest.json           # Manifiesto de la aplicación web (PWA)
 ├── index.html                  # Panel principal del radar de incursiones
-├── noticias.html               # Panel de eventos y calendario
-├── semana.html                 # Vista agenda de eventos de los próximos 7 días
-├── rocket.html                 # Alineaciones del Team GO Rocket
-├── sw.js                       # Service Worker para PWA y caché
-├── manifest.json               # Manifiesto de la aplicación web (PWA)
 ├── .gitignore                  # Exclusiones de control de versiones
 └── README.md                   # Documentación del proyecto
 ```

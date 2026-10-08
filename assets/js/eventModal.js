@@ -3,8 +3,8 @@
 
   // Create the modal HTML dynamically
   var modalHTML = `
-    <div class="modal-backdrop" id="evtModal">
-      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="evtTitle">
+    <dialog class="modal-backdrop" id="evtModal">
+      <div class="modal-box" aria-modal="true" aria-labelledby="evtTitle">
         <button class="modal-close" id="evtClose" aria-label="Cerrar modal">×</button>
         <div class="modal-header">
           <div class="modal-art-wrap">
@@ -109,19 +109,32 @@
 
     typeWriter(evtDesc, descStr);
 
-    evtModal.classList.add('open');
+    evtModal.showModal();
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+    document.body.style.overflow = 'hidden';
   };
 
   function closeEventModal() {
-    evtModal.classList.remove('open');
+    evtModal.close();
+    document.documentElement.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
   }
 
   evtClose.addEventListener('click', closeEventModal);
+  evtClose.addEventListener('pointerup', closeEventModal);
   evtModal.addEventListener('click', function(e){
     if(e.target === evtModal) closeEventModal();
   });
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && evtModal.classList.contains('open')) closeEventModal();
+  evtModal.addEventListener('cancel', function(e){
+    e.preventDefault();
+    closeEventModal();
+  });
+  evtModal.addEventListener('close', function(){
+    document.documentElement.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
   });
 
 })();

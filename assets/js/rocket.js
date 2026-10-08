@@ -15,6 +15,62 @@
     dark:'Siniestro', steel:'Acero', fairy:'Hada'
   };
 
+
+  var TYPE_CHART = {
+    normal:   { rock:0.5, ghost:0, steel:0.5 },
+    fire:     { fire:0.5, water:0.5, grass:2, ice:2, bug:2, rock:0.5, dragon:0.5, steel:2 },
+    water:    { fire:2, water:0.5, grass:0.5, ground:2, rock:2, dragon:0.5 },
+    electric: { water:2, electric:0.5, grass:0.5, ground:0, flying:2, dragon:0.5 },
+    grass:    { fire:0.5, water:2, grass:0.5, poison:0.5, ground:2, flying:0.5, bug:0.5, rock:2, dragon:0.5, steel:0.5 },
+    ice:      { fire:0.5, water:0.5, grass:2, ice:0.5, ground:2, flying:2, dragon:2, steel:0.5 },
+    fighting: { normal:2, ice:2, poison:0.5, flying:0.5, psychic:0.5, bug:0.5, rock:2, ghost:0, dark:2, steel:2, fairy:0.5 },
+    poison:   { grass:2, poison:0.5, ground:0.5, rock:0.5, ghost:0.5, steel:0, fairy:2 },
+    ground:   { fire:2, electric:2, grass:0.5, poison:2, flying:0, bug:0.5, rock:2, steel:2 },
+    flying:   { electric:0.5, grass:2, fighting:2, bug:2, rock:0.5, steel:0.5 },
+    psychic:  { fighting:2, poison:2, psychic:0.5, dark:0, steel:0.5 },
+    bug:      { fire:0.5, grass:2, fighting:0.5, poison:0.5, flying:0.5, psychic:2, ghost:0.5, dark:2, steel:0.5, fairy:0.5 },
+    rock:     { fire:2, ice:2, fighting:0.5, ground:0.5, flying:2, bug:2, steel:0.5 },
+    ghost:    { normal:0, psychic:2, ghost:2, dark:0.5 },
+    dragon:   { dragon:2, steel:0.5, fairy:0 },
+    dark:     { fighting:0.5, psychic:2, ghost:2, dark:0.5, fairy:0.5 },
+    steel:    { fire:0.5, water:0.5, electric:0.5, ice:2, rock:2, steel:0.5, fairy:2 },
+    fairy:    { fire:0.5, fighting:2, poison:0.5, dragon:2, dark:2, steel:0.5 }
+  };
+
+  function calculateEffectiveness(defenderTypes){
+    var allTypes = Object.keys(TYPE_LABELS);
+    var weak = [];
+    var resist = [];
+    allTypes.forEach(function(atk){
+      var mult = 1.0;
+      defenderTypes.forEach(function(def){
+        if(TYPE_CHART[atk] && TYPE_CHART[atk][def] !== undefined){
+          mult *= TYPE_CHART[atk][def];
+        }
+      });
+      if(mult > 1.0) weak.push({ type: atk, mult: mult });
+      else if(mult < 1.0) resist.push({ type: atk, mult: mult });
+    });
+    weak.sort(function(a,b){ return b.mult - a.mult; });
+    resist.sort(function(a,b){ return a.mult - b.mult; });
+    return { weak: weak, resist: resist };
+  }
+
+  function formatMultiplierBadges(items){
+    if(!items || !items.length) return '<span style="font-size:.74rem;color:var(--ink-dim);font-family:var(--font-mono)">Ninguno (Daño neutro)</span>';
+    return items.map(function(item){
+      var c = TYPE_COLORS[item.type];
+      var multLabel = '';
+      if(item.mult === 0) multLabel = ' ×0 (Inmune)';
+      else if(item.mult >= 2.56) multLabel = ' ×2.56';
+      else if(item.mult >= 1.6 || item.mult === 2) multLabel = ' ×1.6';
+      else if(item.mult <= 0.39) multLabel = ' ×0.39';
+      else if(item.mult < 1) multLabel = ' ×0.62';
+      return '<span class="badge" style="color:'+c+';background:'+rgba(c,.16)+';border-color:'+rgba(c,.5)+'">'+
+        TYPE_LABELS[item.type] + multLabel + '</span>';
+    }).join('');
+  }
+
   /* ============ Datos del Team GO Rocket ============ */
   var ROCKET_DATA = {
     leaders: [
@@ -238,6 +294,7 @@
   }
 
   /* ============ Sistema de Modales Interactivo ============ */
+  
   function openRocketModal(el) {
     var name = el.dataset.name;
     var dex = el.dataset.dex;
@@ -250,6 +307,12 @@
     var mShiny = document.getElementById('modalShiny');
     var mImg = document.getElementById('modalImg');
     var mTypes = document.getElementById('modalTypes');
+    
+    var mWeak = document.getElementById('modalWeak');
+    var mResist = document.getElementById('modalResist');
+    var mStats = document.getElementById('modalGoStats');
+
+    if(!modal) return;
     
     mName.textContent = name;
     mDex.textContent = 'N.° ' + dex;
@@ -268,13 +331,50 @@
       mTypes.appendChild(badge);
     });
     
+    // Set header glow based on primary type
+    var primaryTypeColor = TYPE_COLORS[types[0]] || '#3df2c4';
+    var mHeader = document.querySelector('.modal-header');
+    if (mHeader) {
+        mHeader.style.background = 'linear-gradient(180deg, ' + rgba(primaryTypeColor, 0.08) + ' 0%, transparent 100%)';
+        mHeader.style.borderBottom = '1px solid ' + rgba(primaryTypeColor, 0.3);
+    }
+    var mGlow = document.getElementById('modalGlow');
+    if (mGlow) {
+        mGlow.style.background = 'radial-gradient(circle at center, ' + rgba(primaryTypeColor, 0.4) + ' 0%, transparent 70%)';
+    }
+
     document.getElementById('modalTag').textContent = 'Pokémon Oscuro';
-    document.getElementById('modalGoStats').innerHTML = ''; // Limpiar stats de GO por ahora
     
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
+    // Calculate Weaknesses and Resistances
+    var eff = calculateEffectiveness(types);
+    mWeak.innerHTML = formatMultiplierBadges(eff.weak);
+    mResist.innerHTML = formatMultiplierBadges(eff.resist);
+
+    mStats.innerHTML = '<span style="font-size:.74rem;color:var(--ink-dim);font-family:var(--font-mono)">Cargando estadísticas base...</span>';
+
+    // Fetch Base Stats from PokeAPI
+    fetch('https://pokeapi.co/api/v2/pokemon/' + dex)
+      .then(r => r.json())
+      .then(data => {
+        if(mDex.textContent !== 'N.° ' + dex) return; // Prevent race conditions
+        var stats = {};
+        data.stats.forEach(s => { stats[s.stat.name] = s.base_stat; });
+        mStats.innerHTML = `
+          <div class="modal-stat-card"><span class="modal-stat-label">Ataque</span><span class="modal-stat-val" style="color:var(--alert)">${stats['attack'] || '--'}</span></div>
+          <div class="modal-stat-card"><span class="modal-stat-label">Defensa</span><span class="modal-stat-val" style="color:#4C9FE8">${stats['defense'] || '--'}</span></div>
+          <div class="modal-stat-card"><span class="modal-stat-label">Salud (HP)</span><span class="modal-stat-val" style="color:#6FBE5A">${stats['hp'] || '--'}</span></div>
+        `;
+      })
+      .catch(e => {
+        if(mDex.textContent === 'N.° ' + dex) mStats.innerHTML = '<span style="font-size:.74rem;color:var(--alert);font-family:var(--font-mono)">No se pudieron cargar las stats.</span>';
+      });
+
+    modal.showModal();
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
   }
+
 
   // Bind clicks
   document.body.addEventListener('click', function(e){
@@ -285,8 +385,28 @@
   var mc = document.getElementById('modalClose');
   if(mc) {
     mc.addEventListener('click', function(){
-      document.getElementById('monModal').classList.remove('open');
+      var mod = document.getElementById('monModal');
+      if(mod) mod.close();
+    });
+    mc.addEventListener('pointerup', function(){
+      var mod = document.getElementById('monModal');
+      if(mod) mod.close();
+    });
+  }
+
+  var monModal = document.getElementById('monModal');
+  if(monModal) {
+    monModal.addEventListener('close', function(){
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
       document.body.style.overflow = '';
+    });
+    monModal.addEventListener('cancel', function(e){
+      e.preventDefault();
+      monModal.close();
+    });
+    monModal.addEventListener('click', function(e){
+      if(e.target === monModal) monModal.close();
     });
   }
 

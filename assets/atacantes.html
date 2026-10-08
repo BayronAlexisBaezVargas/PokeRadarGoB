@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Top Atacantes PvE - Radar GO</title>
+  <meta name="description" content="Los mejores atacantes de Pokémon GO por cada tipo para incursiones y gimnasios, incluyendo Megas, Primigenios y Oscuros." />
+  <meta name="theme-color" content="#0a0f0d" />
+  
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Estilos específicos para la vista de atacantes */
+    .atacantes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--sp-4);
+      margin-top: var(--sp-5);
+    }
+    .type-card {
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--panel-2);
+      display: flex;
+      flex-direction: column;
+    }
+    .type-header {
+      padding: 12px 16px;
+      text-transform: uppercase;
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(0,0,0,0.2);
+    }
+    .type-header h3 { margin: 0; font-size: 1.1rem; }
+    
+    .type-mons {
+      padding: var(--sp-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+    .mon-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .mon-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .mon-rank {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink-dim);
+      opacity: 0.5;
+      width: 24px;
+    }
+    .mon-avatar-sm {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+    .mon-img-sm {
+      max-width: 140%;
+      max-height: 140%;
+      object-fit: contain;
+    }
+    .mon-info-sm {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mon-name-sm {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+    .mon-tag-sm {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      align-self: flex-start;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+
+<div id="loader" class="loader-overlay">
+  <div class="spinner"></div>
+  <p>Cargando datos del Meta...</p>
+</div>
+
+<header class="hud">
+  <div class="hud-inner">
+    <div class="hud-bar">
+      <div class="hud-brand">
+        <svg class="hud-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" stroke-width="1.4"/><circle class="core" cx="16" cy="16" r="3"/><line x1="16" y1="1" x2="16" y2="6" stroke="currentColor" stroke-width="1.4"/><line x1="16" y1="26" x2="16" y2="31" stroke="currentColor" stroke-width="1.4"/></svg>
+        <span class="hud-word">Pokémon GO<small>Mejores Atacantes PvE</small></span>
+      </div>
+      <div class="hud-status">
+        <span class="live"><span class="live-dot"></span>EN VIVO</span>
+        <span class="hud-date" id="userLocation">· Sincronizando red...</span>
+      </div>
+    </div>
+    <nav class="hud-nav" aria-label="Navegación principal">
+      <a href="../index.html" class="hud-nav-link">Radar</a>
+      <a href="noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
+      <a href="semana.html" class="hud-nav-link">Semana</a>
+      <a href="rocket.html" class="hud-nav-link">Rocket</a>
+      <a href="atacantes.html" class="hud-nav-link active">Atacantes</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="kicker"><span class="kicker-line"></span> META PVE</div>
+      <h1 class="title">Mejores Atacantes <span class="hl">por Tipo</span>.</h1>
+      <p class="lede">Ranking del meta actual para incursiones y gimnasios. Incluye las evoluciones Mega, regresiones Primigenias, Pokémon Oscuros y Fusiones más dominantes en daño por segundo (DPS).</p>
+    </div>
+  </section>
+
+  <section>
+    <div id="atacantesGrid" class="atacantes-grid">
+      <!-- Se inyectan las tarjetas por JS -->
+    </div>
+  </section>
+</main>
+
+<dialog id="monModal" class="modal-backdrop" aria-modal="true" aria-hidden="true">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="modalClose" aria-label="Cerrar modal">&times;</button>
+    <div class="modal-header">
+      <div class="modal-art-wrap">
+        <div class="modal-art-glow" id="modalGlow"></div>
+        <img id="modalImg" class="modal-art" src="" alt="" />
+      </div>
+      <div class="modal-header-info">
+        <div class="modal-dex-row">
+          <span id="modalDex"></span>
+          <span id="modalShiny" class="modal-shiny-tag" style="display:none;"></span>
+        </div>
+        <h3 id="modalName" class="modal-title">Pokémon</h3>
+        <div id="modalTag" class="modal-tag"></div>
+        <div id="modalTypes" class="modal-types"></div>
+      </div>
+    </div>
+    
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">Estadísticas Base</div>
+        <div class="modal-grid" id="modalStatsGrid">
+           <div class="modal-stat-card"><span class="modal-stat-val" id="statAtk">--</span><span class="modal-stat-lbl">ATQ</span></div>
+           <div class="modal-stat-card"><span class="modal-stat-val" id="statDef">--</span><span class="modal-stat-lbl">DEF</span></div>
+           <div class="modal-stat-card"><span class="modal-stat-val" id="statHp">--</span><span class="modal-stat-lbl">PS</span></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Rendimiento PvE</div>
+        <div class="modal-pokedex-box">
+          <p>Este Pokémon destaca en el Top 3 de su categoría gracias a su alto multiplicador de daño (DPS).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-col">
+      <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
+      <div class="foot-meta">
+        <span class="foot-version">v1.6.0</span>
+        <span class="foot-sep">·</span>
+        <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
+      </div>
+    </div>
+    <div class="foot-links">
+      <div class="foot-links-group">
+        <span class="foot-links-title">Fuentes de datos</span>
+        <a href="https://leekduck.com/raid-bosses/" target="_blank" rel="noopener">Leek Duck</a>
+        <a href="https://github.com/bigfoott/ScrapedDuck" target="_blank" rel="noopener">ScrapedDuck API</a>
+        <a href="https://db.pokemongohub.net/es/best/attackers-per-type" target="_blank" rel="noopener">GO Hub (Mejores Atacantes)</a>
+        <a href="https://pokemongohub.net/" target="_blank" rel="noopener">GO Hub</a>
+        <a href="https://pokeapi.co/" target="_blank" rel="noopener">PokéAPI</a>
+      </div>
+      <div class="foot-links-group">
+        <span class="foot-links-title">Proyecto</span>
+        <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener">GitHub</a>
+        <a href="../index.html">Radar de Incursiones</a>
+        <a href="noticias.html">Noticias y Eventos</a>
+        <a href="semana.html">Resumen Semanal</a>
+        <a href="rocket.html">Team GO Rocket</a>
+        <a href="atacantes.html">Top Atacantes</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script defer src="js/location.js"></script>
+<script defer src="js/atacantes.js"></script>
+
+</body>
+</html>
