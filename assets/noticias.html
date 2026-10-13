@@ -25,7 +25,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
-<link rel="stylesheet" href="css/styles.css?v=1.8.0" />
+<link rel="stylesheet" href="css/base.css?v=1.8.1" />
+<link rel="stylesheet" href="css/noticias.css?v=1.8.1" />
 </head>
 <body>
 
@@ -235,7 +236,7 @@
 
 <!-- Modal de Detalle de Evento -->
 <dialog id="eventDetailModal" class="modal-backdrop"  aria-modal="true" aria-hidden="true">
-  <div class="modal-box" style="max-width:620px;">
+  <div class="modal-box" style="width: calc(100% - 24px); max-width: min(620px, calc(100% - 24px)); max-height: 88vh; margin: auto; overflow-y: auto;">
     <button type="button" class="modal-close" id="eventModalClose" aria-label="Cerrar modal">&times;</button>
     
     <div class="event-modal-media" id="eventModalMedia">
@@ -288,7 +289,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.8.0</span>
+        <span class="foot-version">v1.8.1</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -319,6 +320,6 @@
 <script defer src="js/season.js"></script>
 <script defer src="js/noticias.js"></script>
 <script defer src="js/location.js"></script>
-<script defer src="js/nav.js?v=1.8.0"></script>
+<script defer src="js/nav.js?v=1.8.1"></script>
 </body>
 </html>

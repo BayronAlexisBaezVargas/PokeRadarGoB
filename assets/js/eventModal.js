@@ -4,7 +4,7 @@
   // Create the modal HTML dynamically
   var modalHTML = `
     <dialog class="modal-backdrop" id="evtModal">
-      <div class="modal-box" aria-modal="true" aria-labelledby="evtTitle">
+      <div class="modal-box" aria-modal="true" aria-labelledby="evtTitle" style="width: calc(100% - 24px); max-height: 88vh; overflow-y: auto; margin: auto;">
         <button class="modal-close" id="evtClose" aria-label="Cerrar modal">×</button>
         <div class="modal-header">
           <div class="modal-art-wrap">
@@ -24,8 +24,8 @@
               Generando descripción...
             </div>
           </div>
-          <div style="display:flex; justify-content:flex-start; margin-top:16px;">
-            <a id="evtLink" href="#" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none; background:var(--signal); color:var(--void); font-family:var(--font-mono); font-weight:bold; padding:10px 20px; border-radius:var(--radius-sm); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em; transition:transform 0.2s;">Ver Noticia Completa ↗</a>
+          <div style="display:flex; justify-content:flex-start; margin-top:16px; width:100%; box-sizing:border-box;">
+            <a id="evtLink" href="#" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; justify-content:center; text-align:center; max-width:100%; box-sizing:border-box; word-break:break-word; text-decoration:none; background:var(--signal); color:var(--void); font-family:var(--font-mono); font-weight:bold; padding:10px 16px; border-radius:var(--radius-sm); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; transition:transform 0.2s;">Ver Noticia Completa ↗</a>
           </div>
         </div>
       </div>

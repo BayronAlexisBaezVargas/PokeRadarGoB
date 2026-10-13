@@ -13,171 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=1.8.0" />
-  <style>
-    /* Estilos específicos para la vista de atacantes */
-    .atacantes-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: var(--sp-4);
-      margin-top: var(--sp-5);
-    }
-    @media (max-width: 600px) {
-      .atacantes-grid {
-        grid-template-columns: 1fr;
-        gap: var(--sp-3);
-      }
-      .type-card {
-        width: 100%;
-        min-width: 0;
-      }
-      .mon-row {
-        gap: 8px;
-        padding: 6px 8px;
-      }
-      .mon-avatar-sm {
-        width: 40px;
-        height: 40px;
-      }
-      .mon-img-sm {
-        width: 36px;
-        height: 36px;
-      }
-      .mon-name-sm {
-        font-size: 0.88rem;
-      }
-      .mon-dps-badge {
-        font-size: 0.74rem;
-        padding: 2px 6px;
-      }
-    }
-    .type-card {
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: linear-gradient(180deg, rgba(21,32,27,.82) 0%, rgba(14,21,18,.92) 100%);
-      box-shadow: var(--shadow-card);
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .type-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.45);
-      border-color: rgba(255,255,255,0.15);
-    }
-    .type-header {
-      padding: 12px 16px;
-      text-transform: uppercase;
-      font-family: var(--font-display);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .type-header h3 { margin: 0; font-size: 1.05rem; }
-    
-    .type-mons {
-      padding: var(--sp-3);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .mon-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 10px;
-      border-radius: var(--radius-sm);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      transition: background 0.15s ease, transform 0.15s ease;
-      cursor: pointer;
-    }
-    .mon-row:last-child {
-      border-bottom: none;
-    }
-    .mon-row:hover, .mon-row:focus-visible {
-      background: rgba(45,212,191,0.06);
-      transform: translateX(2px);
-      outline: none;
-    }
-    .mon-rank {
-      font-family: var(--font-mono);
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--ink-dim);
-      opacity: 0.7;
-      width: 22px;
-      flex: none;
-    }
-    .mon-avatar-sm {
-      width: 46px;
-      height: 46px;
-      border-radius: var(--radius-sm);
-      background: rgba(10,15,13,0.7);
-      border: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: none;
-    }
-    .mon-img-sm {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-    }
-    .mon-info-sm {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .mon-name-sm {
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: var(--ink);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: -0.01em;
-    }
-    .mon-tag-sm {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      font-weight: 600;
-      padding: 1px 6px;
-      border-radius: 4px;
-      display: inline-block;
-      align-self: flex-start;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .mon-dps-badge {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--signal);
-      text-align: right;
-      flex: none;
-      font-variant-numeric: tabular-nums;
-      padding: 3px 8px;
-      background: rgba(45,212,191,0.08);
-      border: 1px solid rgba(45,212,191,0.22);
-      border-radius: 4px;
-      display: flex;
-      align-items: baseline;
-      gap: 3px;
-    }
-    .mon-dps-badge small {
-      font-size: 0.62rem;
-      font-weight: 500;
-      color: var(--ink-dim);
-    }
-  </style>
+  <link rel="stylesheet" href="css/base.css?v=1.8.1" />
+  <link rel="stylesheet" href="css/atacantes.css?v=1.8.1" />
 </head>
 <body>
 
@@ -377,7 +214,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.8.0</span>
+        <span class="foot-version">v1.8.1</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -407,6 +244,6 @@
 <script defer src="js/audio.js"></script>
 <script defer src="js/location.js"></script>
 <script defer src="js/atacantes.js"></script>
-<script defer src="js/nav.js?v=1.8.0"></script>
+<script defer src="js/nav.js?v=1.8.1"></script>
 </body>
 </html>

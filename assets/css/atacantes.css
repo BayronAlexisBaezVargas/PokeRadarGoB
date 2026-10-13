@@ -1,0 +1,258 @@
+/* ---------- Atacantes Component Styles ---------- */
+.atacantes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+}
+
+.type-card {
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(21,32,27,.82) 0%, rgba(14,21,18,.92) 100%);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.type-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+  border-color: rgba(255,255,255,0.15);
+}
+.type-header {
+  padding: 12px 16px;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.type-header h3 { margin: 0; font-size: 1.05rem; }
+
+.type-mons {
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+.mon-row:last-child {
+  border-bottom: none;
+}
+.mon-row:hover, .mon-row:focus-visible {
+  background: rgba(45,212,191,0.06);
+  transform: translateX(2px);
+  outline: none;
+}
+.mon-rank {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink-dim);
+  opacity: 0.7;
+  width: 22px;
+  flex: none;
+}
+.mon-avatar-sm {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-sm);
+  background: rgba(10,15,13,0.7);
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.mon-img-sm {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+.mon-info-sm {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.mon-name-sm {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+.mon-tag-sm {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: flex-start;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.mon-dps-badge {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--signal);
+  text-align: right;
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  padding: 3px 8px;
+  background: rgba(45,212,191,0.08);
+  border: 1px solid rgba(45,212,191,0.22);
+  border-radius: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.mon-dps-badge small {
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--ink-dim);
+}
+
+@media (max-width: 600px) {
+  .atacantes-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  .type-card {
+    width: 100%;
+    min-width: 0;
+  }
+  .mon-row {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+  .mon-avatar-sm {
+    width: 40px;
+    height: 40px;
+  }
+  .mon-img-sm {
+    width: 36px;
+    height: 36px;
+  }
+  .mon-name-sm {
+    font-size: 0.88rem;
+  }
+  .mon-dps-badge {
+    font-size: 0.74rem;
+    padding: 2px 6px;
+  }
+}
+/* ==========================================================================
+   Responsive Mobile Overrides (Samsung S23 360px & iPhone SE 320px-375px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .atacantes-grid {
+    grid-template-columns: minmax(min(100%, 260px), 1fr) !important;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .type-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .type-header {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .type-header h3 {
+    font-size: 0.98rem;
+  }
+  .type-mons {
+    padding: 8px;
+    gap: 6px;
+  }
+  .mon-row {
+    gap: 8px;
+    padding: 6px 8px;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+  .mon-info-sm {
+    min-width: 0;
+  }
+  .mon-name-sm {
+    font-size: 0.88rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .mon-tag-sm {
+    font-size: 0.62rem;
+    padding: 1px 5px;
+  }
+  .mon-dps-badge {
+    font-size: 0.74rem;
+    padding: 2px 6px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .atacantes-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .type-header {
+    padding: 8px 10px;
+  }
+  .type-header h3 {
+    font-size: 0.92rem;
+  }
+  .type-mons {
+    padding: 6px;
+    gap: 4px;
+  }
+  .mon-row {
+    gap: 6px;
+    padding: 5px 6px;
+  }
+  .mon-avatar-sm {
+    width: 36px;
+    height: 36px;
+  }
+  .mon-img-sm {
+    width: 32px;
+    height: 32px;
+  }
+  .mon-rank {
+    font-size: 0.76rem;
+    width: 16px;
+  }
+  .mon-name-sm {
+    font-size: 0.82rem;
+  }
+  .mon-dps-badge {
+    font-size: 0.68rem;
+    padding: 2px 4px;
+    letter-spacing: -0.02em;
+  }
+}
