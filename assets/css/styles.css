@@ -144,6 +144,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, .card:focus-visible{
     flex-direction:column;
     gap:8px;
   }
+}
+@media (max-width:480px){
+  .hud-inner{
+    padding:var(--sp-2) 10px;
+  }
   .hud-bar{
     display:flex;
     align-items:center;
@@ -198,6 +203,11 @@ main{
     padding:0 var(--sp-3) var(--sp-6);
   }
 }
+@media (max-width:480px){
+  main{
+    padding:0 10px var(--sp-6);
+  }
+}
 
 /* ---------- Hero ---------- */
 .hero{
@@ -247,6 +257,17 @@ h1.title .hl{color:var(--signal);}
 .readout dt{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:4px;font-weight:500;}
 .readout dd{margin:0;font-family:var(--font-display);font-weight:700;font-size:1.35rem;line-height:1.2;overflow-wrap:break-word;}
 .readout dd span{color:var(--signal);}
+
+@media (max-width:480px){
+  .hero{padding-top:var(--sp-3);gap:var(--sp-4);}
+  h1.title{font-size:clamp(1.5rem, 6vw, 2.1rem); margin: var(--sp-2) 0 var(--sp-3);}
+  .lede{font-size:0.9rem;}
+  .hud-readouts{grid-template-columns: 1fr 1fr; gap: 8px; margin-top: var(--sp-4); padding-top: var(--sp-3);}
+  .readout{padding: 8px 10px;}
+  .readout dd{font-size: 1.18rem;}
+  #seasonReadout{grid-column: 1 / -1;}
+  .spotlight-card{padding: var(--sp-3);}
+}
 
 /* ---------- Hero Spotlight (Incursiones Destacadas) ---------- */
 .hero-spotlight{
@@ -431,13 +452,20 @@ h1.title .hl{color:var(--signal);}
   width:100%;box-sizing:border-box;
 }
 @media (max-width:480px){
-  .grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;}
-  .card{padding:12px;min-height:190px;}
-  .mon-avatar{width:46px;height:46px;}
-  .mon-img{width:42px;height:42px;}
-  .card-name{font-size:.92rem;}
-  .stats{gap:4px;}
-  .stat-row{font-size:.70rem;padding-top:4px;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
+  .card{padding:10px;min-height:auto;}
+  .mon-avatar{width:44px;height:44px;}
+  .mon-img{width:40px;height:40px;}
+  .card-name{font-size:.9rem;}
+  .stats{gap:3px;padding-top:4px;}
+  .stat-row{font-size:.68rem;padding-top:3px;}
+  .hundo-row{flex-wrap:wrap;gap:2px;padding:4px 6px;}
+  .hundo-tag{font-size:.62rem;}
+  .hundo-values{font-size:.70rem;width:100%;text-align:left;}
+  .badge{padding:2px 7px;font-size:.68rem;}
+}
+@media (max-width:340px){
+  .grid{grid-template-columns:1fr;gap:10px;}
 }
 .card{
   position:relative;background:linear-gradient(180deg, rgba(21,32,27,.82) 0%, rgba(15,23,20,.95) 100%);
@@ -526,6 +554,9 @@ h1.title .hl{color:var(--signal);}
   border-radius:var(--radius-md);
   padding:var(--sp-5);
   box-shadow:var(--shadow-card);
+}
+@media (max-width:480px){
+  .upcoming{padding:var(--sp-3);}
 }
 .upcoming-head{
   display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;
@@ -667,6 +698,40 @@ dialog.modal-backdrop[open] .modal-box{
     font-size: 1.6rem;
   }
 }
+@media (max-width: 480px) {
+  .modal-box {
+    margin: 8px;
+    max-width: calc(100vw - 16px);
+    border-radius: var(--radius-md);
+  }
+  .modal-header {
+    padding: var(--sp-3);
+    gap: var(--sp-3);
+  }
+  .modal-art-wrap {
+    width: 72px;
+    height: 72px;
+  }
+  .modal-art {
+    width: 68px;
+    height: 68px;
+  }
+  .modal-title {
+    font-size: 1.3rem;
+  }
+  .modal-body {
+    padding: var(--sp-3);
+    gap: var(--sp-3);
+  }
+  .modal-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .event-modal-body {
+    padding: var(--sp-3);
+    gap: var(--sp-3);
+  }
+}
 .event-modal-close-btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;
   background:var(--panel-2);border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius-sm);
@@ -764,6 +829,9 @@ footer{
   .foot-inner{grid-template-columns:1fr;gap:var(--sp-5);text-align:left;}
   .foot-meta{justify-content:flex-start;}
   .foot-links{justify-content:flex-start;gap:var(--sp-5);}
+}
+@media (max-width:480px){
+  footer{padding:var(--sp-4) 10px var(--sp-6);}
 }
 .foot-col{display:flex;flex-direction:column;gap:var(--sp-3);}
 .foot-note{color:var(--ink-dim);font-size:.78rem;line-height:1.65;margin:0;overflow-wrap:break-word;}
@@ -1417,6 +1485,40 @@ body::after {
   font-weight: 600;
 }
 
+#leadersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--sp-4);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  #leadersGrid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  .leader-card {
+    padding: var(--sp-3);
+  }
+  .leader-header {
+    gap: 12px;
+    margin-bottom: var(--sp-3);
+    padding-bottom: var(--sp-3);
+  }
+  .leader-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+  .leader-info h3 {
+    font-size: 1.25rem;
+  }
+  .grunt-card {
+    padding: var(--sp-3);
+  }
+}
+
 /* ---------- Semana Calendar Component Styles ---------- */
 .week-container {
   max-width: 1180px;
@@ -1688,9 +1790,32 @@ body::after {
   color: var(--ink-dim);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .atacantes-grid {
     grid-template-columns: 1fr;
     gap: var(--sp-3);
+  }
+  .type-card {
+    width: 100%;
+    min-width: 0;
+  }
+  .mon-row {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+  .mon-avatar-sm {
+    width: 40px;
+    height: 40px;
+  }
+  .mon-img-sm {
+    width: 36px;
+    height: 36px;
+  }
+  .mon-name-sm {
+    font-size: 0.88rem;
+  }
+  .mon-dps-badge {
+    font-size: 0.74rem;
+    padding: 2px 6px;
   }
 }

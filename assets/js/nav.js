@@ -6,7 +6,7 @@
 
   // 0. PWA Cache Purge on Version Upgrade
   try {
-    var CURRENT_VERSION = '1.8.0';
+    var CURRENT_VERSION = '1.8.0_fix';
     var storedVersion = localStorage.getItem('pokeradar_version');
     if (storedVersion !== CURRENT_VERSION) {
       localStorage.setItem('pokeradar_version', CURRENT_VERSION);

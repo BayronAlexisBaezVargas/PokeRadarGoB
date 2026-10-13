@@ -19,6 +19,38 @@
   .rocket-hero {
     background: radial-gradient(ellipse at center, rgba(165,95,209,0.12) 0%, transparent 60%);
   }
+  #leadersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--sp-4);
+    width: 100%;
+    box-sizing: border-box;
+  }
+  @media (max-width: 600px) {
+    #leadersGrid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-3);
+    }
+    .leader-card {
+      padding: var(--sp-3);
+    }
+    .leader-header {
+      gap: 12px;
+      margin-bottom: var(--sp-3);
+      padding-bottom: var(--sp-3);
+    }
+    .leader-avatar {
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+    }
+    .leader-info h3 {
+      font-size: 1.25rem;
+    }
+    .grunt-card {
+      padding: var(--sp-3);
+    }
+  }
   .leader-card {
     background: linear-gradient(180deg, var(--panel-2), var(--panel));
     border: 1px solid var(--line);
@@ -409,7 +441,7 @@
     <div class="section-title"><h2>Líderes y Giovanni</h2></div>
     <p class="section-sub">El primer Pokémon de la alineación de un líder siempre puede ser variocolor (punto amarillo).</p>
     
-    <div class="grid" id="leadersGrid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+    <div class="grid" id="leadersGrid">
       <div class="sync-loader" id="rocketLoader">
         <span class="spinner" style="border-top-color:#a55fd1;"></span> Desencriptando alineaciones de radar...
       </div>

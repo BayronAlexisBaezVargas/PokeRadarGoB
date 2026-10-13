@@ -22,6 +22,35 @@
       gap: var(--sp-4);
       margin-top: var(--sp-5);
     }
+    @media (max-width: 600px) {
+      .atacantes-grid {
+        grid-template-columns: 1fr;
+        gap: var(--sp-3);
+      }
+      .type-card {
+        width: 100%;
+        min-width: 0;
+      }
+      .mon-row {
+        gap: 8px;
+        padding: 6px 8px;
+      }
+      .mon-avatar-sm {
+        width: 40px;
+        height: 40px;
+      }
+      .mon-img-sm {
+        width: 36px;
+        height: 36px;
+      }
+      .mon-name-sm {
+        font-size: 0.88rem;
+      }
+      .mon-dps-badge {
+        font-size: 0.74rem;
+        padding: 2px 6px;
+      }
+    }
     .type-card {
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: var(--radius-md);
