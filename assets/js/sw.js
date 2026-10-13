@@ -47,8 +47,16 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
   
-  // Estrategia Network First para APIs y datos dinámicos JSON
-  if (url.pathname.endsWith('.json') || url.hostname.includes('pokeapi.co') || url.hostname.includes('raw.githubusercontent.com')) {
+  const isHtmlNavigation = event.request.mode === 'navigate' || 
+                           url.pathname.endsWith('.html') || 
+                           url.pathname.endsWith('/') || 
+                           !url.pathname.includes('.');
+  const isDynamicData = url.pathname.endsWith('.json') || 
+                        url.hostname.includes('pokeapi.co') || 
+                        url.hostname.includes('raw.githubusercontent.com');
+
+  // Estrategia Network First para HTML de páginas, APIs y datos dinámicos JSON
+  if (isHtmlNavigation || isDynamicData) {
     event.respondWith(
       fetch(event.request).then((networkResponse) => {
         const clonedResponse = networkResponse.clone();
