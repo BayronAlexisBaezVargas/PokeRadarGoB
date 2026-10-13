@@ -4,9 +4,9 @@
   /* ============ Tipos y Efectividades (Reutilizado) ============ */
   var TYPE_COLORS = {
     normal:'#B4AE96', fire:'#FF7A45', water:'#4C9FE8', electric:'#F3D23B', grass:'#6FBE5A',
-    ice:'#6FD4C8', fighting:'#D1483F', poison:'#A55FD1', ground:'#C9A25A', flying:'#92AEDC',
-    psychic:'#F35E8A', bug:'#A6C22C', rock:'#B4A05C', ghost:'#6F5FA3', dragon:'#6E5AE6',
-    dark:'#8C8398', steel:'#9FAAC0', fairy:'#E9A0D0'
+    ice:'#6FD4C8', fighting:'#F87171', poison:'#C084FC', ground:'#C9A25A', flying:'#92AEDC',
+    psychic:'#F35E8A', bug:'#A6C22C', rock:'#B4A05C', ghost:'#A78BFA', dragon:'#818CF8',
+    dark:'#B4A9BE', steel:'#9FAAC0', fairy:'#E9A0D0'
   };
   var TYPE_LABELS = {
     normal:'Normal', fire:'Fuego', water:'Agua', electric:'Eléctrico', grass:'Planta',
@@ -14,6 +14,8 @@
     psychic:'Psíquico', bug:'Bicho', rock:'Roca', ghost:'Fantasma', dragon:'Dragón',
     dark:'Siniestro', steel:'Acero', fairy:'Hada'
   };
+
+  function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 
 
   var TYPE_CHART = {
@@ -250,6 +252,28 @@
       quoteDiv.className = 'grunt-quote';
       quoteDiv.textContent = grunt.phrase;
       card.appendChild(quoteDiv);
+
+      var eff = calculateEffectiveness([grunt.type]);
+      if(eff.weak && eff.weak.length){
+        var countersDiv = document.createElement('div');
+        countersDiv.className = 'grunt-counters';
+        var cLabel = document.createElement('div');
+        cLabel.className = 'grunt-counters-label';
+        cLabel.textContent = 'Debilidades clave:';
+        countersDiv.appendChild(cLabel);
+
+        eff.weak.slice(0, 3).forEach(function(item){
+          var badge = document.createElement('span');
+          badge.className = 'grunt-counter-badge';
+          var col = TYPE_COLORS[item.type] || '#B4AE96';
+          badge.style.color = col;
+          badge.style.backgroundColor = rgba(col, 0.16);
+          badge.style.borderColor = rgba(col, 0.45);
+          badge.textContent = TYPE_LABELS[item.type];
+          countersDiv.appendChild(badge);
+        });
+        card.appendChild(countersDiv);
+      }
       
       var phaseDiv = document.createElement('div');
       phaseDiv.className = 'lineup-phase';
@@ -289,6 +313,7 @@
       phaseDiv.appendChild(monsDiv);
       card.appendChild(phaseDiv);
       
+      card.dataset.search = norm(grunt.phrase + ' ' + (TYPE_LABELS[grunt.type] || '') + ' ' + grunt.mons.map(function(m){ return m.name; }).join(' '));
       gruntsGrid.appendChild(card);
     });
   }
@@ -296,6 +321,7 @@
   /* ============ Sistema de Modales Interactivo ============ */
   
   function openRocketModal(el) {
+    if (Date.now() - lastModalCloseTime < 400) return;
     var name = el.dataset.name;
     var dex = el.dataset.dex;
     var typesStr = el.dataset.types;
@@ -376,37 +402,48 @@
   }
 
 
+  var lastModalCloseTime = 0;
+
+  function closeRocketModal(e) {
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    lastModalCloseTime = Date.now();
+    var mod = document.getElementById('monModal');
+    if (mod && mod.open) {
+      mod.close();
+    }
+  }
+
   // Bind clicks
   document.body.addEventListener('click', function(e){
+    if (Date.now() - lastModalCloseTime < 400) return;
     var t = e.target.closest('.rocket-mon');
     if(t) openRocketModal(t);
   });
   
   var mc = document.getElementById('modalClose');
   if(mc) {
-    mc.addEventListener('click', function(){
-      var mod = document.getElementById('monModal');
-      if(mod) mod.close();
-    });
-    mc.addEventListener('pointerup', function(){
-      var mod = document.getElementById('monModal');
-      if(mod) mod.close();
+    mc.addEventListener('click', function(e){
+      closeRocketModal(e);
     });
   }
 
   var monModal = document.getElementById('monModal');
   if(monModal) {
     monModal.addEventListener('close', function(){
+      lastModalCloseTime = Date.now();
       document.documentElement.classList.remove('modal-open');
       document.body.classList.remove('modal-open');
       document.body.style.overflow = '';
     });
     monModal.addEventListener('cancel', function(e){
       e.preventDefault();
-      monModal.close();
+      closeRocketModal(e);
     });
     monModal.addEventListener('click', function(e){
-      if(e.target === monModal) monModal.close();
+      if(e.target === monModal) closeRocketModal(e);
     });
   }
 
@@ -422,8 +459,23 @@
       });
     }, {threshold: 0.01, rootMargin: '60px'});
     
-    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
-    
+    // Búsqueda en tiempo real de reclutas por frase o Pokémon
+    var gruntSearch = document.getElementById('gruntSearch');
+    var gruntEmptyNote = document.getElementById('gruntEmptyNote');
+    if(gruntSearch){
+      gruntSearch.addEventListener('input', function(){
+        var q = norm(gruntSearch.value.trim());
+        var visibleCount = 0;
+        document.querySelectorAll('.grunt-card').forEach(function(card){
+          var match = !q || (card.dataset.search && card.dataset.search.indexOf(q) !== -1);
+          card.style.display = match ? '' : 'none';
+          if(match) visibleCount++;
+        });
+        if(gruntEmptyNote){
+          gruntEmptyNote.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      });
+    }
   }, 300);
 
 })();

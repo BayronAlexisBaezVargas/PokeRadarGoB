@@ -2,7 +2,7 @@
 
 Panel técnico de telemetría y consulta en tiempo real para Pokémon GO. Proporciona información sobre rotaciones de incursiones, apariciones silvestres activas, calendario de eventos y cálculo dinámico de multiplicadores de daño.
 
-**Versión:** 1.6.1  
+**Versión:** 1.8.0  
 **Autor:** [BayronAlexisBaezVargas](https://github.com/BayronAlexisBaezVargas)
 
 ---
@@ -53,7 +53,7 @@ pokegoapi/
 │   │   ├── semana.js           # Agrupamiento de eventos por día de la semana
 │   │   ├── rocket.js           # Base de datos de líderes y reclutas Rocket
 │   │   ├── atacantes.js        # Lógica y renderizado del Top Meta PvE
-│   │   ├── location.js         # Transiciones de página y navegación
+│   │   ├── nav.js              # Transiciones tácticas de radar y navegación sin 404
 │   │   └── sw.js               # Service Worker para PWA y caché
 │   ├── noticias.html           # Panel de eventos y calendario
 │   ├── semana.html             # Vista agenda de eventos de los próximos 7 días

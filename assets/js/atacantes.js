@@ -3,9 +3,9 @@
 
   var TYPE_COLORS = {
     normal:'#B4AE96', fire:'#FF7A45', water:'#4C9FE8', electric:'#F3D23B', grass:'#6FBE5A',
-    ice:'#6FD4C8', fighting:'#D1483F', poison:'#A55FD1', ground:'#C9A25A', flying:'#92AEDC',
-    psychic:'#F35E8A', bug:'#A6C22C', rock:'#B4A05C', ghost:'#6F5FA3', dragon:'#6E5AE6',
-    dark:'#8C8398', steel:'#9FAAC0', fairy:'#E9A0D0'
+    ice:'#6FD4C8', fighting:'#F87171', poison:'#C084FC', ground:'#C9A25A', flying:'#92AEDC',
+    psychic:'#F35E8A', bug:'#A6C22C', rock:'#B4A05C', ghost:'#A78BFA', dragon:'#818CF8',
+    dark:'#B4A9BE', steel:'#9FAAC0', fairy:'#E9A0D0'
   };
 
   var TYPE_LABELS = {
@@ -1037,6 +1037,7 @@
             <div class="mon-name-sm">${mon.name}</div>
             <div class="mon-tag-sm" style="${tagStyle}">${mon.tag}</div>
           </div>
+          ${mon.dps ? `<div class="mon-dps-badge">${mon.dps}<small>DPS</small></div>` : ''}
         `;
         monList.appendChild(row);
       });
@@ -1048,7 +1049,24 @@
   }
 
   /* ============ Modal ============ */
+  var lastModalCloseTime = 0;
+
+  function closeAtacanteModal(e) {
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    lastModalCloseTime = Date.now();
+    var mod = document.getElementById('monModal');
+    if (mod && mod.open) {
+      mod.close();
+    }
+  }
+
   function openAtacanteModal(el) {
+    // Evitar reaperturas por ghost-clicks o doble toque en celulares
+    if (Date.now() - lastModalCloseTime < 400) return;
+
     var name = el.dataset.name;
     var dex = el.dataset.dex;
     var img = el.dataset.img;
@@ -1070,6 +1088,8 @@
     
     if(!modal) return;
     
+    if(window.playScanSound) window.playScanSound();
+
     mName.textContent = name;
     mDex.textContent = 'N.° ' + dex;
     mImg.src = getMonImage(img, tag);
@@ -1134,37 +1154,48 @@
     document.body.style.overflow = 'hidden';
   }
 
-
   document.body.addEventListener('click', function(e){
+    if (Date.now() - lastModalCloseTime < 400) return;
     var t = e.target.closest('.interactive-row');
     if(t) openAtacanteModal(t);
+  });
+
+  document.body.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') {
+      closeAtacanteModal(e);
+      return;
+    }
+    if (e.key === 'Enter' || e.key === ' ') {
+      var t = document.activeElement && document.activeElement.closest('.interactive-row');
+      var mod = document.getElementById('monModal');
+      if (t && (!mod || !mod.open)) {
+        e.preventDefault();
+        openAtacanteModal(t);
+      }
+    }
   });
   
   var mc = document.getElementById('modalClose');
   if(mc) {
-    mc.addEventListener('click', function(){
-      var mod = document.getElementById('monModal');
-      if(mod) mod.close();
-    });
-    mc.addEventListener('pointerup', function(){
-      var mod = document.getElementById('monModal');
-      if(mod) mod.close();
+    mc.addEventListener('click', function(e){
+      closeAtacanteModal(e);
     });
   }
 
   var monModal = document.getElementById('monModal');
   if(monModal) {
     monModal.addEventListener('close', function(){
+      lastModalCloseTime = Date.now();
       document.documentElement.classList.remove('modal-open');
       document.body.classList.remove('modal-open');
       document.body.style.overflow = '';
     });
     monModal.addEventListener('cancel', function(e){
       e.preventDefault();
-      monModal.close();
+      closeAtacanteModal(e);
     });
     monModal.addEventListener('click', function(e){
-      if(e.target === monModal) monModal.close();
+      if(e.target === monModal) closeAtacanteModal(e);
     });
   }
 
@@ -1181,10 +1212,14 @@
     document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
 
     function hideLoader() {
-      var loader = document.getElementById('loader');
+      if (typeof window.__POKERADAR_HIDE_LOADER__ === 'function') {
+        window.__POKERADAR_HIDE_LOADER__();
+      }
+      var loader = document.getElementById('loader') || document.getElementById('radar-screen-loader');
       if (loader && !loader.classList.contains('hidden')) {
+        loader.classList.remove('active');
         loader.classList.add('hidden');
-        setTimeout(function(){ loader.remove(); }, 400);
+        setTimeout(function(){ loader.style.display = 'none'; }, 260);
       }
     }
 
@@ -1207,7 +1242,11 @@
     }
   }
 
-  fetch('scratch_atacantes.json')
+  var jsonUrl = (window.location.pathname.indexOf('/assets/') !== -1)
+    ? 'scratch_atacantes.json'
+    : 'assets/scratch_atacantes.json';
+
+  fetch(jsonUrl)
     .then(function(res) { 
       if (!res.ok) throw new Error('Network error'); 
       return res.json(); 

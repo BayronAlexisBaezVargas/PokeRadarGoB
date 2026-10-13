@@ -24,7 +24,7 @@
               Generando descripción...
             </div>
           </div>
-          <div style="text-align:center; margin-top:16px;">
+          <div style="display:flex; justify-content:flex-start; margin-top:16px;">
             <a id="evtLink" href="#" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none; background:var(--signal); color:var(--void); font-family:var(--font-mono); font-weight:bold; padding:10px 20px; border-radius:var(--radius-sm); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em; transition:transform 0.2s;">Ver Noticia Completa ↗</a>
           </div>
         </div>
@@ -65,6 +65,7 @@
   }
 
   window.openEventModal = function(e) {
+    if (Date.now() - lastModalCloseTime < 400) return;
     if(window.playScanSound) window.playScanSound();
     
     evtImg.src = e.image || '';
@@ -115,23 +116,32 @@
     document.body.style.overflow = 'hidden';
   };
 
-  function closeEventModal() {
+  var lastModalCloseTime = 0;
+
+  function closeEventModal(e) {
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    lastModalCloseTime = Date.now();
     evtModal.close();
     document.documentElement.classList.remove('modal-open');
     document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
   }
 
-  evtClose.addEventListener('click', closeEventModal);
-  evtClose.addEventListener('pointerup', closeEventModal);
+  evtClose.addEventListener('click', function(e){
+    closeEventModal(e);
+  });
   evtModal.addEventListener('click', function(e){
-    if(e.target === evtModal) closeEventModal();
+    if(e.target === evtModal) closeEventModal(e);
   });
   evtModal.addEventListener('cancel', function(e){
     e.preventDefault();
-    closeEventModal();
+    closeEventModal(e);
   });
   evtModal.addEventListener('close', function(){
+    lastModalCloseTime = Date.now();
     document.documentElement.classList.remove('modal-open');
     document.body.classList.remove('modal-open');
     document.body.style.overflow = '';

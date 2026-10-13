@@ -12,16 +12,310 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://raw.githubusercontent.com">
   <link rel="preconnect" href="https://pokeapi.co">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=1.8.0">
   <style>
-    /* Estilos específicos para la vista semanal */
-    .week-container {
-      max-width: 1180px;
+    /* Estilos específicos para la vista semanal táctica */
+    main.week-main-page {
+      max-width: 1240px;
       margin: 0 auto;
-      padding: var(--sp-4) 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .week-hero {
+      grid-template-columns: 1fr;
+      padding: var(--sp-6) 0 var(--sp-4);
+      max-width: 1240px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .week-hero .hero-text {
+      max-width: 820px;
+    }
+
+    /* Contenedor de la barra de navegación semanal alineado con el grid de días */
+    .week-toolbar-section {
+      max-width: 1240px;
+      margin: 0 auto var(--sp-4);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .week-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-4);
+      width: 100%;
+      box-sizing: border-box;
+      padding: 18px 24px;
+      background: linear-gradient(180deg, rgba(20,32,26,.88) 0%, rgba(12,18,15,.96) 100%);
+      border: 1px solid rgba(45,212,191,0.28);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 0 20px rgba(45,212,191,0.06);
+      backdrop-filter: blur(12px);
+      position: relative;
+    }
+    .week-nav-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, rgba(45,212,191,0.7) 50%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .btn-text-short {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .week-nav-bar {
+        flex-wrap: wrap;
+        padding: 16px 14px;
+        gap: 12px;
+      }
+      .week-nav-center {
+        order: -1;
+        width: 100%;
+        margin-bottom: 4px;
+      }
+      .week-range-text {
+        font-size: 1.22rem;
+      }
+      .week-nav-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 12px 14px;
+        font-size: .9rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .btn-text-full {
+        display: none;
+      }
+      .btn-text-short {
+        display: inline;
+      }
+      .week-nav-bar {
+        padding: 14px 10px;
+        gap: 10px;
+      }
+      .week-range-text {
+        font-size: 1.12rem;
+      }
+      .week-nav-tags {
+        gap: 8px;
+        margin-top: 6px;
+      }
+      .week-badge {
+        padding: 4px 10px;
+        font-size: .7rem;
+      }
+      .week-btn-today {
+        padding: 6px 14px;
+        font-size: .8rem;
+        min-height: 36px;
+      }
+      .week-nav-btn {
+        min-height: 46px;
+        padding: 11px 8px;
+        font-size: .86rem;
+        gap: 6px;
+      }
+      .week-nav-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .week-sunday-hint {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 8px;
+        padding: 10px 12px;
+      }
+      .week-sunday-hint button {
+        width: 100%;
+        padding: 10px;
+        min-height: 42px;
+      }
+    }
+
+    .week-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(10,15,13,0.85);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--ink);
+      font-family: var(--font-display);
+      font-size: .95rem;
+      font-weight: 700;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      white-space: nowrap;
+    }
+    .week-nav-btn:hover {
+      background: rgba(45,212,191,0.16);
+      border-color: rgba(45,212,191,0.45);
+      color: var(--signal);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(45,212,191,0.2);
+    }
+    .week-nav-btn:active {
+      transform: translateY(0);
+    }
+    .week-nav-btn svg {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--signal);
+      transition: transform 0.2s ease;
+    }
+    .week-nav-btn.prev-btn:hover svg {
+      transform: translateX(-3px) scale(1.1);
+    }
+    .week-nav-btn.next-btn:hover svg {
+      transform: translateX(3px) scale(1.1);
+    }
+
+    .week-nav-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      flex: 1;
+    }
+    .week-range-text {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.2rem, 2.4vw, 1.45rem);
+      color: var(--ink);
+      letter-spacing: .02em;
+      line-height: 1.2;
+    }
+    .week-nav-tags {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .week-badge {
+      font-family: var(--font-mono);
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(45,212,191,0.15);
+      color: var(--signal);
+      border: 1px solid rgba(45,212,191,0.35);
+      line-height: 1;
+    }
+    .week-badge.is-upcoming {
+      background: rgba(76,159,232,0.16);
+      color: #60a5fa;
+      border-color: rgba(76,159,232,0.4);
+    }
+    .week-badge.is-past {
+      background: rgba(148,163,184,0.14);
+      color: #94a3b8;
+      border-color: rgba(148,163,184,0.3);
+    }
+    .week-btn-today {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: .84rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      background: rgba(45,212,191,0.18);
+      color: var(--signal);
+      border: 1px solid rgba(45,212,191,0.48);
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .week-btn-today:hover {
+      background: var(--signal);
+      color: var(--void);
+      border-color: var(--signal);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(45,212,191,0.35);
+    }
+    .week-btn-today:active {
+      transform: translateY(0);
+    }
+    .week-btn-today svg {
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+      transition: transform 0.25s ease;
+    }
+    .week-btn-today:hover svg {
+      transform: rotate(-45deg);
+    }
+
+    .week-sunday-hint {
+      margin-top: 10px;
+      padding: 12px 18px;
+      background: rgba(45,212,191,0.08);
+      border: 1px dashed rgba(45,212,191,0.3);
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: .84rem;
+      color: var(--signal);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .week-sunday-hint button {
+      background: rgba(45,212,191,0.18);
+      border: 1px solid rgba(45,212,191,0.4);
+      color: var(--ink);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: .78rem;
+      cursor: pointer;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+    .week-sunday-hint button:hover {
+      background: var(--signal);
+      color: var(--void);
+      transform: translateY(-1px);
+    }
+
+    .week-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 0 var(--sp-6);
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: var(--sp-4);
       width: 100%;
       box-sizing: border-box;
@@ -34,8 +328,8 @@
       }
     }
     .day-card {
-      background: var(--panel-2);
-      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(21,32,27,.82) 0%, rgba(14,21,18,.92) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
       border-radius: var(--radius-md);
       overflow: hidden;
       display: flex;
@@ -43,97 +337,288 @@
       position: relative;
       min-width: 0;
       box-sizing: border-box;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .day-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.15);
     }
     .day-card.is-today {
       border-color: var(--signal);
-      box-shadow: 0 0 15px rgba(61,242,196, 0.15);
+      box-shadow: 0 0 24px rgba(45,212,191, 0.2), inset 0 0 0 1px rgba(45,212,191, 0.3);
     }
     .day-header {
-      background: rgba(0,0,0,0.3);
-      padding: var(--sp-3);
-      border-bottom: 1px solid var(--line);
+      background: rgba(10,15,13,0.65);
+      padding: var(--sp-3) var(--sp-4);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    .day-card.is-today .day-header {
+      background: rgba(45,212,191,0.12);
+      border-bottom-color: rgba(45,212,191,0.25);
+    }
+    .day-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
     .day-name {
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: 1.12rem;
       font-weight: 700;
       color: var(--ink);
       text-transform: uppercase;
-      letter-spacing: .05em;
+      letter-spacing: .04em;
     }
     .day-date {
       font-family: var(--font-mono);
-      font-size: .85rem;
+      font-size: .8rem;
       color: var(--ink-dim);
     }
     .day-card.is-today .day-name {
       color: var(--signal);
     }
+    .day-card.is-today .day-date {
+      color: var(--ink);
+    }
+    .today-pill {
+      font-family: var(--font-mono);
+      font-size: .64rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--signal);
+      color: var(--void);
+    }
     .day-events {
       padding: var(--sp-3);
       display: flex;
       flex-direction: column;
-      gap: var(--sp-3);
+      gap: 10px;
       flex: 1;
     }
     .event-item {
       display: flex;
-      gap: 12px;
+      gap: 11px;
       align-items: center;
-      background: rgba(0,0,0,0.2);
-      padding: 10px;
+      background: rgba(10,15,13,0.55);
+      padding: 9px 12px;
       border-radius: var(--radius-sm);
-      border-left: 3px solid var(--ink-dim);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-left: 3px solid var(--signal);
+      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+    .event-item:hover {
+      background: rgba(45,212,191,0.08);
+      border-color: rgba(45,212,191,0.28);
+      transform: translateX(3px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
     }
     .event-item.type-spotlight { border-left-color: #F3D23B; }
     .event-item.type-raidhour { border-left-color: #ff5a44; }
-    .event-item.type-community { border-left-color: #4C9FE8; }
+    .event-item.type-community { border-left-color: #FF7A45; }
+    .event-item.type-dynamax { border-left-color: #E9A0D0; }
+    .event-item.type-hatch { border-left-color: #2DD4BF; }
+    .event-item.type-raid { border-left-color: #4C9FE8; }
+    .event-item.type-event { border-left-color: #3DF2C4; }
     
     .event-icon {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       object-fit: contain;
-      border-radius: 4px;
-      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.04);
+      padding: 2px;
+      flex-shrink: 0;
     }
     .event-info {
       flex: 1;
       display: flex;
       flex-direction: column;
       min-width: 0;
+      gap: 3px;
     }
+    .event-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .event-type-pill {
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.06);
+      color: var(--ink-dim);
+    }
+    .event-item.type-spotlight .event-type-pill { background: rgba(243,210,59,0.15); color: #F3D23B; }
+    .event-item.type-raidhour .event-type-pill { background: rgba(255,90,68,0.15); color: #ff5a44; }
+    .event-item.type-community .event-type-pill { background: rgba(255,122,69,0.15); color: #FF7A45; }
+    .event-item.type-dynamax .event-type-pill { background: rgba(233,160,208,0.15); color: #E9A0D0; }
+    .event-item.type-hatch .event-type-pill { background: rgba(45,212,191,0.15); color: #2DD4BF; }
+    .event-item.type-raid .event-type-pill { background: rgba(76,159,232,0.15); color: #4C9FE8; }
+    .event-item.type-event .event-type-pill { background: rgba(61,242,196,0.15); color: #3DF2C4; }
+
     .event-title {
+      font-family: var(--font-sans);
       font-weight: 600;
-      font-size: .95rem;
+      font-size: .88rem;
       color: var(--ink);
-      line-height: 1.2;
-      margin-bottom: 4px;
+      line-height: 1.25;
+      overflow-wrap: break-word;
     }
     .event-time {
       font-family: var(--font-mono);
-      font-size: .75rem;
+      font-size: .71rem;
       color: var(--signal);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
     .no-events {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       color: var(--ink-dim);
-      font-size: .85rem;
+      font-size: .82rem;
       font-style: italic;
-      text-align: center;
-      padding: var(--sp-4) 0;
+      padding: var(--sp-4) var(--sp-2);
+      background: rgba(255,255,255,0.02);
+      border-radius: var(--radius-sm);
+      border: 1px dashed rgba(255,255,255,0.05);
+      margin: auto 0;
     }
-    .week-header-info {
-      text-align: center;
-      padding: var(--sp-4);
-      font-family: var(--font-mono);
-      color: var(--signal);
-      font-size: 1.1rem;
+    .no-events svg {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
     }
   </style>
 </head>
 <body>
+
+<div id="radar-screen-loader" class="radar-screen-loader active" aria-hidden="true">
+  <div class="radar-loader-content">
+    <div class="radar-pokeball-wrap">
+      <div class="radar-sweep-cone"></div>
+      <svg class="radar-pokeball-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="74" class="radar-grid-ring"/>
+        <circle cx="80" cy="80" r="58" class="radar-grid-ring radar-grid-dash"/>
+        <circle cx="80" cy="80" r="42" class="radar-grid-ring"/>
+        <circle cx="80" cy="80" r="26" class="radar-grid-ring radar-grid-dash"/>
+        <line x1="80" y1="4" x2="80" y2="12" class="radar-axis-tick"/>
+        <line x1="80" y1="148" x2="80" y2="156" class="radar-axis-tick"/>
+        <line x1="4" y1="80" x2="12" y2="80" class="radar-axis-tick"/>
+        <line x1="148" y1="80" x2="156" y2="80" class="radar-axis-tick"/>
+        <circle cx="25.9" cy="65.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="31.5" cy="52.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="40.4" cy="40.4" r="2.8" class="p-dot-outer"/>
+        <circle cx="52.0" cy="31.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="65.5" cy="25.9" r="2.8" class="p-dot-outer"/>
+        <circle cx="80.0" cy="24.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="94.5" cy="25.9" r="2.8" class="p-dot-outer"/>
+        <circle cx="108.0" cy="31.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="119.6" cy="40.4" r="2.8" class="p-dot-outer"/>
+        <circle cx="128.5" cy="52.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="134.1" cy="65.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="134.1" cy="94.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="128.5" cy="108.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="119.6" cy="119.6" r="2.8" class="p-dot-outer"/>
+        <circle cx="108.0" cy="128.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="94.5" cy="134.1" r="2.8" class="p-dot-outer"/>
+        <circle cx="80.0" cy="136.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="65.5" cy="134.1" r="2.8" class="p-dot-outer"/>
+        <circle cx="52.0" cy="128.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="40.4" cy="119.6" r="2.8" class="p-dot-outer"/>
+        <circle cx="31.5" cy="108.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="25.9" cy="94.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="40.5" cy="65.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="47.8" cy="53.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="59.0" cy="43.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="72.7" cy="38.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="87.3" cy="38.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="101.0" cy="43.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="112.2" cy="53.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="119.5" cy="65.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="119.5" cy="94.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="112.2" cy="107.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="101.0" cy="116.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="87.3" cy="121.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="72.7" cy="121.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="59.0" cy="116.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="47.8" cy="107.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="40.5" cy="94.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="53.9" cy="66.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="60.5" cy="58.2" r="1.8" class="p-dot-inner"/>
+        <circle cx="69.4" cy="52.9" r="1.8" class="p-dot-inner"/>
+        <circle cx="79.3" cy="52.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="88.7" cy="54.8" r="1.8" class="p-dot-inner"/>
+        <circle cx="96.5" cy="61.2" r="1.8" class="p-dot-inner"/>
+        <circle cx="96.5" cy="98.8" r="1.8" class="p-dot-inner"/>
+        <circle cx="88.7" cy="105.2" r="1.8" class="p-dot-inner"/>
+        <circle cx="79.3" cy="108.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="69.4" cy="107.1" r="1.8" class="p-dot-inner"/>
+        <circle cx="60.5" cy="101.8" r="1.8" class="p-dot-inner"/>
+        <circle cx="53.9" cy="94.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="24.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="32.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="40.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="48.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="56.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="104.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="112.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="120.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="128.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="136.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="98.0" cy="80.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="95.6" cy="89.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="89.0" cy="95.6" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="80.0" cy="98.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="71.0" cy="95.6" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="64.4" cy="89.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="62.0" cy="80.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="64.4" cy="71.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="71.0" cy="64.4" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="80.0" cy="62.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="89.0" cy="64.4" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="95.6" cy="71.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="90.0" cy="80.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="87.1" cy="87.1" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="80.0" cy="90.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="72.9" cy="87.1" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="70.0" cy="80.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="72.9" cy="72.9" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="80.0" cy="70.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="87.1" cy="72.9" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="80.0" cy="14.0" r="2.2" class="p-dot-reticle-top"/>
+        <circle cx="80.0" cy="20.0" r="2.2" class="p-dot-reticle-top"/>
+        <circle cx="80.0" cy="26.0" r="2.2" class="p-dot-reticle-top"/>
+        <circle cx="80.0" cy="134.0" r="2.2" class="p-dot-reticle-bot"/>
+        <circle cx="80.0" cy="140.0" r="2.2" class="p-dot-reticle-bot"/>
+        <circle cx="80.0" cy="146.0" r="2.2" class="p-dot-reticle-bot"/>
+        <circle cx="80" cy="80" r="6" class="radar-core-pulse"/>
+        <circle cx="80" cy="80" r="3.2" class="radar-core-dot"/>
+      </svg>
+    </div>
+    <div class="radar-loader-brand">
+      <div class="radar-brand-title">POKÉMON GO</div>
+      <div class="radar-brand-sub">
+        <span class="radar-beacon"></span>
+        <span>RADAR DE CAMPO</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <header class="hud">
   <div class="hud-inner">
@@ -157,9 +642,40 @@
   </div>
 </header>
 
-<main class="hud-main">
-  <div class="week-header-info" id="weekRangeDisplay">
-    Sincronizando calendario de la semana...
+<main class="week-main-page">
+  <section class="hero week-hero">
+    <div class="hero-text">
+      <span class="kicker">Agenda Táctica</span>
+      <h1 class="title">Calendario Semanal <span class="hl">de Eventos</span>.</h1>
+      <p class="lede">Planificación día por día de incursiones, Horas del Pokémon Destacado, Horas de Incursiones y eventos activos en Pokémon GO con horarios sincronizados a tu zona horaria local.</p>
+    </div>
+  </section>
+
+  <!-- Barra de navegación semanal de ancho completo alineada con el calendario -->
+  <div class="week-toolbar-section">
+    <div class="week-nav-bar" role="toolbar" aria-label="Navegación entre semanas">
+      <button id="prevWeekBtn" class="week-nav-btn prev-btn" type="button" aria-label="Semana anterior">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <span class="btn-text-full">Semana anterior</span>
+        <span class="btn-text-short">Anterior</span>
+      </button>
+      <div class="week-nav-center">
+        <div class="week-range-text" id="weekRangeDisplay">Sincronizando calendario...</div>
+        <div class="week-nav-tags">
+          <span class="week-badge" id="weekNavBadge">Semana actual</span>
+          <button id="todayWeekBtn" class="week-btn-today" type="button" style="display:none;" aria-label="Volver a la semana en curso">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Volver a hoy</span>
+          </button>
+        </div>
+      </div>
+      <button id="nextWeekBtn" class="week-nav-btn next-btn" type="button" aria-label="Semana siguiente">
+        <span class="btn-text-full">Semana siguiente</span>
+        <span class="btn-text-short">Siguiente</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <div id="weekSundayHint" class="week-sunday-hint" style="display:none;"></div>
   </div>
   
   <div class="week-container" id="weekContainer">
@@ -172,7 +688,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.6.1</span>
+        <span class="foot-version">v1.8.0</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -203,5 +719,6 @@
 <script defer src="js/eventModal.js"></script>
 <script defer src="js/semana.js"></script>
 <script defer src="js/location.js"></script>
+<script defer src="js/nav.js?v=1.8.0"></script>
 </body>
 </html>

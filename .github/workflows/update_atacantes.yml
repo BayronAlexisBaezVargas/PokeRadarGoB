@@ -1,0 +1,38 @@
+name: Actualizar Mejores Atacantes
+
+on:
+  schedule:
+    # Se ejecuta todos los domingos a las 04:00 UTC
+    - cron: '0 4 * * 0'
+  workflow_dispatch: # Permite ejecutar manualmente desde la pestaña Actions en GitHub
+
+permissions:
+  contents: write
+
+jobs:
+  update-atacantes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Ejecutar scraper de mejores atacantes
+        run: node scripts/update_atacantes.js
+
+      - name: Confirmar y subir cambios
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain assets/scratch_atacantes.json)" ]; then
+            git add assets/scratch_atacantes.json
+            git commit -m "chore: actualizar ranking de mejores atacantes [skip ci]"
+            git push origin main
+          else
+            echo "No se detectaron cambios en el meta de atacantes."
+          fi

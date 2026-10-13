@@ -22,12 +22,125 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://raw.githubusercontent.com">
 <link rel="preconnect" href="https://pokeapi.co">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
-<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/styles.css?v=1.8.0" />
 </head>
 <body>
+
+<div id="radar-screen-loader" class="radar-screen-loader active" aria-hidden="true">
+  <div class="radar-loader-content">
+    <div class="radar-pokeball-wrap">
+      <div class="radar-sweep-cone"></div>
+      <svg class="radar-pokeball-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="74" class="radar-grid-ring"/>
+        <circle cx="80" cy="80" r="58" class="radar-grid-ring radar-grid-dash"/>
+        <circle cx="80" cy="80" r="42" class="radar-grid-ring"/>
+        <circle cx="80" cy="80" r="26" class="radar-grid-ring radar-grid-dash"/>
+        <line x1="80" y1="4" x2="80" y2="12" class="radar-axis-tick"/>
+        <line x1="80" y1="148" x2="80" y2="156" class="radar-axis-tick"/>
+        <line x1="4" y1="80" x2="12" y2="80" class="radar-axis-tick"/>
+        <line x1="148" y1="80" x2="156" y2="80" class="radar-axis-tick"/>
+        <circle cx="25.9" cy="65.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="31.5" cy="52.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="40.4" cy="40.4" r="2.8" class="p-dot-outer"/>
+        <circle cx="52.0" cy="31.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="65.5" cy="25.9" r="2.8" class="p-dot-outer"/>
+        <circle cx="80.0" cy="24.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="94.5" cy="25.9" r="2.8" class="p-dot-outer"/>
+        <circle cx="108.0" cy="31.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="119.6" cy="40.4" r="2.8" class="p-dot-outer"/>
+        <circle cx="128.5" cy="52.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="134.1" cy="65.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="134.1" cy="94.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="128.5" cy="108.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="119.6" cy="119.6" r="2.8" class="p-dot-outer"/>
+        <circle cx="108.0" cy="128.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="94.5" cy="134.1" r="2.8" class="p-dot-outer"/>
+        <circle cx="80.0" cy="136.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="65.5" cy="134.1" r="2.8" class="p-dot-outer"/>
+        <circle cx="52.0" cy="128.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="40.4" cy="119.6" r="2.8" class="p-dot-outer"/>
+        <circle cx="31.5" cy="108.0" r="2.8" class="p-dot-outer"/>
+        <circle cx="25.9" cy="94.5" r="2.8" class="p-dot-outer"/>
+        <circle cx="40.5" cy="65.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="47.8" cy="53.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="59.0" cy="43.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="72.7" cy="38.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="87.3" cy="38.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="101.0" cy="43.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="112.2" cy="53.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="119.5" cy="65.6" r="2.2" class="p-dot-mid"/>
+        <circle cx="119.5" cy="94.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="112.2" cy="107.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="101.0" cy="116.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="87.3" cy="121.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="72.7" cy="121.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="59.0" cy="116.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="47.8" cy="107.0" r="2.2" class="p-dot-mid"/>
+        <circle cx="40.5" cy="94.4" r="2.2" class="p-dot-mid"/>
+        <circle cx="53.9" cy="66.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="60.5" cy="58.2" r="1.8" class="p-dot-inner"/>
+        <circle cx="69.4" cy="52.9" r="1.8" class="p-dot-inner"/>
+        <circle cx="79.3" cy="52.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="88.7" cy="54.8" r="1.8" class="p-dot-inner"/>
+        <circle cx="96.5" cy="61.2" r="1.8" class="p-dot-inner"/>
+        <circle cx="96.5" cy="98.8" r="1.8" class="p-dot-inner"/>
+        <circle cx="88.7" cy="105.2" r="1.8" class="p-dot-inner"/>
+        <circle cx="79.3" cy="108.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="69.4" cy="107.1" r="1.8" class="p-dot-inner"/>
+        <circle cx="60.5" cy="101.8" r="1.8" class="p-dot-inner"/>
+        <circle cx="53.9" cy="94.0" r="1.8" class="p-dot-inner"/>
+        <circle cx="24.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="32.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="40.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="48.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="56.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="104.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="112.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="120.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="128.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="136.0" cy="80.0" r="2.5" class="p-dot-equator"/>
+        <circle cx="98.0" cy="80.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="95.6" cy="89.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="89.0" cy="95.6" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="80.0" cy="98.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="71.0" cy="95.6" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="64.4" cy="89.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="62.0" cy="80.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="64.4" cy="71.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="71.0" cy="64.4" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="80.0" cy="62.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="89.0" cy="64.4" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="95.6" cy="71.0" r="2.4" class="p-dot-btn-out"/>
+        <circle cx="90.0" cy="80.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="87.1" cy="87.1" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="80.0" cy="90.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="72.9" cy="87.1" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="70.0" cy="80.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="72.9" cy="72.9" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="80.0" cy="70.0" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="87.1" cy="72.9" r="2.0" class="p-dot-btn-in"/>
+        <circle cx="80.0" cy="14.0" r="2.2" class="p-dot-reticle-top"/>
+        <circle cx="80.0" cy="20.0" r="2.2" class="p-dot-reticle-top"/>
+        <circle cx="80.0" cy="26.0" r="2.2" class="p-dot-reticle-top"/>
+        <circle cx="80.0" cy="134.0" r="2.2" class="p-dot-reticle-bot"/>
+        <circle cx="80.0" cy="140.0" r="2.2" class="p-dot-reticle-bot"/>
+        <circle cx="80.0" cy="146.0" r="2.2" class="p-dot-reticle-bot"/>
+        <circle cx="80" cy="80" r="6" class="radar-core-pulse"/>
+        <circle cx="80" cy="80" r="3.2" class="radar-core-dot"/>
+      </svg>
+    </div>
+    <div class="radar-loader-brand">
+      <div class="radar-brand-title">POKÉMON GO</div>
+      <div class="radar-brand-sub">
+        <span class="radar-beacon"></span>
+        <span>RADAR DE CAMPO</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <header class="hud">
   <div class="hud-inner">
@@ -64,24 +177,22 @@
         <div class="readout" id="seasonReadout"><dt>Temporada actual</dt><dd id="statSeason" style="font-size:1.05rem;">Sincronizando...</dd></div>
       </dl>
     </div>
-    <div class="hero-visual">
-      <svg class="reticle" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
-        <circle class="ring-outer" cx="100" cy="100" r="90"/>
-        <circle class="ring-mid" cx="100" cy="100" r="64"/>
-        <circle class="ring-core" cx="100" cy="100" r="5"/>
-        <g class="ticks">
-          <line x1="100" y1="2" x2="100" y2="16"/>
-          <line x1="100" y1="184" x2="100" y2="198"/>
-          <line x1="2" y1="100" x2="16" y2="100"/>
-          <line x1="184" y1="100" x2="198" y2="100"/>
-        </g>
-        <g class="brk">
-          <polyline points="44,58 44,44 58,44"/>
-          <polyline points="142,44 156,44 156,58"/>
-          <polyline points="44,142 44,156 58,156"/>
-          <polyline points="156,142 156,156 142,156"/>
-        </g>
-      </svg>
+    <div class="hero-spotlight" aria-label="Agenda en vivo">
+      <div class="spotlight-card">
+        <div class="spotlight-header">
+          <span class="spotlight-badge"><span class="live-dot"></span> Radar de eventos</span>
+          <span class="spotlight-note">Actualización comunitaria</span>
+        </div>
+        <div class="spotlight-list">
+          <div class="spotlight-item" style="cursor:default;">
+            <div class="spotlight-info">
+              <span class="spotlight-tier" style="background:rgba(45,212,191,.15);color:var(--signal);border-color:rgba(45,212,191,.35);">SINCRONIZACIÓN</span>
+              <h3 class="spotlight-name" style="margin-top:4px;font-size:1rem;">Eventos oficiales & Horas destacadas</h3>
+              <p style="font-size:.76rem;color:var(--ink-dim);margin-top:2px;">Horarios adaptados automáticamente a tu zona horaria local.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -116,7 +227,7 @@
 
     <div class="events-grid" id="eventsGrid"></div>
     
-    <p id="eventsEmptyMsg" class="empty-note" style="text-align:center;padding:var(--sp-8) 0;font-size:1rem;">
+    <p id="eventsEmptyMsg" class="empty-note" style="text-align:left;padding:var(--sp-5) 0;font-size:.95rem;">
       No se encontraron eventos con los filtros seleccionados.
     </p>
   </section>
@@ -163,7 +274,7 @@
       </div>
 
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:var(--sp-2);">
-        <button type="button" class="event-modal-close-btn" id="eventModalBottomClose">✕ Cerrar Noticia</button>
+        <button type="button" class="event-modal-close-btn" id="eventModalBottomClose">Cerrar detalle</button>
         <a id="eventModalGuideLink" href="#" target="_blank" rel="noopener" class="event-modal-link-btn" style="margin-top:0;">
           Consultar guía en Leek Duck
         </a>
@@ -177,7 +288,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.6.1</span>
+        <span class="foot-version">v1.8.0</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -208,5 +319,6 @@
 <script defer src="js/season.js"></script>
 <script defer src="js/noticias.js"></script>
 <script defer src="js/location.js"></script>
+<script defer src="js/nav.js?v=1.8.0"></script>
 </body>
 </html>

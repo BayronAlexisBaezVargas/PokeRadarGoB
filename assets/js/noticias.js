@@ -467,6 +467,7 @@
 
   /* ============ Modal de Detalle de Evento ============ */
   function openEventModal(item){
+    if (Date.now() - lastModalCloseTime < 400) return;
     var modal = document.getElementById('eventDetailModal');
     var modalImg = document.getElementById('eventModalImg');
     var modalCategory = document.getElementById('eventModalCategory');
@@ -557,7 +558,14 @@
     document.body.style.overflow = 'hidden';
   }
 
-  function closeEventModal(){
+  var lastModalCloseTime = 0;
+
+  function closeEventModal(e){
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    lastModalCloseTime = Date.now();
     var modal = document.getElementById('eventDetailModal');
     if(!modal) return;
     modal.close();
@@ -766,11 +774,23 @@
 
   /* ============ Inicialización ============ */
   function init(){
-    // 1. Carga inmediata con datos curados
-    allEvents = FALLBACK_EVENTS;
+    // 1. Carga inmediata: intentar caché de localStorage primero, sino dataset curado
+    try {
+      var cached = localStorage.getItem('pokeradar_events_v1');
+      if(cached){
+        var parsed = JSON.parse(cached);
+        if(Array.isArray(parsed) && parsed.length > 0){
+          allEvents = parsed;
+        }
+      }
+    } catch(e){}
+
+    if(!allEvents || !allEvents.length){
+      allEvents = FALLBACK_EVENTS;
+    }
     renderAllEvents(allEvents);
 
-    // 2. Fetch asíncrono para datos en vivo
+    // 2. Fetch asíncrono para revalidar datos en vivo (Stale-While-Revalidate)
     fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
       .then(function(res){
         if(!res.ok) throw new Error('HTTP ' + res.status);
@@ -778,13 +798,15 @@
       })
       .then(function(data){
         if(Array.isArray(data) && data.length > 0){
+          try {
+            localStorage.setItem('pokeradar_events_v1', JSON.stringify(data));
+          } catch(e){}
           allEvents = data;
           renderAllEvents(allEvents);
         }
       })
       .catch(function(err){
-        // En caso de fallo de red, se mantiene el dataset curado
-        console.info('Noticias: Usando dataset base de eventos.', err.message);
+        console.info('Noticias: Usando dataset en caché o base.', err.message);
       });
 
     // Filtros de marco temporal (Segmentos)
@@ -822,6 +844,7 @@
 
     // Delegación de clic en tarjetas para abrir modal
     document.addEventListener('click', function(e){
+      if (Date.now() - lastModalCloseTime < 400) return;
       var card = e.target.closest('[data-ev-key]');
       if(card){
         var key = card.getAttribute('data-ev-key');
@@ -834,11 +857,12 @@
     // Eventos de teclado para accesibilidad
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape'){
-        closeEventModal();
+        closeEventModal(e);
       }
       if(e.key === 'Enter' || e.key === ' '){
         var card = document.activeElement && document.activeElement.closest('[data-ev-key]');
-        if(card && !document.getElementById('eventDetailModal').classList.contains('open')){
+        var mod = document.getElementById('eventDetailModal');
+        if(card && (!mod || !mod.open)){
           e.preventDefault();
           var key = card.getAttribute('data-ev-key');
           if(eventRegistry[key]){
@@ -850,25 +874,29 @@
 
     var modalCloseBtn = document.getElementById('eventModalClose');
     if(modalCloseBtn){
-      modalCloseBtn.addEventListener('click', function(e) { e.preventDefault(); closeEventModal(); });
+      modalCloseBtn.addEventListener('click', function(e) {
+        closeEventModal(e);
+      });
     }
 
     var modalBottomCloseBtn = document.getElementById('eventModalBottomClose');
     if(modalBottomCloseBtn){
-      modalBottomCloseBtn.addEventListener('click', closeEventModal);
-      modalBottomCloseBtn.addEventListener('pointerup', closeEventModal);
+      modalBottomCloseBtn.addEventListener('click', function(e) {
+        closeEventModal(e);
+      });
     }
 
     var modalBackdrop = document.getElementById('eventDetailModal');
     if(modalBackdrop){
       modalBackdrop.addEventListener('click', function(e){
-        if(e.target === this) closeEventModal();
+        if(e.target === this) closeEventModal(e);
       });
       modalBackdrop.addEventListener('cancel', function(e){
         e.preventDefault();
-        closeEventModal();
+        closeEventModal(e);
       });
       modalBackdrop.addEventListener('close', function(){
+        lastModalCloseTime = Date.now();
         document.documentElement.classList.remove('modal-open');
         document.body.classList.remove('modal-open');
         document.body.style.overflow = '';

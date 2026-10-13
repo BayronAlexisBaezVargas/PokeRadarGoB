@@ -7,9 +7,9 @@
   /* ============ Tipos ============ */
   var TYPE_COLORS = {
     normal:'#B4AE96', fire:'#FF7A45', water:'#4C9FE8', electric:'#F3D23B', grass:'#6FBE5A',
-    ice:'#6FD4C8', fighting:'#D1483F', poison:'#A55FD1', ground:'#C9A25A', flying:'#92AEDC',
-    psychic:'#F35E8A', bug:'#A6C22C', rock:'#B4A05C', ghost:'#6F5FA3', dragon:'#6E5AE6',
-    dark:'#8C8398', steel:'#9FAAC0', fairy:'#E9A0D0'
+    ice:'#6FD4C8', fighting:'#F87171', poison:'#C084FC', ground:'#C9A25A', flying:'#92AEDC',
+    psychic:'#F35E8A', bug:'#A6C22C', rock:'#B4A05C', ghost:'#A78BFA', dragon:'#818CF8',
+    dark:'#B4A9BE', steel:'#9FAAC0', fairy:'#E9A0D0'
   };
   var TYPE_LABELS = {
     normal:'Normal', fire:'Fuego', water:'Agua', electric:'Eléctrico', grass:'Planta',
@@ -358,6 +358,11 @@
     // GO Stats cards
     var statsHTML = '';
     if(m.cp){
+      statsHTML += '<div class="modal-stat-card modal-stat-hundo">' +
+        '<span class="modal-stat-label">100% IV Máximo</span>' +
+        '<span class="modal-stat-val">' + m.cp[1] + ' CP</span>' +
+        (m.cpBoost ? '<span class="modal-stat-sub" style="color:var(--signal);">Con clima · Nivel 25: ' + m.cpBoost[1] + ' CP</span>' : '<span class="modal-stat-sub">Nivel 20 estándar</span>') +
+      '</div>';
       statsHTML += '<div class="modal-stat-card">' +
         '<span class="modal-stat-label">Rango CP (Captura)</span>' +
         '<span class="modal-stat-val">' + m.cp[0] + ' – ' + m.cp[1] + '</span>' +
@@ -405,7 +410,14 @@
     document.body.style.overflow = 'hidden';
   }
 
-  function closeMonModal(){
+  var lastModalCloseTime = 0;
+
+  function closeMonModal(e){
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    lastModalCloseTime = Date.now();
     var modal = document.getElementById('monModal');
     if(!modal) return;
     modal.close();
@@ -419,6 +431,14 @@
       '<div class="stat-row"><dt>CP</dt><dd>'+m.cp[0]+'–'+m.cp[1]+
       (m.cpBoost ? '<span class="boost">'+m.cpBoost[0]+'–'+m.cpBoost[1]+' con clima</span>' : '')+
       '</dd></div>'
+    ) : '';
+    var hundoHTML = m.cp ? (
+      '<div class="hundo-row" title="Poder de Combate 100% IV (Captura perfecta)">' +
+        '<span class="hundo-tag"><span class="hundo-dot" aria-hidden="true"></span>100% IV</span>' +
+        '<span class="hundo-values"><strong>' + m.cp[1] + ' CP</strong>' +
+        (m.cpBoost ? '<span class="hundo-boost"> · ' + m.cpBoost[1] + ' clima</span>' : '') +
+        '</span>' +
+      '</div>'
     ) : '';
     var weatherHTML = (m.weather && m.weather.length) ? (
       '<div class="stat-row"><dt>Clima ideal</dt><dd>'+m.weather.map(function(w){return WEATHER_LABELS[w];}).join(' · ')+'</dd></div>'
@@ -434,18 +454,18 @@
     var dexNum = Number.parseInt(m.dex, 10);
     var monKey = registerMon(m);
     return (
-      '<article class="card" data-mon-key="'+monKey+'" data-name="'+searchable+'" data-types="'+m.types.join(' ')+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
+      '<article class="card" data-mon-key="'+monKey+'" data-name="'+searchable+'" data-types="'+m.types.join(' ')+'" data-shiny="'+(m.shiny ? '1' : '0')+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
         '<span class="bracket tl"></span><span class="bracket tr"></span><span class="bracket bl"></span><span class="bracket br"></span>'+
         '<div class="card-top">'+
           '<div class="mon-avatar">'+
             '<div class="mon-avatar-glow" style="'+orbStyle(m.types)+'"></div>'+
             '<img class="mon-img" src="'+imgSrc+'" alt="'+m.name+'" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+dexNum+'.png\';" />'+
           '</div>'+
-          '<div class="card-id"><span class="dex">N.\u00b0 '+m.dex+'</span>'+(m.shiny?'<span class="shiny" title="Variocolor disponible">SHINY</span>':'')+'</div>'+
+          '<div class="card-id"><span class="dex">N.\u00b0 '+m.dex+'</span>'+(m.shiny?'<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Variocolor</span>':'')+'</div>'+
         '</div>'+
         '<h4 class="card-name">'+m.name+(m.tag?'<small>'+m.tag+'</small>':'')+'</h4>'+
         '<div class="types">'+typeBadges(m.types)+'</div>'+
-        '<dl class="stats">'+cpHTML+weatherHTML+signalHTML+weakHTML+'</dl>'+
+        '<dl class="stats">'+cpHTML+hundoHTML+weatherHTML+signalHTML+weakHTML+'</dl>'+
         (m.note?'<p class="mon-note">'+m.note+'</p>':'')+
         '<div class="card-click-hint">Ver detalles</div>'+
       '</article>'
@@ -560,201 +580,302 @@
     return el;
   }
 
+  /* ============ Hero Spotlight ============ */
+  function renderHeroSpotlight(){
+    var spotlightEl = document.getElementById('spotlightContent');
+    if(!spotlightEl) return;
+
+    var featured = [];
+    RAID_GROUPS.forEach(function(g){
+      if(!g.mons || !g.mons.length) return;
+      if(g.tier === '5★'){
+        g.mons.slice(0, 2).forEach(function(m){
+          featured.push({ m: m, tierLabel: '5★ Legendario', tierClass: 'legendary' });
+        });
+      } else if(g.tier === 'MEGA'){
+        g.mons.slice(0, 1).forEach(function(m){
+          featured.push({ m: m, tierLabel: 'Mega Incursión', tierClass: 'mega' });
+        });
+      }
+    });
+
+    if(!featured.length){
+      RAID_GROUPS.forEach(function(g){
+        if(g.mons && g.mons.length && featured.length < 2){
+          featured.push({ m: g.mons[0], tierLabel: g.tier, tierClass: '' });
+        }
+      });
+    }
+
+    if(!featured.length){
+      spotlightEl.innerHTML = '<div class="spotlight-skeleton"><span>Sin jefes activos registrados</span></div>';
+      return;
+    }
+
+    spotlightEl.innerHTML = featured.map(function(item){
+      var m = item.m;
+      var monKey = registerMon(m);
+      var imgSrc = getMonImage(m);
+      var dexNum = Number.parseInt(m.dex, 10);
+      var cpLabel = m.cp ? ('<span style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-dim);margin-left:auto;">CP ' + m.cp[1] + '</span>') : '';
+      return (
+        '<div class="spotlight-item" data-mon-key="'+monKey+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
+          '<div class="spotlight-avatar">'+
+            '<img src="'+imgSrc+'" alt="'+m.name+'" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+dexNum+'.png\';" />'+
+          '</div>'+
+          '<div class="spotlight-info">'+
+            '<div class="spotlight-meta">'+
+              '<span class="spotlight-tier '+(item.tierClass === 'mega' ? 'mega' : '')+'">'+item.tierLabel+'</span>'+
+              (m.shiny ? '<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Variocolor</span>' : '')+
+              cpLabel +
+            '</div>'+
+            '<h4 class="spotlight-name">'+m.name+(m.tag ? ' <small style="font-size:.78rem;font-weight:400;color:var(--ink-dim);">('+m.tag+')</small>' : '')+'</h4>'+
+            '<div class="spotlight-tags">'+typeBadges(m.types)+'</div>'+
+          '</div>'+
+          '<div class="spotlight-action">'+
+            '<span>Ver</span> &rarr;'+
+          '</div>'+
+        '</div>'
+      );
+    }).join('');
+
+    spotlightEl.querySelectorAll('.spotlight-item').forEach(function(el){
+      el.addEventListener('click', function(){
+        var key = el.getAttribute('data-mon-key');
+        if(MON_REGISTRY[key]){
+          openMonModal(MON_REGISTRY[key]);
+        }
+      });
+      el.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          var key = el.getAttribute('data-mon-key');
+          if(MON_REGISTRY[key]){
+            openMonModal(MON_REGISTRY[key]);
+          }
+        }
+      });
+    });
+  }
+
   /* ============ Inicialización ============ */
   var motionOK = window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var raidGroupsEl = document.getElementById('raidGroups');
   RAID_GROUPS.forEach(function(g){ raidGroupsEl.appendChild(renderRaidGroup(g)); });
+  renderHeroSpotlight();
 
-  fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json')
-    .then(function(res){ return res.json(); })
-    .then(function(data){
-      var t1 = RAID_GROUPS.find(function(g){ return g.id === 't1'; });
-      var t3 = RAID_GROUPS.find(function(g){ return g.id === 't3'; });
-      var t5 = RAID_GROUPS.find(function(g){ return g.id === 't5'; });
-      var tm = RAID_GROUPS.find(function(g){ return g.id === 'tm'; });
-      var ts = RAID_GROUPS.find(function(g){ return g.id === 'ts'; });
-
-      if (t1) t1.mons = [];
-      if (t3) t3.mons = [];
-      if (t5) t5.mons = [];
-      if (tm) tm.mons = [];
-      if (ts) ts.subgroups = [
-        { label:'1★ Sombra', mons:[] },
-        { label:'3★ Sombra', mons:[] },
-        { label:'5★ Sombra', mons:[] }
-      ];
-
-      data.forEach(function(b){
-        var isShadow = b.name.toLowerCase().indexOf('shadow') !== -1;
-        var cleanName = b.name.replace(/^Shadow /i, '');
-        var tag = '';
-        if (cleanName.indexOf('Mega ') === 0) { tag = 'Mega'; cleanName = cleanName.replace(/^Mega /i, ''); }
-        else if (cleanName.indexOf('Primal ') === 0) { tag = 'Primigenio'; cleanName = cleanName.replace(/^Primal /i, ''); }
-        else if (isShadow) { tag = 'Sombra'; }
-
-        var pMatch = cleanName.match(/\((.*?)\)/);
-        if (pMatch) {
-          if (!tag) tag = pMatch[1];
-          else tag += ' (' + pMatch[1] + ')';
-          cleanName = cleanName.replace(/\s*\(.*?\)/, '');
+  function cachedFetch(url, cacheKey, callback){
+    try {
+      var cached = localStorage.getItem(cacheKey);
+      if(cached){
+        var parsed = JSON.parse(cached);
+        if(parsed && (Array.isArray(parsed) ? parsed.length > 0 : true)){
+          callback(parsed, true);
         }
+      }
+    } catch(e){}
 
-        var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
-        var dex = dexMatch ? dexMatch[1] : '000';
-
-        var m = {
-          name: cleanName,
-          tag: tag,
-          dex: dex,
-          types: b.types.map(function(t){ return t.name; }),
-          shiny: b.canBeShiny,
-          image: b.image,
-          cp: b.combatPower ? [b.combatPower.normal.min, b.combatPower.normal.max] : null,
-          cpBoost: b.combatPower ? [b.combatPower.boosted.min, b.combatPower.boosted.max] : null,
-          weather: b.boostedWeather ? b.boostedWeather.map(function(w){ return w.name; }) : []
-        };
-        
-        if (isShadow) {
-          if (b.tier === '1-Star Raids' && ts) ts.subgroups[0].mons.push(mon(m));
-          else if (b.tier === '3-Star Raids' && ts) ts.subgroups[1].mons.push(mon(m));
-          else if (b.tier === '5-Star Raids' && ts) ts.subgroups[2].mons.push(mon(m));
-        } else {
-          if (b.tier === '1-Star Raids' && t1) t1.mons.push(mon(m));
-          else if (b.tier === '3-Star Raids' && t3) t3.mons.push(mon(m));
-          else if (b.tier === '5-Star Raids' && t5) t5.mons.push(mon(m));
-          else if (b.tier === 'Mega Raids' && tm) tm.mons.push(mon(m));
-        }
+    fetch(url)
+      .then(function(res){
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function(data){
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+        } catch(e){}
+        callback(data, false);
+      })
+      .catch(function(err){
+        console.warn('Network fetch error for ' + cacheKey, err);
       });
+  }
 
-      if (ts) ts.subgroups = ts.subgroups.filter(function(sg){ return sg.mons.length > 0; });
-      
-      raidGroupsEl.innerHTML = '';
-      RAID_GROUPS.forEach(function(g){ 
-        var hasMons = g.subgroups ? g.subgroups.length > 0 : (g.mons && g.mons.length > 0);
-        if(hasMons) { 
-          var el = renderRaidGroup(g);
-          el.classList.add('in');
-          raidGroupsEl.appendChild(el); 
-          if(typeof io !== 'undefined') { io.observe(el); }
-        }
-      });
+  function applyRaidsData(data){
+    var t1 = RAID_GROUPS.find(function(g){ return g.id === 't1'; });
+    var t3 = RAID_GROUPS.find(function(g){ return g.id === 't3'; });
+    var t5 = RAID_GROUPS.find(function(g){ return g.id === 't5'; });
+    var tm = RAID_GROUPS.find(function(g){ return g.id === 'tm'; });
+    var ts = RAID_GROUPS.find(function(g){ return g.id === 'ts'; });
 
-      var totalRaids = RAID_GROUPS.reduce(function(n,g){
-        return n + (g.subgroups ? g.subgroups.reduce(function(x,sg){return x+sg.mons.length;},0) : (g.mons?g.mons.length:0));
-      },0);
-      var statRaidsEl = document.getElementById('statRaids');
-      if (statRaidsEl) statRaidsEl.innerHTML = '<span>'+totalRaids+'</span>';
+    if (t1) t1.mons = [];
+    if (t3) t3.mons = [];
+    if (t5) t5.mons = [];
+    if (tm) tm.mons = [];
+    if (ts) ts.subgroups = [
+      { label:'1★ Sombra', mons:[] },
+      { label:'3★ Sombra', mons:[] },
+      { label:'5★ Sombra', mons:[] }
+    ];
 
-      var tierNavEl = document.getElementById('tierNav');
-      if(tierNavEl) {
-        tierNavEl.innerHTML = RAID_GROUPS.filter(function(g){
-          return g.subgroups ? g.subgroups.length > 0 : (g.mons && g.mons.length > 0);
-        }).map(function(g){ return '<a href="#'+g.id+'" class="tier-chip">'+g.tier+'</a>'; }).join('') +
-          '<a href="#upcomingRaidsSection" class="tier-chip" style="color:var(--signal);border-color:rgba(61,242,196,.35);">Próximas</a>';
-        
-        tierNavEl.querySelectorAll('a').forEach(function(a){
-          a.addEventListener('click', function(e){
-            e.preventDefault();
-            var target = document.getElementById(a.getAttribute('href').slice(1));
-            if(!target) return;
-            target.scrollIntoView({behavior: motionOK ? 'smooth' : 'auto', block:'start'});
-            if(motionOK){
-              var head = target.querySelector('.section-head') || target;
-              head.classList.add('flash');
-              setTimeout(function(){ head.classList.remove('flash'); }, 900);
-            }
-          });
-        });
+    data.forEach(function(b){
+      var isShadow = b.name.toLowerCase().indexOf('shadow') !== -1;
+      var cleanName = b.name.replace(/^Shadow /i, '');
+      var tag = '';
+      if (cleanName.indexOf('Mega ') === 0) { tag = 'Mega'; cleanName = cleanName.replace(/^Mega /i, ''); }
+      else if (cleanName.indexOf('Primal ') === 0) { tag = 'Primigenio'; cleanName = cleanName.replace(/^Primal /i, ''); }
+      else if (isShadow) { tag = 'Sombra'; }
+
+      var pMatch = cleanName.match(/\((.*?)\)/);
+      if (pMatch) {
+        if (!tag) tag = pMatch[1];
+        else tag += ' (' + pMatch[1] + ')';
+        cleanName = cleanName.replace(/\s*\(.*?\)/, '');
       }
 
-      buildTypeChips();
-      filterAll();
-    })
-    .catch(console.error);
+      var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
+      var dex = dexMatch ? dexMatch[1] : '000';
 
+      var m = {
+        name: cleanName,
+        tag: tag,
+        dex: dex,
+        types: b.types.map(function(t){ return t.name; }),
+        shiny: b.canBeShiny,
+        image: b.image,
+        cp: b.combatPower ? [b.combatPower.normal.min, b.combatPower.normal.max] : null,
+        cpBoost: b.combatPower ? [b.combatPower.boosted.min, b.combatPower.boosted.max] : null,
+        weather: b.boostedWeather ? b.boostedWeather.map(function(w){ return w.name; }) : []
+      };
+      
+      if (isShadow) {
+        if (b.tier === '1-Star Raids' && ts) ts.subgroups[0].mons.push(mon(m));
+        else if (b.tier === '3-Star Raids' && ts) ts.subgroups[1].mons.push(mon(m));
+        else if (b.tier === '5-Star Raids' && ts) ts.subgroups[2].mons.push(mon(m));
+      } else {
+        if (b.tier === '1-Star Raids' && t1) t1.mons.push(mon(m));
+        else if (b.tier === '3-Star Raids' && t3) t3.mons.push(mon(m));
+        else if (b.tier === '5-Star Raids' && t5) t5.mons.push(mon(m));
+        else if (b.tier === 'Mega Raids' && tm) tm.mons.push(mon(m));
+      }
+    });
 
+    if (ts) ts.subgroups = ts.subgroups.filter(function(sg){ return sg.mons.length > 0; });
+    
+    raidGroupsEl.innerHTML = '';
+    RAID_GROUPS.forEach(function(g){ 
+      var hasMons = g.subgroups ? g.subgroups.length > 0 : (g.mons && g.mons.length > 0);
+      if(hasMons) { 
+        var el = renderRaidGroup(g);
+        el.classList.add('in');
+        raidGroupsEl.appendChild(el); 
+        if(typeof io !== 'undefined') { io.observe(el); }
+      }
+    });
+
+    var totalRaids = RAID_GROUPS.reduce(function(n,g){
+      return n + (g.subgroups ? g.subgroups.reduce(function(x,sg){return x+sg.mons.length;},0) : (g.mons?g.mons.length:0));
+    },0);
+    var statRaidsEl = document.getElementById('statRaids');
+    if (statRaidsEl) statRaidsEl.innerHTML = '<span>'+totalRaids+'</span>';
+
+    var tierNavEl = document.getElementById('tierNav');
+    if(tierNavEl) {
+      tierNavEl.innerHTML = RAID_GROUPS.filter(function(g){
+        return g.subgroups ? g.subgroups.length > 0 : (g.mons && g.mons.length > 0);
+      }).map(function(g){ return '<a href="#'+g.id+'" class="tier-chip">'+g.tier+'</a>'; }).join('') +
+        '<a href="#upcomingRaidsSection" class="tier-chip" style="color:var(--signal);border-color:rgba(61,242,196,.35);">Próximas</a>';
+      
+      tierNavEl.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(e){
+          e.preventDefault();
+          var target = document.getElementById(a.getAttribute('href').slice(1));
+          if(!target) return;
+          target.scrollIntoView({behavior: motionOK ? 'smooth' : 'auto', block:'start'});
+          if(motionOK){
+            var head = target.querySelector('.section-head') || target;
+            head.classList.add('flash');
+            setTimeout(function(){ head.classList.remove('flash'); }, 900);
+          }
+        });
+      });
+    }
+
+    buildTypeChips();
+    filterAll();
+    renderHeroSpotlight();
+  }
+
+  cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json', 'pokeradar_raids_v1', applyRaidsData);
 
   // Cargar de inmediato si hay temporada en caché
   window.updateCurrentSeasonReadout();
 
   var upcomingRaidGroupsEl = document.getElementById('upcomingRaidGroups');
   if(upcomingRaidGroupsEl){
-    fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
-      .then(function(res){ return res.json(); })
-      .then(function(data){
-        window.updateCurrentSeasonReadout(data);
-        var now = new Date();
-        var g5 = { id:'u-5s', tier:'5★', title:'Incursiones 5★ · Próximas', mons:[] };
-        var gMega = { id:'u-mega', tier:'MEGA', title:'Megaincursiones · Próximas', mons:[] };
-        var gShadow = { id:'u-shadow', tier:'SOMBRA', title:'Incursiones Sombra · Próximas', mons:[] };
-        
-        var promises = [];
+    function applyUpcomingData(data){
+      window.updateCurrentSeasonReadout(data);
+      var now = new Date();
+      var g5 = { id:'u-5s', tier:'5★', title:'Incursiones 5★ · Próximas', mons:[] };
+      var gMega = { id:'u-mega', tier:'MEGA', title:'Megaincursiones · Próximas', mons:[] };
+      var gShadow = { id:'u-shadow', tier:'SOMBRA', title:'Incursiones Sombra · Próximas', mons:[] };
+      
+      var promises = [];
 
-        data.forEach(function(e){
-          var start = new Date(e.start);
-          if(start <= now) return;
-          if(!e.extraData || !e.extraData.raidbattles || !e.extraData.raidbattles.bosses) return;
-          if(e.eventType === 'raid-hour') return;
+      data.forEach(function(e){
+        var start = new Date(e.start);
+        if(start <= now) return;
+        if(!e.extraData || !e.extraData.raidbattles || !e.extraData.raidbattles.bosses) return;
+        if(e.eventType === 'raid-hour') return;
 
-          var isMega = e.name.toLowerCase().indexOf('mega') !== -1;
-          var isShadow = e.name.toLowerCase().indexOf('shadow') !== -1;
+        var isMega = e.name.toLowerCase().indexOf('mega') !== -1;
+        var isShadow = e.name.toLowerCase().indexOf('shadow') !== -1;
 
-          e.extraData.raidbattles.bosses.forEach(function(b){
-            var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
-            var dex = dexMatch ? dexMatch[1] : '000';
-            var m = {
-              name: b.name,
-              dex: dex,
-              types: [],
-              shiny: b.canBeShiny,
-              image: b.image,
-              note: 'Inicia: ' + start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
-            };
-            
-            var p = fetch('https://pokeapi.co/api/v2/pokemon/' + Number.parseInt(dex, 10))
-              .then(function(r){ return r.ok ? r.json() : null; })
-              .then(function(pd){
-                if(pd && pd.types) {
-                  m.types = pd.types.map(function(t){ return t.type.name; });
-                } else {
-                  m.types = ['normal'];
-                }
-                if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
-                else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
-                else { g5.mons.push(mon(m)); }
-              })
-              .catch(function(){
+        e.extraData.raidbattles.bosses.forEach(function(b){
+          var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
+          var dex = dexMatch ? dexMatch[1] : '000';
+          var m = {
+            name: b.name,
+            dex: dex,
+            types: [],
+            shiny: b.canBeShiny,
+            image: b.image,
+            note: 'Inicia: ' + start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+          };
+          
+          var p = fetch('https://pokeapi.co/api/v2/pokemon/' + Number.parseInt(dex, 10))
+            .then(function(r){ return r.ok ? r.json() : null; })
+            .then(function(pd){
+              if(pd && pd.types) {
+                m.types = pd.types.map(function(t){ return t.type.name; });
+              } else {
                 m.types = ['normal'];
-                if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
-                else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
-                else { g5.mons.push(mon(m)); }
-              });
-              
-            promises.push(p);
-          });
+              }
+              if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
+              else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
+              else { g5.mons.push(mon(m)); }
+            })
+            .catch(function(){
+              m.types = ['normal'];
+              if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
+              else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
+              else { g5.mons.push(mon(m)); }
+            });
+            
+          promises.push(p);
         });
-
-        Promise.all(promises).then(function(){
-          upcomingRaidGroupsEl.innerHTML = '';
-          if(g5.mons.length) UPCOMING_RAID_GROUPS.push(g5);
-          if(gMega.mons.length) UPCOMING_RAID_GROUPS.push(gMega);
-          if(gShadow.mons.length) UPCOMING_RAID_GROUPS.push(gShadow);
-
-          UPCOMING_RAID_GROUPS.forEach(function(g){ 
-            var el = renderUpcomingRaidGroup(g);
-            el.classList.add('in');
-            upcomingRaidGroupsEl.appendChild(el); 
-            if(typeof io !== 'undefined') { io.observe(el); }
-          });
-          buildTypeChips();
-          filterAll();
-        });
-      })
-      .catch(function(err){
-        console.error('Error fetching upcoming raids', err);
-        upcomingRaidGroupsEl.innerHTML = '<p class="empty-note" style="display:block;color:var(--alert);">Hubo un error al sincronizar las próximas incursiones.</p>';
       });
+
+      Promise.all(promises).then(function(){
+        upcomingRaidGroupsEl.innerHTML = '';
+        UPCOMING_RAID_GROUPS = [];
+        if(g5.mons.length) UPCOMING_RAID_GROUPS.push(g5);
+        if(gMega.mons.length) UPCOMING_RAID_GROUPS.push(gMega);
+        if(gShadow.mons.length) UPCOMING_RAID_GROUPS.push(gShadow);
+
+        UPCOMING_RAID_GROUPS.forEach(function(g){ 
+          var el = renderUpcomingRaidGroup(g);
+          el.classList.add('in');
+          upcomingRaidGroupsEl.appendChild(el); 
+          if(typeof io !== 'undefined') { io.observe(el); }
+        });
+        buildTypeChips();
+        filterAll();
+      });
+    }
+
+    cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json', 'pokeradar_events_v1', applyUpcomingData);
   }
 
   var wildGroupsEl = document.getElementById('wildGroups');
@@ -799,8 +920,12 @@
   /* Segmentos */
   document.querySelectorAll('.seg-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
-      document.querySelectorAll('.seg-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.seg-btn').forEach(function(b){
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
       document.body.setAttribute('data-seg', btn.getAttribute('data-seg'));
     });
   });
@@ -822,14 +947,22 @@
     UPCOMING_WILD.forEach(function(m){ m.types.forEach(function(t){ used.add(t); }); });
     var order = Object.keys(TYPE_COLORS).filter(function(t){ return used.has(t); });
     typeChipsEl.innerHTML = order.map(function(t){
-      var activeCls = activeTypes.has(t) ? ' active' : '';
-      return '<button class="chip type-chip'+activeCls+'" data-type="'+t+'" style="--tc:'+TYPE_COLORS[t]+'">'+TYPE_LABELS[t]+'</button>';
+      var isActive = activeTypes.has(t);
+      var activeCls = isActive ? ' active' : '';
+      return '<button class="chip type-chip'+activeCls+'" data-type="'+t+'" aria-pressed="'+(isActive ? 'true' : 'false')+'" style="--tc:'+TYPE_COLORS[t]+'">'+TYPE_LABELS[t]+'</button>';
     }).join('');
     typeChipsEl.querySelectorAll('.type-chip').forEach(function(btn){
       btn.addEventListener('click', function(){
         var t = btn.getAttribute('data-type');
-        if(activeTypes.has(t)){ activeTypes.delete(t); btn.classList.remove('active'); }
-        else { activeTypes.add(t); btn.classList.add('active'); }
+        if(activeTypes.has(t)){
+          activeTypes.delete(t);
+          btn.classList.remove('active');
+          btn.setAttribute('aria-pressed', 'false');
+        } else {
+          activeTypes.add(t);
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+        }
         filterAll();
       });
     });
@@ -838,15 +971,27 @@
 
   /* Búsqueda + filtro */
   var searchInput = document.getElementById('searchInput');
-  searchInput.addEventListener('input', filterAll);
+  if(searchInput) searchInput.addEventListener('input', filterAll);
+
+  var shinyFilterBtn = document.getElementById('shinyFilterBtn');
+  if(shinyFilterBtn){
+    shinyFilterBtn.addEventListener('click', function(){
+      var wasActive = shinyFilterBtn.classList.contains('active');
+      shinyFilterBtn.classList.toggle('active', !wasActive);
+      shinyFilterBtn.setAttribute('aria-pressed', (!wasActive).toString());
+      filterAll();
+    });
+  }
 
   function filterAll(){
-    var q = norm(searchInput.value.trim());
+    var q = norm(searchInput ? searchInput.value.trim() : '');
+    var onlyShiny = shinyFilterBtn && shinyFilterBtn.classList.contains('active');
     document.querySelectorAll('.card').forEach(function(c){
       var nameOk = !q || c.getAttribute('data-name').indexOf(q) !== -1;
       var types = c.getAttribute('data-types').split(' ');
       var typeOk = activeTypes.size===0 || types.some(function(t){ return activeTypes.has(t); });
-      c.classList.toggle('is-hidden', !(nameOk && typeOk));
+      var shinyOk = !onlyShiny || c.getAttribute('data-shiny') === '1';
+      c.classList.toggle('is-hidden', !(nameOk && typeOk && shinyOk));
     });
     document.querySelectorAll('.tier-group').forEach(function(g){
       var anyVisible = g.querySelectorAll('.card:not(.is-hidden)').length > 0;
@@ -867,6 +1012,7 @@
 
   /* Modal Event Listeners */
   document.addEventListener('click', function(e){
+    if (Date.now() - lastModalCloseTime < 400) return;
     var target = e.target.closest('[data-mon-key]');
     if(target){
       var key = target.getAttribute('data-mon-key');
@@ -879,11 +1025,12 @@
 
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape'){
-      closeMonModal();
+      closeMonModal(e);
     }
     if(e.key === 'Enter' || e.key === ' '){
       var target = document.activeElement && document.activeElement.closest('[data-mon-key]');
-      if(target && !document.getElementById('monModal').classList.contains('open')){
+      var mod = document.getElementById('monModal');
+      if(target && (!mod || !mod.open)){
         e.preventDefault();
         var key = target.getAttribute('data-mon-key');
         if(MON_REGISTRY[key]){
@@ -897,17 +1044,19 @@
   if(monModalEl){
     var mcEl = document.getElementById('modalClose');
     if(mcEl){
-      mcEl.addEventListener('click', closeMonModal);
-      mcEl.addEventListener('pointerup', closeMonModal);
+      mcEl.addEventListener('click', function(e){
+        closeMonModal(e);
+      });
     }
     monModalEl.addEventListener('click', function(e){
-      if(e.target === this) closeMonModal();
+      if(e.target === this) closeMonModal(e);
     });
     monModalEl.addEventListener('cancel', function(e){
       e.preventDefault();
-      closeMonModal();
+      closeMonModal(e);
     });
     monModalEl.addEventListener('close', function(){
+      lastModalCloseTime = Date.now();
       document.documentElement.classList.remove('modal-open');
       document.body.classList.remove('modal-open');
       document.body.style.overflow = '';

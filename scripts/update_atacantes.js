@@ -101,8 +101,10 @@ function cleanMonName(name) {
     .trim();
 }
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 async function scrapeAll() {
-  console.log('⚡ Conectando a Pokémon GO Hub Database...');
+  console.log('Conectando a Pokémon GO Hub Database...');
   const results = [];
 
   for (const t of types) {
@@ -110,6 +112,7 @@ async function scrapeAll() {
       const res = await fetch(`https://db.pokemongohub.net/es/pokemon-list/best-per-type/${t}`, {
         headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) PokeRadar/1.5" }
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
       const html = await res.text();
       const regex = /{\\"order\\":(\d+),\\"attacker\\":({.*?}),\\"qm\\":{.*?},\\"cm\\":{.*?},\\"dps\\":([0-9.]+)/g;
       
@@ -156,11 +159,18 @@ const tag = determineTag(raw.name, raw.form);
     } catch(err) {
       console.error(`✗ Error en tipo ${t}:`, err.message);
     }
+    await sleep(500);
   }
 
-  const outPath = path.join(__dirname, '../assets/scratch_atacantes.json');
-  fs.writeFileSync(outPath, JSON.stringify(results, null, 2), 'utf-8');
-  console.log(`\n🎉 Base de datos de atacantes guardada con éxito en: ${outPath}`);
+  const validResults = results.filter(r => r.top && r.top.length > 0);
+  if (validResults.length >= 15) {
+    const outPath = path.join(__dirname, '../assets/scratch_atacantes.json');
+    fs.writeFileSync(outPath, JSON.stringify(results, null, 2), 'utf-8');
+    console.log(`\nBase de datos de atacantes guardada con éxito en: ${outPath}`);
+  } else {
+    console.error(`\nError: Se obtuvieron solo ${validResults.length} tipos con datos válidos.`);
+    console.error('No se sobrescribirá assets/scratch_atacantes.json para proteger la integridad de los datos.');
+  }
 }
 
 scrapeAll();

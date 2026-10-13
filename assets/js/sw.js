@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pokego-radar-v1.6.1';
+const CACHE_NAME = 'pokego-radar-v1.8.0';
 const ASSETS_TO_CACHE = [
   '../../',
   '../../index.html',
@@ -16,6 +16,7 @@ const ASSETS_TO_CACHE = [
   './semana.js',
   './rocket.js',
   './atacantes.js',
+  './nav.js',
   '../img/favicon.svg'
 ];
 
