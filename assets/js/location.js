@@ -32,6 +32,7 @@
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register(window.location.pathname.includes('/assets/') ? 'js/sw.js' : 'assets/js/sw.js').then(function(registration) {
+        registration.update();
         console.log('PWA: ServiceWorker registrado con éxito', registration.scope);
       }).catch(function(err) {
         console.warn('PWA: Error al registrar ServiceWorker', err);

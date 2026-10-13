@@ -4,6 +4,31 @@
   if (window.__POKERADAR_NAV_ACTIVE__) return;
   window.__POKERADAR_NAV_ACTIVE__ = true;
 
+  // 0. PWA Cache Purge on Version Upgrade
+  try {
+    var CURRENT_VERSION = '1.8.0';
+    var storedVersion = localStorage.getItem('pokeradar_version');
+    if (storedVersion !== CURRENT_VERSION) {
+      localStorage.setItem('pokeradar_version', CURRENT_VERSION);
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          names.forEach(function(name) {
+            if (name !== 'pokego-radar-v1.8.0') {
+              caches.delete(name);
+            }
+          });
+        });
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          regs.forEach(function(r) {
+            r.unregister();
+          });
+        });
+      }
+    }
+  } catch (e) {}
+
   // 1. Radar Full-Screen Loader Markup (Dotted Pokeball + Tactical Radar Sweep)
   var loaderHtml = '<div class="radar-loader-content">' +
     '<div class="radar-pokeball-wrap">' +
