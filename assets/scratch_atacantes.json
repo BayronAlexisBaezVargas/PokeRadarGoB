@@ -177,6 +177,21 @@
       },
       {
         "rank": 2,
+        "name": "Mega Manectric",
+        "fullName": "Mega-Manectric",
+        "dex": 310,
+        "img": 10055,
+        "tag": "Mega",
+        "types": [
+          "electric"
+        ],
+        "dps": 36.1,
+        "atk": 286,
+        "def": 179,
+        "sta": 172
+      },
+      {
+        "rank": 3,
         "name": "Mega Raichu X",
         "fullName": "Mega-Raichu X",
         "dex": 26,
@@ -189,22 +204,6 @@
         "atk": 277,
         "def": 203,
         "sta": 155
-      },
-      {
-        "rank": 3,
-        "name": "Thundurus (Forma Tótem)",
-        "fullName": "Thundurus oscuro (Forma Tótem)",
-        "dex": 642,
-        "img": 10020,
-        "tag": "Oscuro",
-        "types": [
-          "electric",
-          "flying"
-        ],
-        "dps": 34,
-        "atk": 295,
-        "def": 161,
-        "sta": 188
       }
     ]
   },
