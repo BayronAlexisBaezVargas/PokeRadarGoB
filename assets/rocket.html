@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Radar Team GO Rocket · Pokémon GO</title>
 <meta name="description" content="Alineaciones actuales de los líderes del Team GO Rocket, Giovanni y Reclutas." />
-<meta name="theme-color" content="#0a0f0d" />
+<meta name="theme-color" content="#090D16" />
 <meta name="view-transition" content="same-origin" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,8 +14,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
-<link rel="stylesheet" href="css/base.css?v=1.8.1" />
-<link rel="stylesheet" href="css/rocket.css?v=1.8.1" />
+<link rel="stylesheet" href="css/base.css?v=1.9.4" />
+<link rel="stylesheet" href="css/rocket.css?v=1.9.4" />
 </head>
 <body>
 
@@ -144,25 +144,37 @@
         <span class="hud-date" id="userLocation">· Sincronizando red...</span>
       </div>
     </div>
-    <nav class="hud-nav" aria-label="Navegación principal">
-      <a href="../index.html" class="hud-nav-link">Radar</a>
-      <a href="noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
-      <a href="semana.html" class="hud-nav-link">Semana</a>
-      <a href="rocket.html" class="hud-nav-link active">Rocket</a>
-      <a href="atacantes.html" class="hud-nav-link">Atacantes</a>
-    </nav>
   </div>
 </header>
+<nav class="hud-nav" aria-label="Navegación principal">
+  <a href="../index.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/><circle cx="12" cy="12" r="2"/></svg>
+    <span>Radar</span>
+  </a>
+  <a href="noticias.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+    <span>Noticias<span class="nav-text-extra"> y Eventos</span></span>
+  </a>
+  <a href="semana.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+    <span>Semana</span>
+  </a>
+  <a href="rocket.html" class="hud-nav-link active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    <span>Rocket</span>
+  </a>
+  <a href="atacantes.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/><circle cx="12" cy="12" r="3"/></svg>
+    <span>Atacantes</span>
+  </a>
+</nav>
 
 <main>
   <section class="hero rocket-hero">
     <div class="hero-text">
-      <span class="kicker" style="color:#a55fd1;">Inteligencia Operativa (BETA)</span>
-      <h1 class="title">Radares del <span class="hl" style="color:#a55fd1;">Team GO Rocket</span>.</h1>
+      <span class="kicker" style="color:#c084fc;">Rotación Actual</span>
+      <h1 class="title">Radares del <span class="hl">Team GO Rocket</span>.</h1>
       <p class="lede">Alineaciones actuales de los Líderes, el Jefe Giovanni y los reclutas. Prepárate para combatir y rescatar Pokémon oscuros.</p>
-    </div>
-    <div class="hero-visual" style="display:flex;align-items:center;justify-content:center;">
-      <div style="font-size:120px;font-family:var(--font-display);font-weight:700;color:#a55fd1;text-shadow:0 0 40px rgba(165,95,209,0.5);">R</div>
     </div>
   </section>
 
@@ -170,14 +182,23 @@
     <div class="section-title"><h2>Líderes y Giovanni</h2></div>
     <p class="section-sub">El primer Pokémon de la alineación de un líder siempre puede ser variocolor (punto amarillo).</p>
     
+    <div class="rocket-tabs-bar" id="rocketTabsBar" aria-label="Filtro rápido de líderes">
+      <button type="button" class="rocket-tab-btn active" data-leader-filter="all">Todos</button>
+      <button type="button" class="rocket-tab-btn" data-leader-filter="giovanni">Giovanni</button>
+      <button type="button" class="rocket-tab-btn" data-leader-filter="cliff">Cliff</button>
+      <button type="button" class="rocket-tab-btn" data-leader-filter="sierra">Sierra</button>
+      <button type="button" class="rocket-tab-btn" data-leader-filter="arlo">Arlo</button>
+      <a href="#rocketGrunts" class="rocket-tab-btn rocket-tab-link">Reclutas ▾</a>
+    </div>
+
     <div class="grid" id="leadersGrid">
       <div class="sync-loader" id="rocketLoader">
-        <span class="spinner" style="border-top-color:#a55fd1;"></span> Desencriptando alineaciones de radar...
+        <span class="spinner" style="border-top-color:#a55fd1;"></span> Cargando alineaciones del Team GO Rocket...
       </div>
     </div>
   </section>
   
-  <section id="rocketGrunts" style="margin-top:var(--sp-8);border-top:1px solid var(--line);padding-top:var(--sp-6);">
+  <section id="rocketGrunts" class="section-divider">
     <div class="section-title"><h2>Reclutas (Grunts)</h2></div>
     <p class="section-sub">Posibles encuentros de rescate según la frase del recluta en las Poképaradas y Globos.</p>
     
@@ -234,7 +255,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.8.1</span>
+        <span class="foot-version">v1.9.4</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -264,6 +285,6 @@
 <script defer src="js/audio.js"></script>
 <script defer src="js/location.js"></script>
 <script defer src="js/rocket.js"></script>
-<script defer src="js/nav.js?v=1.8.1"></script>
+<script defer src="js/nav.js?v=1.9.4"></script>
 </body>
 </html>

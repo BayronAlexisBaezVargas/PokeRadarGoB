@@ -975,24 +975,70 @@
   }
 
   
+  function renderTypeFilters() {
+    var bar = document.getElementById('typeFilterBar');
+    if (!bar || bar.children.length > 0) return;
+    bar.innerHTML = '';
+
+    var allBtn = document.createElement('button');
+    allBtn.className = 'type-filter-btn active';
+    allBtn.setAttribute('data-type', 'all');
+    allBtn.setAttribute('role', 'tab');
+    allBtn.innerHTML = '<span class="type-filter-dot" style="background:var(--color-radar-cyan);"></span><span>Todos</span>';
+    bar.appendChild(allBtn);
+
+    ATACANTES_DATA.forEach(function(td) {
+      var col = TYPE_COLORS[td.type] || '#38BDF8';
+      var lbl = TYPE_LABELS[td.type] || td.type;
+      var btn = document.createElement('button');
+      btn.className = 'type-filter-btn';
+      btn.setAttribute('data-type', td.type);
+      btn.setAttribute('role', 'tab');
+      btn.innerHTML = '<span class="type-filter-dot" style="background:' + col + ';"></span><span>' + lbl + '</span>';
+      bar.appendChild(btn);
+    });
+
+    bar.addEventListener('click', function(e) {
+      var btn = e.target.closest('.type-filter-btn');
+      if (!btn) return;
+      var selected = btn.getAttribute('data-type');
+      bar.querySelectorAll('.type-filter-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+
+      var cards = document.querySelectorAll('.atacantes-grid .type-card');
+      cards.forEach(function(c) {
+        if (selected === 'all' || c.getAttribute('data-type') === selected) {
+          c.classList.remove('hidden');
+        } else {
+          c.classList.add('hidden');
+        }
+      });
+    });
+  }
+
   function renderAtacantes() {
     var grid = document.getElementById('atacantesGrid');
     if(!grid) return;
     grid.innerHTML = '';
+    renderTypeFilters();
 
     ATACANTES_DATA.forEach(function(typeData) {
       var color = TYPE_COLORS[typeData.type];
       
       var card = document.createElement('div');
       card.className = 'type-card reveal';
-      card.style.borderColor = rgba(color, 0.4);
-      card.style.background = 'linear-gradient(0deg, ' + rgba(color, 0.08) + ', ' + rgba(color, 0.08) + '), var(--panel-2)';
+      card.setAttribute('data-type', typeData.type);
+      card.style.setProperty('--card-type-color', color);
+      card.style.borderTopColor = color;
+      card.style.background = 'linear-gradient(0deg, ' + rgba(color, 0.08) + ', ' + rgba(color, 0.08) + '), var(--surface-card)';
       
       var header = document.createElement('div');
       header.className = 'type-header';
       header.style.background = rgba(color, 0.15);
       header.style.color = color;
-      header.innerHTML = '<h3>' + TYPE_LABELS[typeData.type] + '</h3>';
+      header.innerHTML = '<h3><span class="type-filter-dot" style="background:' + color + ';"></span>' + TYPE_LABELS[typeData.type] + '</h3><span class="type-badge-pill">TOP 3</span>';
       
       var monList = document.createElement('div');
       monList.className = 'type-mons';
@@ -1019,15 +1065,14 @@
         var imgClass = 'mon-img-sm';
         var tagStyle = '';
         if(mon.tag === 'Mega' || mon.tag === 'Primigenio' || mon.tag === 'Fusión'){
-           tagStyle = 'background:rgba(255,197,61,0.2);color:#ffc53d;border:1px solid rgba(255,197,61,0.4);';
+           tagStyle = 'background:rgba(255,197,61,0.2);color:#ffc53d;border:1px solid rgba(255,197,61,0.4);box-shadow:0 0 8px rgba(255,197,61,0.25);';
         } else if(mon.tag === 'Oscuro'){
-           tagStyle = 'background:rgba(165,95,209,0.2);color:#a55fd1;border:1px solid rgba(165,95,209,0.4);';
+           tagStyle = 'background:rgba(168,85,247,0.2);color:#c084fc;border:1px solid rgba(168,85,247,0.45);box-shadow:0 0 8px rgba(168,85,247,0.3);';
         } else if(mon.tag === 'Ultraente' || mon.tag === 'Especial'){
-           tagStyle = 'background:rgba(110,90,230,0.2);color:#6E5AE6;border:1px solid rgba(110,90,230,0.4);';
+           tagStyle = 'background:rgba(129,140,248,0.2);color:#818cf8;border:1px solid rgba(129,140,248,0.4);box-shadow:0 0 8px rgba(129,140,248,0.25);';
         } else {
-           tagStyle = 'background:rgba(255,255,255,0.1);color:#ccc;border:1px solid rgba(255,255,255,0.2);';
+           tagStyle = 'background:rgba(255,255,255,0.08);color:#cbd5e1;border:1px solid rgba(255,255,255,0.15);';
         }
-
         row.innerHTML = `
           <div class="mon-rank">#${index+1}</div>
           <div class="mon-avatar-sm">

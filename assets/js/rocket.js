@@ -116,7 +116,7 @@
         image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/331.png', // Cacnea
         lineup: [
           { phase: 'Fase 1 (Encuentro)', mons: [{ name:'Cacnea', dex:331, types:['grass'], shiny:true }] },
-          { phase: 'Fase 2', mons: [{ name:'Charizard', dex:6, types:['fire','flying'] }, { name:'Hypno', dex:97, types:['psychic'] }, { name:'Gorok', dex:75, types:['rock','ground'] }] }, // Graveler -> Gorok
+          { phase: 'Fase 2', mons: [{ name:'Charizard', dex:6, types:['fire','flying'] }, { name:'Hypno', dex:97, types:['psychic'] }, { name:'Graveler', dex:75, types:['rock','ground'] }] },
           { phase: 'Fase 3', mons: [{ name:'Dragonite', dex:149, types:['dragon','flying'] }, { name:'Scizor', dex:212, types:['bug','steel'] }, { name:'Salamence', dex:373, types:['dragon','flying'] }] }
         ]
       }
@@ -146,7 +146,7 @@
 
   /* ============ Helpers ============ */
   function getMonImage(dex){
-    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dex + '.png';
+    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/' + dex + '.png';
   }
 
   function rgba(hex, a){
@@ -163,6 +163,7 @@
     ROCKET_DATA.leaders.forEach(function(leader) {
       var card = document.createElement('div');
       card.className = 'leader-card reveal';
+      card.dataset.leader = leader.id;
       
       var header = document.createElement('div');
       header.className = 'leader-header';
@@ -187,13 +188,13 @@
       var lineupDiv = document.createElement('div');
       lineupDiv.className = 'leader-lineup';
       
-      leader.lineup.forEach(function(phase) {
+      leader.lineup.forEach(function(phase, phaseIdx) {
         var phaseDiv = document.createElement('div');
-        phaseDiv.className = 'lineup-phase';
+        phaseDiv.className = 'lineup-phase slot-' + (phaseIdx + 1);
         
         var titleDiv = document.createElement('div');
         titleDiv.className = 'phase-title';
-        titleDiv.textContent = phase.phase;
+        titleDiv.innerHTML = '<span class="slot-badge">SLOT ' + (phaseIdx + 1) + '</span> <span>' + phase.phase + '</span>';
         phaseDiv.appendChild(titleDiv);
         
         var monsDiv = document.createElement('div');
@@ -216,6 +217,15 @@
           
           monDiv.appendChild(img);
           monDiv.appendChild(span);
+
+          if (m.shiny) {
+            var shinyStar = document.createElement('span');
+            shinyStar.className = 'shiny-badge-indicator';
+            shinyStar.title = 'Posible Variocolor';
+            shinyStar.textContent = '✨';
+            monDiv.appendChild(shinyStar);
+          }
+
           monsDiv.appendChild(monDiv);
         });
         
@@ -246,21 +256,15 @@
       typeSpan.style.color = c;
       typeSpan.textContent = TYPE_LABELS[grunt.type] || 'Mixto';
       header.appendChild(typeSpan);
-      card.appendChild(header);
-      
-      var quoteDiv = document.createElement('div');
-      quoteDiv.className = 'grunt-quote';
-      quoteDiv.textContent = grunt.phrase;
-      card.appendChild(quoteDiv);
 
       var eff = calculateEffectiveness([grunt.type]);
       if(eff.weak && eff.weak.length){
-        var countersDiv = document.createElement('div');
-        countersDiv.className = 'grunt-counters';
-        var cLabel = document.createElement('div');
+        var countersWrap = document.createElement('div');
+        countersWrap.className = 'grunt-counters';
+        var cLabel = document.createElement('span');
         cLabel.className = 'grunt-counters-label';
-        cLabel.textContent = 'Debilidades clave:';
-        countersDiv.appendChild(cLabel);
+        cLabel.textContent = 'Débil vs:';
+        countersWrap.appendChild(cLabel);
 
         eff.weak.slice(0, 3).forEach(function(item){
           var badge = document.createElement('span');
@@ -270,16 +274,19 @@
           badge.style.backgroundColor = rgba(col, 0.16);
           badge.style.borderColor = rgba(col, 0.45);
           badge.textContent = TYPE_LABELS[item.type];
-          countersDiv.appendChild(badge);
+          countersWrap.appendChild(badge);
         });
-        card.appendChild(countersDiv);
+        header.appendChild(countersWrap);
       }
+      card.appendChild(header);
+
+      var quoteDiv = document.createElement('div');
+      quoteDiv.className = 'grunt-quote';
+      quoteDiv.textContent = grunt.phrase;
+      card.appendChild(quoteDiv);
       
       var phaseDiv = document.createElement('div');
-      phaseDiv.className = 'lineup-phase';
-      phaseDiv.style.background = 'transparent';
-      phaseDiv.style.border = 'none';
-      phaseDiv.style.padding = '0';
+      phaseDiv.className = 'lineup-phase grunt-encounters';
       
       var titleDiv = document.createElement('div');
       titleDiv.className = 'phase-title';
@@ -288,7 +295,6 @@
       
       var monsDiv = document.createElement('div');
       monsDiv.className = 'phase-mons';
-      monsDiv.style.gap = '6px';
       
       grunt.mons.forEach(function(m) {
         var monDiv = document.createElement('div');
@@ -458,6 +464,10 @@
         if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
       });
     }, {threshold: 0.01, rootMargin: '60px'});
+
+    document.querySelectorAll('.leader-card.reveal, .grunt-card.reveal').forEach(function(el){
+      io.observe(el);
+    });
     
     // Búsqueda en tiempo real de reclutas por frase o Pokémon
     var gruntSearch = document.getElementById('gruntSearch');
@@ -474,6 +484,30 @@
         if(gruntEmptyNote){
           gruntEmptyNote.style.display = visibleCount === 0 ? 'block' : 'none';
         }
+      });
+    }
+
+    // Pestañas / Tabs de navegación rápida entre Líderes
+    var tabsBar = document.getElementById('rocketTabsBar');
+    if (tabsBar) {
+      tabsBar.addEventListener('click', function(e) {
+        var btn = e.target.closest('.rocket-tab-btn[data-leader-filter]');
+        if (!btn) return;
+        var filter = btn.getAttribute('data-leader-filter');
+        tabsBar.querySelectorAll('.rocket-tab-btn').forEach(function(b) {
+          b.classList.remove('active');
+        });
+        btn.classList.add('active');
+        if (typeof window.playClickSound === 'function') window.playClickSound();
+
+        var cards = leadersGrid.querySelectorAll('.leader-card');
+        cards.forEach(function(card) {
+          if (filter === 'all' || card.dataset.leader === filter) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
       });
     }
   }, 300);

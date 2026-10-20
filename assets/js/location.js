@@ -40,49 +40,4 @@
     });
   }
 
-  // Animaciones híbridas de salida para enlaces internos (Transiciones manuales)
-  document.addEventListener('click', function(e) {
-    var link = e.target.closest('a');
-    // Verificar que sea un enlace interno válido y no uno de otra pestaña
-    if (link && link.href && link.target !== '_blank' && link.href.startsWith(window.location.origin) && !link.href.includes('#')) {
-      
-      // Si el enlace apunta a la página actual exacta, lo ignoramos para evitar la recarga y animación inútil
-      var currentPath = window.location.pathname.replace(/\/$/, '');
-      var linkPath = link.pathname.replace(/\/$/, '');
-      if (currentPath === '' || currentPath === '/') currentPath = '/index.html';
-      if (linkPath === '' || linkPath === '/') linkPath = '/index.html';
-      
-      if (link.href === window.location.href || linkPath === currentPath) {
-        e.preventDefault();
-        return;
-      }
-
-      e.preventDefault();
-      
-      var mainEl = document.querySelector('main');
-      var footerEl = document.querySelector('footer');
-      var els = [mainEl, footerEl].filter(Boolean);
-      
-      els.forEach(function(el) {
-        el.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(-10px)';
-      });
-      
-      setTimeout(function() {
-        window.location.href = link.href;
-      }, 280);
-    }
-  });
-
-  // Restaurar los elementos al entrar en la página o al usar el botón "Atrás"
-  window.addEventListener('pageshow', function() {
-    var els = [document.querySelector('main'), document.querySelector('footer')].filter(Boolean);
-    els.forEach(function(el) {
-      el.style.transition = 'none';
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    });
-  });
-
 })();

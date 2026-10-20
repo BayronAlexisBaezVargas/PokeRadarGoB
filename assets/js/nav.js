@@ -6,14 +6,14 @@
 
   // 0. PWA Cache Purge on Version Upgrade
   try {
-    var CURRENT_VERSION = '1.8.1';
+    var CURRENT_VERSION = '1.9.4';
     var storedVersion = localStorage.getItem('pokeradar_version');
     if (storedVersion !== CURRENT_VERSION) {
       localStorage.setItem('pokeradar_version', CURRENT_VERSION);
       if ('caches' in window) {
         caches.keys().then(function(names) {
           names.forEach(function(name) {
-            if (name !== 'pokego-radar-v1.8.1') {
+            if (name !== 'pokego-radar-v1.9.4') {
               caches.delete(name);
             }
           });

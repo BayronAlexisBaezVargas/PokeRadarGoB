@@ -1,122 +1,115 @@
 (function(){
   "use strict";
 
-  // Create the modal HTML dynamically
+  // Floating Event Card modal for semana.html events
   var modalHTML = `
     <dialog class="modal-backdrop" id="evtModal">
-      <div class="modal-box" aria-modal="true" aria-labelledby="evtTitle" style="width: calc(100% - 24px); max-height: 88vh; overflow-y: auto; margin: auto;">
-        <button class="modal-close" id="evtClose" aria-label="Cerrar modal">×</button>
-        <div class="modal-header">
-          <div class="modal-art-wrap">
-            <div class="modal-art-glow" style="background:rgba(61,242,196,0.3)"></div>
-            <img id="evtImg" class="modal-art" src="" alt="">
-          </div>
-          <div class="modal-header-info">
-            <div class="modal-tag" id="evtType">TIPO DE EVENTO</div>
-            <h2 class="modal-title" id="evtTitle">Nombre del Evento</h2>
-            <div class="modal-dex-row" id="evtDates">Fechas</div>
+      <div class="modal-box floating-event-card" aria-modal="true" aria-labelledby="evtTitle">
+        <button class="modal-close" id="evtClose" aria-label="Cerrar modal">&times;</button>
+        <div class="fec-header">
+          <img id="evtImg" class="fec-thumb" src="" alt="">
+          <div class="fec-head-info">
+            <div class="fec-badges">
+              <span id="evtType" class="fec-cat-pill">TIPO DE EVENTO</span>
+            </div>
+            <h2 id="evtTitle" class="fec-title">Nombre del Evento</h2>
+            <div id="evtDates" style="font-size:0.75rem;color:var(--ink-dim);font-family:var(--font-mono);margin-top:2px;"></div>
           </div>
         </div>
-        <div class="modal-body">
-          <div class="modal-section">
-            <div class="modal-section-title">Detalles Analizados</div>
-            <div class="modal-pokedex-box" id="evtDesc">
-              Generando descripción...
-            </div>
+        <div class="fec-body">
+          <div class="fec-section" id="evtPerksSection" style="display:none;">
+            <span class="fec-label">Bonificaciones</span>
+            <ul id="evtPerks" class="fec-perks-list"></ul>
           </div>
-          <div style="display:flex; justify-content:flex-start; margin-top:16px; width:100%; box-sizing:border-box;">
-            <a id="evtLink" href="#" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; justify-content:center; text-align:center; max-width:100%; box-sizing:border-box; word-break:break-word; text-decoration:none; background:var(--signal); color:var(--void); font-family:var(--font-mono); font-weight:bold; padding:10px 16px; border-radius:var(--radius-sm); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; transition:transform 0.2s;">Ver Noticia Completa ↗</a>
-          </div>
+          <a id="evtLink" href="#" target="_blank" rel="noopener" class="fec-action-btn" style="display:none;">
+            <span>Ver noticia oficial</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+          </a>
         </div>
       </div>
-    </div>
+    </dialog>
   `;
 
   var div = document.createElement('div');
   div.innerHTML = modalHTML;
   document.body.appendChild(div.firstElementChild);
 
-  var evtModal = document.getElementById('evtModal');
-  var evtClose = document.getElementById('evtClose');
-  var evtImg = document.getElementById('evtImg');
-  var evtType = document.getElementById('evtType');
-  var evtTitle = document.getElementById('evtTitle');
-  var evtDates = document.getElementById('evtDates');
-  var evtDesc = document.getElementById('evtDesc');
-  var evtLink = document.getElementById('evtLink');
+  var evtModal        = document.getElementById('evtModal');
+  var evtClose        = document.getElementById('evtClose');
+  var evtImg          = document.getElementById('evtImg');
+  var evtType         = document.getElementById('evtType');
+  var evtTitle        = document.getElementById('evtTitle');
+  var evtDates        = document.getElementById('evtDates');
+  var evtPerks        = document.getElementById('evtPerks');
+  var evtPerksSection = document.getElementById('evtPerksSection');
+  var evtLink         = document.getElementById('evtLink');
 
-  function typeWriter(el, text) {
-    el.innerHTML = '';
-    el.classList.add('typing-cursor');
-    var tid = (window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967295).toString();
-    el.dataset.tid = tid;
-    var i = 0;
-    function type() {
-      if (el.dataset.tid != tid) return;
-      if (i < text.length) {
-        el.textContent += text.charAt(i);
-        i++;
-        setTimeout(type, 15);
-      } else {
-        el.classList.remove('typing-cursor');
-      }
-    }
-    type();
-  }
+  var lastModalCloseTime = 0;
 
   window.openEventModal = function(e) {
     if (Date.now() - lastModalCloseTime < 400) return;
-    if(window.playScanSound) window.playScanSound();
-    
-    evtImg.src = e.image || '';
-    evtType.textContent = e.heading || 'Evento de Pokémon GO';
-    evtTitle.textContent = e.name || 'Evento Desconocido';
-    if (e.link && (e.link.startsWith('http://') || e.link.startsWith('https://'))) {
-      evtLink.href = e.link;
-      evtLink.style.display = 'inline-block';
-    } else {
-      evtLink.href = '#';
-      evtLink.style.display = 'none';
-    }
+    if (window.playScanSound) window.playScanSound();
 
-    // Dates formatting
+    // Image
+    evtImg.src = e.image || '';
+    evtImg.alt = e.name || '';
+
+    // Type pill
+    evtType.textContent = e.heading || 'Evento';
+
+    // Title
+    evtTitle.textContent = e.name || 'Evento';
+
+    // Dates
     var datesStr = '';
-    if(e.start && e.end) {
+    if (e.start && e.end) {
       var d1 = new Date(e.start);
       var d2 = new Date(e.end);
-      datesStr = d1.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ' - ' + d2.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+      datesStr = d1.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) +
+                 ' – ' +
+                 d2.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
     } else {
       datesStr = 'Fecha sin especificar';
     }
     evtDates.textContent = datesStr;
 
-    // Generate a description based on event extraData
-    var descStr = '';
+    // Perks
+    var perks = [];
     if (e.extraData) {
       if (e.extraData.spotlight && e.extraData.spotlight.bonus) {
-        descStr = 'Bonus activo: ' + e.extraData.spotlight.bonus;
-        if(e.extraData.spotlight.name) descStr += '. Pokémon Destacado: ' + e.extraData.spotlight.name + '.';
-      } else if (e.extraData.generic) {
-        if(e.extraData.generic.hasSpawns) descStr += 'Este evento cuenta con apariciones silvestres especiales. ';
-        if(e.extraData.generic.hasFieldResearchTasks) descStr += 'Nuevas tareas de investigación de campo disponibles. ';
+        perks.push('Bonus: ' + e.extraData.spotlight.bonus);
+        if (e.extraData.spotlight.name) perks.push('Pokémon Destacado: ' + e.extraData.spotlight.name);
+      } else if (e.extraData.generic && Array.isArray(e.extraData.generic.perks)) {
+        perks = e.extraData.generic.perks;
       } else if (e.extraData.communityday) {
-        descStr += 'Día de la comunidad. Aprende un ataque exclusivo evolucionando al Pokémon destacado durante el evento o hasta unas horas después.';
+        perks.push('Día de la Comunidad');
+        perks.push('Evoluciona al Pokémon destacado para aprender su ataque exclusivo.');
       }
     }
-    
-    if(!descStr) {
-      descStr = 'Evento detectado en el radar. Revisa la fuente oficial para conocer todos los detalles, bonos y rotaciones asociadas a esta anomalía.';
+    if (perks.length > 0) {
+      evtPerks.innerHTML = perks.map(function(p) {
+        return '<li>' + p + '</li>';
+      }).join('');
+      evtPerksSection.style.display = 'flex';
+    } else {
+      evtPerks.innerHTML = '';
+      evtPerksSection.style.display = 'none';
     }
 
-    typeWriter(evtDesc, descStr);
+    // Link
+    if (e.link && (e.link.startsWith('http://') || e.link.startsWith('https://'))) {
+      evtLink.href = e.link;
+      evtLink.style.display = 'flex';
+    } else {
+      evtLink.href = '#';
+      evtLink.style.display = 'none';
+    }
 
     evtModal.showModal();
     document.documentElement.classList.add('modal-open');
     document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
   };
-
-  var lastModalCloseTime = 0;
 
   function closeEventModal(e) {
     if (e) {
@@ -130,17 +123,17 @@
     document.body.style.overflow = '';
   }
 
-  evtClose.addEventListener('click', function(e){
+  evtClose.addEventListener('click', function(e) {
     closeEventModal(e);
   });
-  evtModal.addEventListener('click', function(e){
-    if(e.target === evtModal) closeEventModal(e);
+  evtModal.addEventListener('click', function(e) {
+    if (e.target === evtModal) closeEventModal(e);
   });
-  evtModal.addEventListener('cancel', function(e){
+  evtModal.addEventListener('cancel', function(e) {
     e.preventDefault();
     closeEventModal(e);
   });
-  evtModal.addEventListener('close', function(){
+  evtModal.addEventListener('close', function() {
     lastModalCloseTime = Date.now();
     document.documentElement.classList.remove('modal-open');
     document.body.classList.remove('modal-open');

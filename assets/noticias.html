@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Noticias y Próximos Eventos · Pokémon GO</title>
 <meta name="description" content="Noticias, calendario de eventos próximos, Días de la Comunidad, Horas Destacadas y rotaciones en Pokémon GO." />
-<meta name="theme-color" content="#0a0f0d" />
+<meta name="theme-color" content="#090D16" />
 <meta name="view-transition" content="same-origin" />
 <meta property="og:title" content="Noticias y Próximos Eventos · Pokémon GO" />
 <meta property="og:description" content="Calendario de eventos próximos, Días de la Comunidad, Horas Destacadas y rotaciones en Pokémon GO." />
@@ -25,8 +25,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
-<link rel="stylesheet" href="css/base.css?v=1.8.1" />
-<link rel="stylesheet" href="css/noticias.css?v=1.8.1" />
+<link rel="stylesheet" href="css/base.css?v=1.9.4" />
+<link rel="stylesheet" href="css/noticias.css?v=1.9.4" />
 </head>
 <body>
 
@@ -155,15 +155,30 @@
         <span class="hud-date" id="userLocation">· Sincronizando red...</span>
       </div>
     </div>
-    <nav class="hud-nav" aria-label="Navegación principal">
-      <a href="../index.html" class="hud-nav-link">Radar</a>
-      <a href="noticias.html" class="hud-nav-link active">Noticias<span class="nav-text-extra"> y Eventos</span></a>
-      <a href="semana.html" class="hud-nav-link">Semana</a>
-      <a href="rocket.html" class="hud-nav-link">Rocket</a>
-      <a href="atacantes.html" class="hud-nav-link">Atacantes</a>
-    </nav>
   </div>
 </header>
+<nav class="hud-nav" aria-label="Navegación principal">
+  <a href="../index.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/><circle cx="12" cy="12" r="2"/></svg>
+    <span>Radar</span>
+  </a>
+  <a href="noticias.html" class="hud-nav-link active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+    <span>Noticias<span class="nav-text-extra"> y Eventos</span></span>
+  </a>
+  <a href="semana.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+    <span>Semana</span>
+  </a>
+  <a href="rocket.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    <span>Rocket</span>
+  </a>
+  <a href="atacantes.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/><circle cx="12" cy="12" r="3"/></svg>
+    <span>Atacantes</span>
+  </a>
+</nav>
 
 <main>
   <section class="hero">
@@ -175,7 +190,7 @@
         <div class="readout"><dt>Eventos en curso</dt><dd id="statActiveEvents">—</dd></div>
         <div class="readout"><dt>Próximos 7 días</dt><dd id="statWeekEvents">—</dd></div>
         <div class="readout"><dt>Total programados</dt><dd id="statTotalEvents">—</dd></div>
-        <div class="readout" id="seasonReadout"><dt>Temporada actual</dt><dd id="statSeason" style="font-size:1.05rem;">Sincronizando...</dd></div>
+        <div class="readout" id="seasonReadout"><dt>Temporada actual</dt><dd id="statSeason">Sincronizando...</dd></div>
       </dl>
     </div>
     <div class="hero-spotlight" aria-label="Agenda en vivo">
@@ -199,7 +214,7 @@
 
   <!-- Banner de evento destacado -->
   <div class="today-banner" id="highlightBanner" style="display:none;">
-    <span class="badge" style="color:var(--alert);border-color:rgba(255,90,68,.4);background:rgba(255,90,68,.15);font-size:.7rem;padding:3px 8px;">DESTACADO</span>
+    <span class="badge" style="color:var(--gold);border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.12);font-size:.7rem;padding:3px 8px;">DESTACADO</span>
     <div id="highlightContent"></div>
   </div>
 
@@ -235,51 +250,45 @@
 </main>
 
 <!-- Modal de Detalle de Evento -->
-<dialog id="eventDetailModal" class="modal-backdrop"  aria-modal="true" aria-hidden="true">
-  <div class="modal-box" style="width: calc(100% - 24px); max-width: min(620px, calc(100% - 24px)); max-height: 88vh; margin: auto; overflow-y: auto;">
+<dialog id="eventDetailModal" class="modal-backdrop" aria-modal="true" aria-hidden="true">
+  <div class="modal-box floating-event-card">
     <button type="button" class="modal-close" id="eventModalClose" aria-label="Cerrar modal">&times;</button>
-    
-    <div class="event-modal-media" id="eventModalMedia">
-      <img id="eventModalImg" class="event-modal-img" src="" alt="" />
-      <div class="event-modal-overlay"></div>
-      <div class="event-tags-bar">
-        <span id="eventModalCategory" class="event-cat-tag"></span>
-        <span id="eventModalStatus" class="event-status-tag"></span>
+
+    <div class="fec-header">
+      <img id="eventModalImg" class="fec-thumb" src="" alt="" />
+      <div class="fec-head-info">
+        <div class="fec-badges">
+          <span id="eventModalCategory" class="fec-cat-pill"></span>
+          <span id="eventModalStatus" class="fec-status-pill"></span>
+        </div>
+        <h3 id="eventModalTitle" class="fec-title">Evento</h3>
       </div>
     </div>
 
-    <div class="event-modal-body">
-      <h3 id="eventModalTitle" class="event-modal-title">Evento</h3>
-      
-      <div class="event-modal-times">
-        <div><strong>Inicio:</strong> <span id="eventModalStart">—</span></div>
-        <div><strong>Término:</strong> <span id="eventModalEnd">—</span></div>
-        <div style="margin-top:4px;color:var(--signal);" id="eventModalCountdown"></div>
+    <div class="fec-body">
+      <div class="fec-time-bar">
+        <div class="fec-time-main">
+          <span id="eventModalDate">—</span>
+          <span class="fec-sep">·</span>
+          <span id="eventModalTime">—</span>
+        </div>
+        <span id="eventModalCountdown" class="fec-countdown">—</span>
       </div>
 
-      <div class="modal-section" id="eventModalBossesSection" style="display:none;">
-        <div class="modal-section-title">Pokémon Protagonistas / Jefes</div>
+      <div class="fec-section" id="eventModalBossesSection" style="display:none;">
+        <span class="fec-label">Destacados</span>
         <div id="eventModalBosses" class="modal-badges-wrap"></div>
       </div>
 
-      <div class="modal-section">
-        <div class="modal-section-title">Parámetros y Bonificaciones del Evento</div>
-        <div id="eventModalPerks" class="modal-badges-wrap"></div>
+      <div class="fec-section">
+        <span class="fec-label">Bonificaciones del evento</span>
+        <ul id="eventModalPerks" class="fec-perks-list"></ul>
       </div>
 
-      <div class="modal-section" id="eventModalDescSection">
-        <div class="modal-section-title">Detalles Operativos</div>
-        <div class="modal-pokedex-box" style="font-style:normal;">
-          <p id="eventModalDesc">Cargando información del evento...</p>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:var(--sp-2);">
-        <button type="button" class="event-modal-close-btn" id="eventModalBottomClose">Cerrar detalle</button>
-        <a id="eventModalGuideLink" href="#" target="_blank" rel="noopener" class="event-modal-link-btn" style="margin-top:0;">
-          Consultar guía en Leek Duck
-        </a>
-      </div>
+      <a id="eventModalGuideLink" href="#" target="_blank" rel="noopener" class="fec-action-btn">
+        <span>Ver noticia oficial</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+      </a>
     </div>
   </div>
 </dialog>
@@ -289,7 +298,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.8.1</span>
+        <span class="foot-version">v1.9.4</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -320,6 +329,6 @@
 <script defer src="js/season.js"></script>
 <script defer src="js/noticias.js"></script>
 <script defer src="js/location.js"></script>
-<script defer src="js/nav.js?v=1.8.1"></script>
+<script defer src="js/nav.js?v=1.9.4"></script>
 </body>
 </html>

@@ -1,1 +1,4 @@
-/* Migrado a base.css, home.css, noticias.css, semana.css, rocket.css y atacantes.css */
+/* ==========================================================================
+   PokeRadar GO · Master Stylesheet Import
+   ========================================================================== */
+@import url("base.css");

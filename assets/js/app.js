@@ -220,6 +220,24 @@
     return { weak: weak, resist: resist };
   }
 
+  function ensureWeakness(m){
+    if (m && m.types && (!m.weak || !m.weak.length)) {
+      var eff = calculateEffectiveness(m.types);
+      m.weak = eff.weak.slice(0, 4).map(function(w){ return w.type; });
+    }
+    return m;
+  }
+
+  // Precalcular debilidades de grupos precargados
+  RAID_GROUPS.forEach(function(g){
+    if (g.mons) g.mons.forEach(ensureWeakness);
+    if (g.subgroups) g.subgroups.forEach(function(sg){ if (sg.mons) sg.mons.forEach(ensureWeakness); });
+  });
+  WILD_GROUPS.forEach(function(g){
+    if (g.mons) g.mons.forEach(ensureWeakness);
+    if (g.subgroups) g.subgroups.forEach(function(sg){ if (sg.mons) sg.mons.forEach(ensureWeakness); });
+  });
+
   function formatMultiplierBadges(items){
     if(!items || !items.length){
       return '<span style="font-size:.74rem;color:var(--ink-dim);font-family:var(--font-mono)">Ninguno (Daño neutro)</span>';
@@ -244,6 +262,9 @@
 
   function registerMon(m){
     var key = 'pk_' + m.dex + '_' + (m.tag || '').replace(/[^a-zA-Z0-9]/g, '_');
+    if (MON_REGISTRY[key] && MON_REGISTRY[key].cp && !m.cp) {
+      return key;
+    }
     MON_REGISTRY[key] = m;
     return key;
   }
@@ -251,22 +272,8 @@
   var currentOpenDex = null;
 
   function runTypewriter(el, text) {
-    el.innerHTML = '';
-    el.classList.add('typing-cursor');
-    var tid = (window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967295).toString();
-    el.dataset.tid = tid;
-    var i = 0;
-    function type() {
-      if (el.dataset.tid != tid) return;
-      if (i < text.length) {
-        el.textContent += text.charAt(i);
-        i++;
-        setTimeout(type, 10);
-      } else {
-        el.classList.remove('typing-cursor');
-      }
-    }
-    type();
+    if (!el) return;
+    el.textContent = text || '';
   }
 
   function fetchPokeApiDetails(dexStr){
@@ -427,47 +434,78 @@
   }
 
   function cardHTML(m){
-    var cpHTML = m.cp ? (
-      '<div class="stat-row"><dt>CP</dt><dd>'+m.cp[0]+'–'+m.cp[1]+
-      (m.cpBoost ? '<span class="boost">'+m.cpBoost[0]+'–'+m.cpBoost[1]+' con clima</span>' : '')+
-      '</dd></div>'
-    ) : '';
-    var hundoHTML = m.cp ? (
-      '<div class="hundo-row" title="Poder de Combate 100% IV (Captura perfecta)">' +
-        '<span class="hundo-tag"><span class="hundo-dot" aria-hidden="true"></span>100% IV</span>' +
-        '<span class="hundo-values"><strong>' + m.cp[1] + ' CP</strong>' +
-        (m.cpBoost ? '<span class="hundo-boost"> · ' + m.cpBoost[1] + ' clima</span>' : '') +
-        '</span>' +
-      '</div>'
-    ) : '';
-    var weatherHTML = (m.weather && m.weather.length) ? (
-      '<div class="stat-row"><dt>Clima ideal</dt><dd>'+m.weather.map(function(w){return WEATHER_LABELS[w];}).join(' · ')+'</dd></div>'
-    ) : '';
-    var weakHTML = m.weak ? (
-      '<div class="stat-row weak-row"><dt>Débil vs.</dt><dd>'+typeBadges(m.weak)+'</dd></div>'
-    ) : '';
-    var signalHTML = m.signal ? (
-      '<div class="stat-row"><dt>Frecuencia</dt><dd><span class="bars '+m.signal+'"><i></i><i></i><i></i></span>'+(m.signal==='alta'?'Alta':'Baja')+'</dd></div>'
-    ) : '';
-    var searchable = norm(m.name+' '+(m.tag||''));
+    if (m && m.types && (!m.weak || !m.weak.length)) {
+      ensureWeakness(m);
+    }
+    var searchable = norm(m.name + ' ' + (m.tag || ''));
     var imgSrc = getMonImage(m);
     var dexNum = Number.parseInt(m.dex, 10);
     var monKey = registerMon(m);
+    var primaryColor = (m.types && m.types[0] && TYPE_COLORS[m.types[0]]) ? TYPE_COLORS[m.types[0]] : '#38BDF8';
+
+    var headerHTML =
+      '<div class="card-header-main">' +
+        '<div class="mon-avatar">' +
+          '<div class="mon-avatar-glow" style="' + orbStyle(m.types) + '"></div>' +
+          '<img class="mon-img" src="' + imgSrc + '" alt="' + m.name + '" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png\';" />' +
+        '</div>' +
+        '<div class="card-identity">' +
+          '<div class="card-meta-row">' +
+            '<span class="dex">#' + m.dex + '</span>' +
+            (m.tag ? '<span class="mon-tag-chip">' + m.tag + '</span>' : '') +
+            (m.shiny ? '<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Shiny</span>' : '') +
+          '</div>' +
+          '<h4 class="card-name">' + m.name + '</h4>' +
+          '<div class="types">' + typeBadges(m.types) + '</div>' +
+        '</div>' +
+      '</div>';
+
+    var bodyHTML = '';
+    if (m.cp) {
+      bodyHTML =
+        '<div class="card-metrics-grid">' +
+          '<div class="metric-box cp-box">' +
+            '<div class="metric-top"><span class="metric-lbl">RANGO CP</span></div>' +
+            '<strong class="metric-val">' + m.cp[0] + ' – ' + m.cp[1] + '</strong>' +
+            (m.cpBoost ? '<span class="metric-sub">Clima: ' + m.cpBoost[0] + ' – ' + m.cpBoost[1] + '</span>' : '') +
+          '</div>' +
+          '<div class="metric-box hundo-box">' +
+            '<div class="metric-top"><span class="metric-lbl"><span class="hundo-dot"></span>100% IV</span></div>' +
+            '<strong class="metric-val">' + m.cp[1] + ' <small>CP</small></strong>' +
+            (m.cpBoost ? '<span class="metric-sub">Clima: ' + m.cpBoost[1] + ' CP</span>' : '') +
+          '</div>' +
+        '</div>' +
+        ((m.weak && m.weak.length) ? (
+          '<div class="card-weak-block">' +
+            '<span class="weak-lbl">Débil a</span>' +
+            '<div class="weak-pills">' + typeBadges(m.weak.slice(0, 4)) + '</div>' +
+          '</div>'
+        ) : '');
+    } else {
+      var infoVal = m.signal
+        ? ('<span class="extra-val"><span class="bars ' + m.signal + '"><i></i><i></i><i></i></span>' + (m.signal === 'alta' ? 'Frecuente' : 'Raro') + '</span>')
+        : ('<strong class="metric-val" style="font-size:0.78rem;">' + (m.note ? m.note.replace('Inicia: ', '') : 'Próximamente') + '</strong>');
+      var infoLbl = m.signal ? 'APARICIÓN' : 'INICIO';
+
+      bodyHTML =
+        '<div class="card-metrics-grid">' +
+          '<div class="metric-box">' +
+            '<span class="metric-lbl">' + infoLbl + '</span>' +
+            infoVal +
+          '</div>' +
+          '<div class="metric-box">' +
+            '<span class="metric-lbl">DÉBIL A</span>' +
+            '<div class="weak-pills" style="justify-content:flex-start;margin-top:2px;">' +
+              (m.weak && m.weak.length ? typeBadges(m.weak.slice(0, 3)) : '') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }
+
     return (
-      '<article class="card" data-mon-key="'+monKey+'" data-name="'+searchable+'" data-types="'+m.types.join(' ')+'" data-shiny="'+(m.shiny ? '1' : '0')+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
-        '<span class="bracket tl"></span><span class="bracket tr"></span><span class="bracket bl"></span><span class="bracket br"></span>'+
-        '<div class="card-top">'+
-          '<div class="mon-avatar">'+
-            '<div class="mon-avatar-glow" style="'+orbStyle(m.types)+'"></div>'+
-            '<img class="mon-img" src="'+imgSrc+'" alt="'+m.name+'" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+dexNum+'.png\';" />'+
-          '</div>'+
-          '<div class="card-id"><span class="dex">N.\u00b0 '+m.dex+'</span>'+(m.shiny?'<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Variocolor</span>':'')+'</div>'+
-        '</div>'+
-        '<h4 class="card-name">'+m.name+(m.tag?'<small>'+m.tag+'</small>':'')+'</h4>'+
-        '<div class="types">'+typeBadges(m.types)+'</div>'+
-        '<dl class="stats">'+cpHTML+hundoHTML+weatherHTML+signalHTML+weakHTML+'</dl>'+
-        (m.note?'<p class="mon-note">'+m.note+'</p>':'')+
-        '<div class="card-click-hint">Ver detalles</div>'+
+      '<article class="card" style="--card-accent:' + primaryColor + ';" data-mon-key="' + monKey + '" data-name="' + searchable + '" data-types="' + m.types.join(' ') + '" data-shiny="' + (m.shiny ? '1' : '0') + '" tabindex="0" role="button" aria-label="Ver detalles de ' + m.name + '">' +
+        headerHTML +
+        bodyHTML +
       '</article>'
     );
   }
@@ -738,6 +776,8 @@
         cpBoost: b.combatPower ? [b.combatPower.boosted.min, b.combatPower.boosted.max] : null,
         weather: b.boostedWeather ? b.boostedWeather.map(function(w){ return w.name; }) : []
       };
+      var eff = calculateEffectiveness(m.types);
+      m.weak = eff.weak.slice(0, 4).map(function(w){ return w.type; });
       
       if (isShadow) {
         if (b.tier === '1-Star Raids' && ts) ts.subgroups[0].mons.push(mon(m));
@@ -807,6 +847,7 @@
     function applyUpcomingData(data){
       window.updateCurrentSeasonReadout(data);
       var now = new Date();
+      var seenUpcoming = new Set();
       var g5 = { id:'u-5s', tier:'5★', title:'Incursiones 5★ · Próximas', mons:[] };
       var gMega = { id:'u-mega', tier:'MEGA', title:'Megaincursiones · Próximas', mons:[] };
       var gShadow = { id:'u-shadow', tier:'SOMBRA', title:'Incursiones Sombra · Próximas', mons:[] };
@@ -819,14 +860,39 @@
         if(!e.extraData || !e.extraData.raidbattles || !e.extraData.raidbattles.bosses) return;
         if(e.eventType === 'raid-hour') return;
 
-        var isMega = e.name.toLowerCase().indexOf('mega') !== -1;
-        var isShadow = e.name.toLowerCase().indexOf('shadow') !== -1;
+        var isMegaEvent = e.name.toLowerCase().indexOf('mega') !== -1;
+        var isShadowEvent = e.name.toLowerCase().indexOf('shadow') !== -1;
 
         e.extraData.raidbattles.bosses.forEach(function(b){
+          var isShadow = isShadowEvent || b.name.toLowerCase().indexOf('shadow') !== -1;
+          var cleanName = b.name.replace(/^Shadow /i, '');
+          var tag = '';
+          if (cleanName.indexOf('Mega ') === 0 || isMegaEvent) {
+            tag = 'Mega';
+            cleanName = cleanName.replace(/^Mega /i, '');
+          } else if (cleanName.indexOf('Primal ') === 0) {
+            tag = 'Primigenio';
+            cleanName = cleanName.replace(/^Primal /i, '');
+          } else if (isShadow) {
+            tag = 'Sombra';
+          }
+
+          var pMatch = cleanName.match(/\((.*?)\)/);
+          if (pMatch) {
+            if (!tag) tag = pMatch[1];
+            else tag += ' (' + pMatch[1] + ')';
+            cleanName = cleanName.replace(/\s*\(.*?\)/, '');
+          }
+
           var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
           var dex = dexMatch ? dexMatch[1] : '000';
+
+          var uniqueKey = dex + '_' + cleanName + '_' + tag;
+          if (seenUpcoming.has(uniqueKey)) return;
+          seenUpcoming.add(uniqueKey);
           var m = {
-            name: b.name,
+            name: cleanName,
+            tag: tag,
             dex: dex,
             types: [],
             shiny: b.canBeShiny,
@@ -842,15 +908,31 @@
               } else {
                 m.types = ['normal'];
               }
-              if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
-              else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
-              else { g5.mons.push(mon(m)); }
+              var eff = calculateEffectiveness(m.types);
+              m.weak = eff.weak.slice(0, 4).map(function(w){ return w.type; });
+              if(isMegaEvent || (m.tag && m.tag.indexOf('Mega') !== -1)) {
+                if(!m.tag) m.tag = 'Mega';
+                gMega.mons.push(mon(m));
+              } else if(isShadow || (m.tag && m.tag.indexOf('Sombra') !== -1)) {
+                if(!m.tag) m.tag = 'Sombra';
+                gShadow.mons.push(mon(m));
+              } else {
+                g5.mons.push(mon(m));
+              }
             })
             .catch(function(){
               m.types = ['normal'];
-              if(isMega) { m.tag = 'Mega'; gMega.mons.push(mon(m)); }
-              else if(isShadow) { m.tag = 'Sombra'; gShadow.mons.push(mon(m)); }
-              else { g5.mons.push(mon(m)); }
+              var eff = calculateEffectiveness(m.types);
+              m.weak = eff.weak.slice(0, 4).map(function(w){ return w.type; });
+              if(isMegaEvent || (m.tag && m.tag.indexOf('Mega') !== -1)) {
+                if(!m.tag) m.tag = 'Mega';
+                gMega.mons.push(mon(m));
+              } else if(isShadow || (m.tag && m.tag.indexOf('Sombra') !== -1)) {
+                if(!m.tag) m.tag = 'Sombra';
+                gShadow.mons.push(mon(m));
+              } else {
+                g5.mons.push(mon(m));
+              }
             });
             
           promises.push(p);

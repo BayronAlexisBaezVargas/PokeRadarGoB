@@ -65,7 +65,14 @@
     'Shadow Thundurus (Incarnate Forme) in Shadow Raids': 'Thundurus Forma Avatar Sombra en Incursiones Sombra',
     'Mega Swampert in Mega Raids': 'Mega Swampert en Megaincursiones',
     'Lunala in 5-star Raid Battles': 'Lunala en Incursiones 5★',
-    'Regirock, Regice, and Registeel in 5-star Raid Battles': 'Titanes Legendarios (Regirock, Regice, Registeel) en Incursiones 5★'
+    'Regirock, Regice, and Registeel in 5-star Raid Battles': 'Titanes Legendarios (Regirock, Regice, Registeel) en Incursiones 5★',
+    'Fall Marathon: Buddy Trek': 'Maratón de Otoño: Caminata de Compañero',
+    'Pokémon TCG: 30th Celebration': 'Celebración 30.º Aniversario Pokémon TCG',
+    'Pokémon GO Halloween 2026 Part I': 'Pokémon GO Halloween 2026 (Parte 1)',
+    'Pokémon GO Halloween 2026 Part II': 'Pokémon GO Halloween 2026 (Parte 2)',
+    'Shadow Landorus (Incarnate Forme) in Shadow Raids': 'Landorus Avatar Sombra en Incursiones Sombra',
+    'Dynamax Uxie, Mesprit, and Azelf Max Battle Day': 'Día de Combates Max: Trío del Lago Dinamax',
+    'Mega Charizard X and Mega Charizard Y in Mega Raids': 'Mega Charizard X e Y en Megaincursiones'
   };
 
   /* ============ Dataset Curado Inicial (Carga Inmediata) ============ */
@@ -249,8 +256,65 @@
 
   function cleanTitle(rawName){
     if(!rawName) return '';
-    var clean = rawName.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-    return NAME_TRANSLATIONS[clean] || clean;
+    var clean = rawName.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
+    if (NAME_TRANSLATIONS[clean]) return NAME_TRANSLATIONS[clean];
+
+    var m = clean.match(/^Dynamax\s+(.+?)\s+during\s+Max\s+Monday$/i);
+    if (m) return 'Lunes Dinamax: ' + m[1] + ' Dinamax';
+
+    m = clean.match(/^(.+?)\s+in\s+5-star\s+Raid\s+Battles$/i);
+    if (m) return m[1] + ' en Incursiones 5★';
+
+    m = clean.match(/^(.+?)\s+in\s+Mega\s+Raids$/i);
+    if (m) return m[1] + ' en Megaincursiones';
+
+    m = clean.match(/^(.+?)\s+in\s+Shadow\s+Raids$/i);
+    if (m) return m[1] + ' en Incursiones Sombra';
+
+    m = clean.match(/^(.+?)\s+Raid\s+Hour$/i);
+    if (m) return 'Hora de Incursiones: ' + m[1];
+
+    m = clean.match(/^(.+?)\s+Spotlight\s+Hour$/i);
+    if (m) return 'Hora Destacada: ' + m[1];
+
+    m = clean.match(/^(.+?)\s+Hatch\s+Day$/i);
+    if (m) return 'Día de Eclosiones: ' + m[1];
+
+    m = clean.match(/^(.+?)\s+Community\s+Day\s+Classic$/i);
+    if (m) return 'Día de la Comunidad Clásico: ' + m[1];
+
+    m = clean.match(/^(.+?)\s+Community\s+Day$/i);
+    if (m) return 'Día de la Comunidad: ' + m[1];
+
+    m = clean.match(/^(.+?)\s+Max\s+Battle\s+Day$/i);
+    if (m) return 'Día de Combates Max: ' + m[1];
+
+    return clean;
+  }
+
+  function formatCompactDateRange(startDate, endDate){
+    if(!startDate) return 'Por confirmar';
+    var d = startDate.getDate();
+    var m = MONTH_NAMES[startDate.getMonth()].slice(0, 3);
+    var dayName = DAY_NAMES[startDate.getDay()].slice(0, 3);
+    var tStart = formatTime(startDate);
+
+    if(!endDate){
+      return dayName + ' ' + d + ' ' + m + ' · ' + tStart;
+    }
+
+    var sameDay = startDate.getFullYear() === endDate.getFullYear() &&
+                  startDate.getMonth() === endDate.getMonth() &&
+                  startDate.getDate() === endDate.getDate();
+
+    if(sameDay){
+      var tEnd = formatTime(endDate);
+      return dayName + ' ' + d + ' ' + m + ' · ' + tStart + ' – ' + tEnd;
+    }
+
+    var d2 = endDate.getDate();
+    var m2 = MONTH_NAMES[endDate.getMonth()].slice(0, 3);
+    return d + ' ' + m + ' – ' + d2 + ' ' + m2;
   }
 
   function parseDate(dStr){
@@ -361,6 +425,34 @@
     return 'Evento finalizado';
   }
 
+  function getShortCountdownString(start, end){
+    var now = Date.now();
+    var sTime = start ? start.getTime() : 0;
+    var eTime = end ? end.getTime() : 0;
+
+    if(now >= sTime && now <= eTime){
+      var diffEnd = eTime - now;
+      var mins = Math.floor(diffEnd / 60000);
+      var hours = Math.floor(mins / 60);
+      var days = Math.floor(hours / 24);
+      if(days > 0) return 'Quedan ' + days + 'd ' + (hours % 24) + 'h';
+      if(hours > 0) return 'Quedan ' + hours + 'h ' + (mins % 60) + 'm';
+      return 'Quedan ' + Math.max(1, mins) + 'm';
+    }
+
+    if(now < sTime){
+      var diffStart = sTime - now;
+      var mins2 = Math.floor(diffStart / 60000);
+      var hours2 = Math.floor(mins2 / 60);
+      var days2 = Math.floor(hours2 / 24);
+      if(days2 > 0) return 'En ' + days2 + 'd ' + (hours2 % 24) + 'h';
+      if(hours2 > 0) return 'En ' + hours2 + 'h ' + (mins2 % 60) + 'm';
+      return 'En ' + Math.max(1, mins2) + 'm';
+    }
+
+    return 'Finalizado';
+  }
+
   function extractPerks(ev){
     var perks = [];
     var cat = CATEGORIES[ev.eventType];
@@ -439,8 +531,15 @@
     var fallbackImg = 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg';
     var imgSrc = ev.image || fallbackImg;
 
+    var excerpt = '';
+    if (ev.heading && ev.heading.toLowerCase() !== 'event' && norm(ev.heading) !== norm(cleanName)) {
+      excerpt = '<div class="event-excerpt">' + ev.heading + '</div>';
+    }
+
+    var cardClass = 'event-card reveal' + (status.code === 'live' ? ' is-live' : '');
+
     return (
-      '<article class="event-card reveal" data-ev-key="' + evKey + '" data-cat="' + ev.eventType + '" data-status="' + status.code + '" tabindex="0" role="button" aria-label="Ver detalles de ' + cleanName + '">' +
+      '<article class="' + cardClass + '" data-ev-key="' + evKey + '" data-cat="' + ev.eventType + '" data-status="' + status.code + '" tabindex="0" role="button" aria-label="Ver detalles de ' + cleanName + '">' +
         '<div class="event-media">' +
           '<img class="event-media-img" src="' + imgSrc + '" alt="' + cleanName + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + fallbackImg + '\';" />' +
           '<div class="event-media-overlay"></div>' +
@@ -451,15 +550,13 @@
         '</div>' +
         '<div class="event-content">' +
           '<h3 class="event-title">' + cleanName + '</h3>' +
-          '<div class="event-date-row">' +
-            '<span class="event-date-label">Fecha:</span><span>' + dateStr + '</span>' +
-          '</div>' +
-          '<div class="event-countdown-pill" data-ev-countdown="' + evKey + '">' +
-            '<span>' + countdown + '</span>' +
+          excerpt +
+          '<div class="event-meta-strip">' +
+            '<span class="event-date-compact">' + formatCompactDateRange(startDate, endDate) + '</span>' +
+            '<span class="event-countdown-inline" data-ev-countdown="' + evKey + '"><span>' + countdown + '</span></span>' +
           '</div>' +
           (perksHTML ? '<div class="event-perks">' + perksHTML + '</div>' : '') +
           bossesHTML +
-          '<div class="card-click-hint">Ver detalles</div>' +
         '</div>' +
       '</article>'
     );
@@ -473,13 +570,12 @@
     var modalCategory = document.getElementById('eventModalCategory');
     var modalStatus = document.getElementById('eventModalStatus');
     var modalTitle = document.getElementById('eventModalTitle');
-    var modalStart = document.getElementById('eventModalStart');
-    var modalEnd = document.getElementById('eventModalEnd');
+    var modalDate = document.getElementById('eventModalDate');
+    var modalTime = document.getElementById('eventModalTime');
     var modalCountdown = document.getElementById('eventModalCountdown');
     var modalPerks = document.getElementById('eventModalPerks');
     var modalBossesSection = document.getElementById('eventModalBossesSection');
     var modalBosses = document.getElementById('eventModalBosses');
-    var modalDesc = document.getElementById('eventModalDesc');
     var modalGuideLink = document.getElementById('eventModalGuideLink');
 
     modalImg.src = item.raw.image || 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg';
@@ -488,16 +584,68 @@
     modalCategory.style.borderColor = item.category.color + '55';
 
     modalStatus.textContent = item.status.label;
-    modalStatus.className = 'event-status-tag ' + item.status.code;
+    modalStatus.className = 'fec-status-pill ' + item.status.code;
 
     modalTitle.textContent = item.cleanName;
-    modalStart.textContent = item.startDate ? item.startDate.toLocaleString('es-ES', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'Por confirmar';
-    modalEnd.textContent = item.endDate ? item.endDate.toLocaleString('es-ES', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'Por confirmar';
-    modalCountdown.textContent = getCountdownString(item.startDate, item.endDate);
 
-    modalPerks.innerHTML = item.perks.map(function(p){
-      return '<span class="badge" style="color:var(--signal);background:rgba(61,242,196,.12);border-color:rgba(61,242,196,.35);font-size:.78rem;padding:4px 10px;">' + p + '</span>';
-    }).join('');
+    var sameDay = false;
+    if (item.startDate && item.endDate) {
+      sameDay = item.startDate.getFullYear() === item.endDate.getFullYear() &&
+                item.startDate.getMonth() === item.endDate.getMonth() &&
+                item.startDate.getDate() === item.endDate.getDate();
+    }
+
+    // Fecha
+    if (modalDate) {
+      if (!item.startDate) {
+        modalDate.textContent = 'Por confirmar';
+      } else if (!item.endDate) {
+        var dayName = DAY_NAMES[item.startDate.getDay()].slice(0, 3);
+        var mName = MONTH_NAMES[item.startDate.getMonth()].slice(0, 3);
+        modalDate.textContent = dayName + ', ' + item.startDate.getDate() + ' ' + mName;
+      } else if (sameDay) {
+        var dayName1 = DAY_NAMES[item.startDate.getDay()].slice(0, 3);
+        var d1 = item.startDate.getDate();
+        var m1 = MONTH_NAMES[item.startDate.getMonth()].slice(0, 3);
+        modalDate.textContent = dayName1 + ', ' + d1 + ' ' + m1;
+      } else {
+        var d1 = item.startDate.getDate();
+        var m1 = MONTH_NAMES[item.startDate.getMonth()].slice(0, 3);
+        var d2 = item.endDate.getDate();
+        var m2 = MONTH_NAMES[item.endDate.getMonth()].slice(0, 3);
+        modalDate.textContent = d1 + ' ' + m1 + ' – ' + d2 + ' ' + m2;
+      }
+    }
+
+    // Horario
+    if (modalTime) {
+      if (!item.startDate) {
+        modalTime.textContent = 'Todo el día';
+      } else if (!item.endDate) {
+        modalTime.textContent = 'Desde ' + formatTime(item.startDate) + ' hrs';
+      } else if (!sameDay) {
+        var t1 = formatTime(item.startDate);
+        modalTime.textContent = 'Desde ' + t1 + ' hrs';
+      } else {
+        var t1 = formatTime(item.startDate);
+        var t2 = formatTime(item.endDate);
+        modalTime.textContent = (t1 === t2) ? (t1 + ' hrs') : (t1 + ' – ' + t2);
+      }
+    }
+
+    // Countdown
+    if (modalCountdown) {
+      modalCountdown.textContent = getShortCountdownString(item.startDate, item.endDate);
+    }
+
+    // Bonificaciones como <li>
+    if (item.perks && item.perks.length > 0) {
+      modalPerks.innerHTML = item.perks.map(function(p){
+        return '<li>' + p + '</li>';
+      }).join('');
+    } else {
+      modalPerks.innerHTML = '<li>Evento oficial del calendario de Pokémon GO</li>';
+    }
 
     if(item.bosses && item.bosses.length > 0){
       modalBossesSection.style.display = 'flex';
@@ -512,41 +660,9 @@
       modalBossesSection.style.display = 'none';
     }
 
-    var descText = 'Evento oficial en Pokémon GO. Los horarios corresponden a la hora local configurada en tu dispositivo. Asegúrate de verificar las condiciones meteorológicas y el estado de los gimnasios antes de participar.';
-    if(item.raw.eventType === 'pokemon-spotlight-hour'){
-      descText = 'Durante esta hora, la especie destacada aparecerá con una frecuencia sumamente alta en estado silvestre. Aprovecha el bonus especial durante los 60 minutos del evento.';
-    } else if(item.raw.eventType === 'raid-hour'){
-      descText = 'Prácticamente todos los gimnasios disponibles albergarán incursiones legendarias de 5★ durante la hora del evento. Ideal para coordinar grupos y maximizar capturas con pase de incursión.';
-    } else if(item.raw.eventType === 'community-day'){
-      descText = 'El Día de la Comunidad ofrece apariciones masivas del Pokémon protagonista con tasa incrementada de variocolor, módulos cebo e inciensos de duración extendida, y un ataque exclusivo al evolucionar.';
-    } else if(item.raw.eventType === 'max-mondays'){
-      descText = 'Los Nodos Dinamax contarán con una densidad de combate intensificada para la especie protagonista. Obtén Partículas Max e interactúa con entrenadores cercanos.';
-    }
-    modalDesc.innerHTML = '';
-    modalDesc.classList.add('typing-cursor');
-    var tid = (window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967295).toString();
-    modalDesc.dataset.tid = tid;
-    var i = 0;
-    function type() {
-      if(modalDesc.dataset.tid != tid) return;
-      if(i < descText.length){
-        modalDesc.textContent += descText.charAt(i);
-        i++;
-        setTimeout(type, 15);
-      } else {
-        modalDesc.classList.remove('typing-cursor');
-      }
-    }
-    type();
-
     if(item.raw.link && (item.raw.link.startsWith('http://') || item.raw.link.startsWith('https://'))){
       modalGuideLink.href = item.raw.link;
-      modalGuideLink.textContent = 'Ver Noticia Completa ↗';
-      modalGuideLink.style.display = 'inline-flex';
-      modalGuideLink.style.background = 'var(--signal)';
-      modalGuideLink.style.color = 'var(--void)';
-      modalGuideLink.style.padding = '10px 20px';
-      modalGuideLink.style.fontWeight = 'bold';
+      modalGuideLink.style.display = 'flex';
     } else {
       modalGuideLink.style.display = 'none';
       modalGuideLink.removeAttribute('href');

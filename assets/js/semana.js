@@ -22,6 +22,7 @@
 
   /* ============ Estado Global ============ */
   var currentWeekOffset = 0;
+  var hasAutoScrolledToday = false;
   var rawEventsList = [];
   var renderedEventsMap = [];
 
@@ -339,6 +340,17 @@
       card.innerHTML = headerHTML + eventsHTML;
       weekContainer.appendChild(card);
     }
+
+    // Auto-scroll suave al día actual en móvil si es la semana en curso (solo la primera vez)
+    if (currentWeekOffset === 0 && weekContainer && !hasAutoScrolledToday) {
+      var todayEl = weekContainer.querySelector('.day-card.is-today');
+      if (todayEl) {
+        hasAutoScrolledToday = true;
+        setTimeout(function() {
+          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 160);
+      }
+    }
   }
 
   /* ============ Navegación de Semanas ============ */
@@ -360,6 +372,7 @@
     todayWeekBtn.addEventListener('click', function(){
       if (currentWeekOffset !== 0) {
         currentWeekOffset = 0;
+        hasAutoScrolledToday = false;
         playBeep();
         renderWeek();
       }

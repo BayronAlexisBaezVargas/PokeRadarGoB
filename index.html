@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Radar de Campo · Pokémon GO</title>
 <meta name="description" content="Incursiones activas, próximas rotaciones y apariciones silvestres en Pokémon GO." />
-<meta name="theme-color" content="#0a0f0d" />
+<meta name="theme-color" content="#090D16" />
 <meta name="view-transition" content="same-origin" />
 <meta property="og:title" content="Radar de Campo · Pokémon GO" />
 <meta property="og:description" content="Jefes de incursión activos, rotaciones programadas y apariciones silvestres en Pokémon GO." />
@@ -25,8 +25,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="assets/manifest.json" />
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
-<link rel="stylesheet" href="assets/css/base.css?v=1.8.1" />
-<link rel="stylesheet" href="assets/css/home.css?v=1.8.1" />
+<link rel="stylesheet" href="assets/css/base.css?v=1.9.4" />
+<link rel="stylesheet" href="assets/css/home.css?v=1.9.4" />
 </head>
 <body data-seg="all">
 
@@ -156,26 +156,41 @@
         <span class="hud-date" id="userLocation">· Sincronizando red...</span>
       </div>
     </div>
-    <nav class="hud-nav" aria-label="Navegación principal">
-      <a href="index.html" class="hud-nav-link active">Radar</a>
-      <a href="assets/noticias.html" class="hud-nav-link">Noticias<span class="nav-text-extra"> y Eventos</span></a>
-      <a href="assets/semana.html" class="hud-nav-link">Semana</a>
-      <a href="assets/rocket.html" class="hud-nav-link">Rocket</a>
-      <a href="assets/atacantes.html" class="hud-nav-link">Atacantes</a>
-    </nav>
   </div>
 </header>
+<nav class="hud-nav" aria-label="Navegación principal">
+  <a href="index.html" class="hud-nav-link active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/><circle cx="12" cy="12" r="2"/></svg>
+    <span>Radar</span>
+  </a>
+  <a href="assets/noticias.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+    <span>Noticias<span class="nav-text-extra"> y Eventos</span></span>
+  </a>
+  <a href="assets/semana.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+    <span>Semana</span>
+  </a>
+  <a href="assets/rocket.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    <span>Rocket</span>
+  </a>
+  <a href="assets/atacantes.html" class="hud-nav-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/><circle cx="12" cy="12" r="3"/></svg>
+    <span>Atacantes</span>
+  </a>
+</nav>
 
 <main>
   <section class="hero">
     <div class="hero-text">
-      <span class="kicker">Panel operativo</span>
+      <span class="kicker">En vivo</span>
       <h1 class="title">Rotaciones e Incursiones <span class="hl">en Tiempo Real</span>.</h1>
       <p class="lede">Jefes de incursión activos, próximas rotaciones confirmadas y especies con tasa de aparición aumentada en Pokémon GO.</p>
       <dl class="hud-readouts">
         <div class="readout"><dt>Jefes activos</dt><dd id="statRaids">—</dd></div>
         <div class="readout"><dt>Silvestres activas</dt><dd id="statWild">—</dd></div>
-        <div class="readout" id="seasonReadout"><dt>Temporada actual</dt><dd id="statSeason" style="font-size:1.05rem;">Sincronizando...</dd></div>
+        <div class="readout" id="seasonReadout"><dt>Temporada actual</dt><dd id="statSeason">Sincronizando...</dd></div>
       </dl>
     </div>
     <div class="hero-spotlight" id="heroSpotlight" aria-label="Incursiones destacadas">
@@ -216,7 +231,7 @@
     <div id="raidGroups"></div>
 
     <div class="upcoming-raids-section" id="upcomingRaidsSection">
-      <div class="section-title" style="margin-top:var(--sp-8);border-top:1px solid var(--line);padding-top:var(--sp-6);">
+      <div class="section-title section-divider">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span class="tier-pill" style="color:var(--signal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.08);">PROGRAMACIÓN</span>
           <h3 style="font-size:1.25rem;">Próximas rotaciones en incursiones</h3>
@@ -225,14 +240,14 @@
       <p class="section-sub">Jefes programados para las próximas semanas con fechas de inicio y estimación de combate.</p>
       <div id="upcomingRaidGroups">
         <div class="sync-loader" id="upcomingLoader">
-          <span class="spinner"></span> Sincronizando datos en vivo de ScrapedDuck...
+          <span class="spinner"></span> Actualizando próximas incursiones...
         </div>
       </div>
     </div>
   </section>
 
   <section id="silvestres" class="seg-wild">
-    <div class="section-title" style="margin-top:var(--sp-8);border-top:1px solid var(--line);padding-top:var(--sp-6);">
+    <div class="section-title section-divider">
       <h2>Apariciones silvestres activas</h2>
     </div>
     <p class="section-sub">Especies con frecuencia de aparición aumentada durante el periodo vigente.</p>
@@ -301,7 +316,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.8.1</span>
+        <span class="foot-version">v1.9.4</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -332,6 +347,6 @@
 <script defer src="assets/js/season.js"></script>
 <script defer src="assets/js/app.js"></script>
 <script defer src="assets/js/location.js"></script>
-<script defer src="assets/js/nav.js?v=1.8.1"></script>
+<script defer src="assets/js/nav.js?v=1.9.4"></script>
 </body>
 </html>
