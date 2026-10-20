@@ -16,14 +16,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-@media (max-width: 768px) {
-  .atacantes-controls {
-    top: 52px;
-    margin: 0 -16px var(--space-4);
-    padding: 8px 16px;
-  }
-}
-
 .type-filter-wrapper {
   position: relative;
   width: 100%;
@@ -325,6 +317,12 @@
 
 /* ---------- Responsive Adjustments ---------- */
 @media (max-width: 768px) {
+  .atacantes-controls {
+    top: 52px;
+    margin: 0 -16px var(--space-4);
+    padding: 8px 16px;
+  }
+
   .atacantes-grid {
     grid-template-columns: 1fr;
     gap: var(--space-4);

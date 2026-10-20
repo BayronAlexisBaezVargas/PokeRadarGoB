@@ -238,7 +238,7 @@
     if (g.subgroups) g.subgroups.forEach(function(sg){ if (sg.mons) sg.mons.forEach(ensureWeakness); });
   });
 
-  function formatMultiplierBadges(items){
+  function formatMultiplierBadges(items, linkToAtacantes){
     if(!items || !items.length){
       return '<span style="font-size:.74rem;color:var(--ink-dim);font-family:var(--font-mono)">Ninguno (Daño neutro)</span>';
     }
@@ -250,7 +250,9 @@
       else if(item.mult >= 1.6 || item.mult === 2) multLabel = ' ×1.6';
       else if(item.mult <= 0.39) multLabel = ' ×0.39';
       else if(item.mult < 1) multLabel = ' ×0.62';
-      return '<span class="badge" style="color:'+c+';background:'+rgba(c,.16)+';border-color:'+rgba(c,.5)+'">'+
+      var st = 'color:'+c+';background:'+rgba(c,.16)+';border-color:'+rgba(c,.5);
+      if (linkToAtacantes) return '<a class="badge badge-link" href="assets/atacantes.html?type=' + item.type + '" style="' + st + '" title="Ver mejores atacantes de tipo ' + TYPE_LABELS[item.type] + '">' + TYPE_LABELS[item.type] + multLabel + ' ↗</a>';
+      return '<span class="badge" style="' + st + '">'+
         TYPE_LABELS[item.type] + multLabel +
       '</span>';
     }).join('');
@@ -405,7 +407,7 @@
 
     // Type effectiveness
     var eff = calculateEffectiveness(m.types);
-    modalWeak.innerHTML = formatMultiplierBadges(eff.weak);
+    modalWeak.innerHTML = formatMultiplierBadges(eff.weak, true);
     modalResist.innerHTML = formatMultiplierBadges(eff.resist);
 
     // Fetch live Pokédex lore

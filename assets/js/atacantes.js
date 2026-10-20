@@ -1006,6 +1006,7 @@
         b.classList.remove('active');
       });
       btn.classList.add('active');
+      if (window.history && window.history.replaceState) { window.history.replaceState(null, '', selected === 'all' ? window.location.pathname : '?type=' + selected); }
 
       var cards = document.querySelectorAll('.atacantes-grid .type-card');
       cards.forEach(function(c) {
@@ -1248,6 +1249,25 @@
   /* ============ Init ============ */
   function startInit() {
     renderAtacantes();
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var reqType = (params.get('type') || (window.location.hash ? window.location.hash.replace('#', '') : '')).toLowerCase();
+      if (reqType && TYPE_LABELS[reqType]) {
+        var bar = document.getElementById('typeFilterBar');
+        var targetBtn = bar && bar.querySelector('.type-filter-btn[data-type="' + reqType + '"]');
+        if (targetBtn) {
+          bar.querySelectorAll('.type-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+          targetBtn.classList.add('active');
+          document.querySelectorAll('.atacantes-grid .type-card').forEach(function(c) {
+            if (c.getAttribute('data-type') === reqType) c.classList.remove('hidden');
+            else c.classList.add('hidden');
+          });
+          setTimeout(function() {
+            if (targetBtn.scrollIntoView) targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }, 80);
+        }
+      }
+    } catch (e) {}
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }

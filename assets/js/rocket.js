@@ -58,7 +58,7 @@
     return { weak: weak, resist: resist };
   }
 
-  function formatMultiplierBadges(items){
+  function formatMultiplierBadges(items, linkToAtacantes){
     if(!items || !items.length) return '<span style="font-size:.74rem;color:var(--ink-dim);font-family:var(--font-mono)">Ninguno (Daño neutro)</span>';
     return items.map(function(item){
       var c = TYPE_COLORS[item.type];
@@ -68,7 +68,9 @@
       else if(item.mult >= 1.6 || item.mult === 2) multLabel = ' ×1.6';
       else if(item.mult <= 0.39) multLabel = ' ×0.39';
       else if(item.mult < 1) multLabel = ' ×0.62';
-      return '<span class="badge" style="color:'+c+';background:'+rgba(c,.16)+';border-color:'+rgba(c,.5)+'">'+
+      var st = 'color:'+c+';background:'+rgba(c,.16)+';border-color:'+rgba(c,.5);
+      if (linkToAtacantes) return '<a class="badge badge-link" href="atacantes.html?type=' + item.type + '" style="' + st + '" title="Ver mejores atacantes de tipo ' + TYPE_LABELS[item.type] + '">' + TYPE_LABELS[item.type] + multLabel + ' ↗</a>';
+      return '<span class="badge" style="' + st + '">'+
         TYPE_LABELS[item.type] + multLabel + '</span>';
     }).join('');
   }
@@ -267,8 +269,8 @@
         countersWrap.appendChild(cLabel);
 
         eff.weak.slice(0, 3).forEach(function(item){
-          var badge = document.createElement('span');
-          badge.className = 'grunt-counter-badge';
+          var badge = document.createElement('a'); badge.className = 'grunt-counter-badge badge-link'; badge.href = 'atacantes.html?type=' + item.type; badge.title = 'Ver mejores atacantes de tipo ' + TYPE_LABELS[item.type];
+          badge.className = 'grunt-counter-badge badge-link';
           var col = TYPE_COLORS[item.type] || '#B4AE96';
           badge.style.color = col;
           badge.style.backgroundColor = rgba(col, 0.16);
@@ -379,7 +381,7 @@
     
     // Calculate Weaknesses and Resistances
     var eff = calculateEffectiveness(types);
-    mWeak.innerHTML = formatMultiplierBadges(eff.weak);
+    mWeak.innerHTML = formatMultiplierBadges(eff.weak, true);
     mResist.innerHTML = formatMultiplierBadges(eff.resist);
 
     mStats.innerHTML = '<span style="font-size:.74rem;color:var(--ink-dim);font-family:var(--font-mono)">Cargando estadísticas base...</span>';

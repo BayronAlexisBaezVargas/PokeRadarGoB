@@ -548,12 +548,6 @@
   }
 }
 
-@media (max-width: 640px) {
-  .hero-visual {
-    display: none !important;
-  }
-}
-
 @media (max-width: 480px) {
   .leader-card, .grunt-card {
     padding: 12px;
