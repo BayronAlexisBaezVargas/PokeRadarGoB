@@ -198,10 +198,12 @@
   user-select: none;
 }
 
-.shiny-filter-btn:hover {
-  background: rgba(245, 158, 11, 0.16);
-  border-color: var(--gold);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .shiny-filter-btn:hover {
+    background: rgba(245, 158, 11, 0.16);
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
 }
 
 .shiny-filter-btn.active {
@@ -253,11 +255,13 @@
   transition: all 0.16s ease;
 }
 
-.tier-chip:hover {
-  color: var(--ink);
-  border-color: var(--signal);
-  background: rgba(56, 189, 248, 0.08);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .tier-chip:hover {
+    color: var(--ink);
+    border-color: var(--signal);
+    background: rgba(56, 189, 248, 0.08);
+    transform: translateY(-1px);
+  }
 }
 
 .section-head {
@@ -373,8 +377,17 @@
   contain: layout style;
 }
 
-.card:hover, .card:focus-visible {
-  transform: translateY(-3px);
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-accent, rgba(56, 189, 248, 0.45));
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(56, 189, 248, 0.18);
+  }
+  .card:hover .mon-img {
+    transform: scale(1.12) translateY(-2px);
+  }
+}
+.card:focus-visible {
   border-color: var(--card-accent, rgba(56, 189, 248, 0.45));
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(56, 189, 248, 0.18);
 }
@@ -863,9 +876,9 @@ body[data-seg="wild"] .seg-raids { display: none !important; }
   .controls .segment .seg-btn {
     flex: 1;
     text-align: center;
-    padding: 7px 4px;
+    padding: 8px 4px;
     font-size: 0.75rem;
-    min-height: 38px;
+    min-height: 44px;
   }
 
   .controls .search-wrap {
@@ -877,8 +890,8 @@ body[data-seg="wild"] .seg-raids { display: none !important; }
 
   .controls .search-wrap input {
     font-size: 1rem !important; /* 16px prevents iOS Safari auto-zoom */
-    min-height: 42px;
-    height: 42px;
+    min-height: 44px;
+    height: 44px;
     padding: 8px 12px 8px 36px;
     box-sizing: border-box;
   }
@@ -886,8 +899,8 @@ body[data-seg="wild"] .seg-raids { display: none !important; }
   .controls .shiny-filter-btn {
     grid-column: 2;
     padding: 0 12px;
-    height: 42px;
-    min-height: 42px;
+    height: 44px;
+    min-height: 44px;
     font-size: 0.74rem;
     box-sizing: border-box;
     align-self: center;
@@ -947,7 +960,10 @@ body[data-seg="wild"] .seg-raids { display: none !important; }
   }
 
   .tier-chip {
-    padding: 6px 14px;
+    padding: 8px 14px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
     font-size: 0.76rem;
     flex-shrink: 0;
     border-radius: var(--radius-pill);
@@ -959,23 +975,23 @@ body[data-seg="wild"] .seg-raids { display: none !important; }
   .controls .shiny-filter-btn {
     padding: 0 10px;
     font-size: 0.72rem;
-    height: 40px;
-    min-height: 40px;
+    height: 44px;
+    min-height: 44px;
     gap: 5px;
     white-space: nowrap;
     flex-shrink: 0;
   }
 
   .controls .search-wrap input {
-    height: 40px;
-    min-height: 40px;
+    height: 44px;
+    min-height: 44px;
     padding: 8px 12px 8px 34px;
     font-size: 16px !important;
   }
 
   .controls .segment .seg-btn {
-    min-height: 36px;
-    padding: 7px 4px;
+    min-height: 44px;
+    padding: 8px 4px;
     font-size: 0.75rem;
   }
 

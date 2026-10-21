@@ -6,9 +6,16 @@
 /* ---------- Hero Visual Identity ---------- */
 .rocket-hero {
   position: relative;
-  background: radial-gradient(ellipse at 80% 20%, rgba(147, 51, 234, 0.18) 0%, rgba(239, 68, 68, 0.1) 40%, transparent 70%);
-  border: 1px solid rgba(147, 51, 234, 0.2);
-  border-radius: var(--radius-xl);
+  display: block;
+  grid-template-columns: 1fr;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--sp-6) var(--sp-6);
+  margin-top: var(--sp-4);
+  background: radial-gradient(ellipse at 85% 20%, rgba(147, 51, 234, 0.2) 0%, rgba(239, 68, 68, 0.1) 45%, rgba(14, 21, 38, 0.75) 100%);
+  border: 1px solid rgba(147, 51, 234, 0.28);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 24px -4px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
 
@@ -22,11 +29,20 @@
   background: linear-gradient(90deg, #EF4444, #9333EA, transparent);
 }
 
+.rocket-hero .hero-text {
+  max-width: 100%;
+  width: 100%;
+}
+
+.rocket-hero .lede {
+  max-width: 72ch;
+}
+
 .rocket-hero h1.title .hl,
 .rocket-hero .title .hl {
-  background: linear-gradient(135deg, #FFFFFF 15%, #E9D5FF 45%, #C084FC 80%, var(--rocket-purple, #9333EA) 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
   color: #C084FC !important;
 }
 
@@ -83,11 +99,13 @@
   user-select: none;
 }
 
-.leader-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(147, 51, 234, 0.6);
-  border-top-color: #C084FC;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(147, 51, 234, 0.18);
+@media (hover: hover) {
+  .leader-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(147, 51, 234, 0.6);
+    border-top-color: #C084FC;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(147, 51, 234, 0.18);
+  }
 }
 
 /* Giovanni Special Variant */
@@ -239,11 +257,13 @@
   min-width: 0;
 }
 
-.rocket-mon:hover {
-  border-color: #C084FC;
-  background: rgba(147, 51, 234, 0.18);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.25);
+@media (hover: hover) {
+  .rocket-mon:hover {
+    border-color: #C084FC;
+    background: rgba(147, 51, 234, 0.18);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(147, 51, 234, 0.25);
+  }
 }
 
 .rocket-mon img {
@@ -278,8 +298,19 @@
 }
 
 .shiny-badge-indicator {
-  font-size: 0.75rem;
-  margin-left: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.shiny-badge-indicator .shiny-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #F59E0B;
+  box-shadow: 0 0 6px #F59E0B;
+  display: inline-block;
 }
 
 /* ---------- Grunt Cards ---------- */
@@ -300,11 +331,13 @@
   flex-direction: column;
 }
 
-.grunt-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(147, 51, 234, 0.5);
-  border-top-color: #C084FC;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 18px rgba(147, 51, 234, 0.16);
+@media (hover: hover) {
+  .grunt-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(147, 51, 234, 0.5);
+    border-top-color: #C084FC;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 18px rgba(147, 51, 234, 0.16);
+  }
 }
 
 .grunt-header {
@@ -420,7 +453,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  min-height: 40px;
+  min-height: 44px;
   border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -464,10 +497,40 @@
 /* ---------- Responsive Overrides ---------- */
 @media (max-width: 768px) {
   .rocket-hero {
-    padding: 8px 0 6px !important;
-    gap: 6px;
-    position: relative;
-    overflow: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 16px 16px 14px !important;
+    margin: 10px 0 6px !important;
+    gap: 6px !important;
+    border-radius: 14px !important;
+  }
+
+  .rocket-hero .hero-text {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .rocket-hero .kicker {
+    display: flex !important;
+    font-size: 0.65rem !important;
+    margin-bottom: 4px !important;
+  }
+
+  .rocket-hero h1.title {
+    font-size: 1.35rem !important;
+    line-height: 1.2 !important;
+    margin: 0 0 6px 0 !important;
+  }
+
+  .rocket-hero .lede {
+    display: block !important;
+    font-size: 0.84rem !important;
+    line-height: 1.45 !important;
+    color: var(--ink-dim) !important;
+    max-width: 100% !important;
+    margin: 0 !important;
   }
 
   .rocket-hero .hero-visual,

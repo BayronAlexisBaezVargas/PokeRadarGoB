@@ -212,7 +212,7 @@
           var img = document.createElement('img');
           img.src = getMonImage(m.dex);
           img.alt = m.name;
-          img.loading = 'lazy';
+          img.loading = 'lazy'; img.width = 48; img.height = 48;
           
           var span = document.createElement('span');
           span.textContent = m.name;
@@ -224,7 +224,7 @@
             var shinyStar = document.createElement('span');
             shinyStar.className = 'shiny-badge-indicator';
             shinyStar.title = 'Posible Variocolor';
-            shinyStar.textContent = '✨';
+            shinyStar.innerHTML = '<span class="shiny-dot" aria-hidden="true"></span>';
             monDiv.appendChild(shinyStar);
           }
 
@@ -308,7 +308,7 @@
         var img = document.createElement('img');
         img.src = getMonImage(m.dex);
         img.alt = m.name;
-        img.loading = 'lazy';
+        img.loading = 'lazy'; img.width = 48; img.height = 48;
         
         var span = document.createElement('span');
         span.textContent = m.name;

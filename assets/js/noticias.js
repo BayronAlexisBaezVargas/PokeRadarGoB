@@ -521,7 +521,7 @@
         '<span class="event-bosses-label">Jefes:</span>' +
         bosses.map(function(b){
           return '<div class="event-boss-avatar" title="' + b.name + '">' +
-            '<img src="' + b.image + '" alt="' + b.name + '" loading="lazy" onerror="this.style.display=\'none\';" />' +
+            '<img src="' + b.image + '" alt="' + b.name + '" width="28" height="28" loading="lazy" onerror="this.style.display=\'none\';" />' +
             (b.canBeShiny ? '<span class="event-boss-shiny-dot" title="Variocolor disponible">S</span>' : '') +
           '</div>';
         }).join('') +
@@ -541,7 +541,7 @@
     return (
       '<article class="' + cardClass + '" data-ev-key="' + evKey + '" data-cat="' + ev.eventType + '" data-status="' + status.code + '" tabindex="0" role="button" aria-label="Ver detalles de ' + cleanName + '">' +
         '<div class="event-media">' +
-          '<img class="event-media-img" src="' + imgSrc + '" alt="' + cleanName + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + fallbackImg + '\';" />' +
+          '<img class="event-media-img" src="' + imgSrc + '" alt="' + cleanName + '" width="640" height="360" loading="lazy" onerror="this.onerror=null;this.src=\'' + fallbackImg + '\';" />' +
           '<div class="event-media-overlay"></div>' +
           '<div class="event-tags-bar">' +
             '<span class="event-cat-tag" style="color:' + category.color + ';border-color:' + category.color + '44;">' + category.label + '</span>' +
@@ -651,7 +651,7 @@
       modalBossesSection.style.display = 'flex';
       modalBosses.innerHTML = item.bosses.map(function(b){
         return '<div class="mini-chip" style="padding:4px 12px 4px 6px;">' +
-          '<img class="mini-mon-img" src="' + b.image + '" alt="' + b.name + '" />' +
+          '<img class="mini-mon-img" src="' + b.image + '" alt="' + b.name + '" width="32" height="32" loading="lazy" />' +
           '<span>' + b.name + '</span>' +
           (b.canBeShiny ? '<span class="modal-shiny-tag" style="margin-left:6px;">Variocolor</span>' : '') +
         '</div>';

@@ -7,7 +7,7 @@
       <div class="modal-box floating-event-card" aria-modal="true" aria-labelledby="evtTitle">
         <button class="modal-close" id="evtClose" aria-label="Cerrar modal">&times;</button>
         <div class="fec-header">
-          <img id="evtImg" class="fec-thumb" src="" alt="">
+          <img id="evtImg" class="fec-thumb" src="" alt="" width="58" height="58">
           <div class="fec-head-info">
             <div class="fec-badges">
               <span id="evtType" class="fec-cat-pill">TIPO DE EVENTO</span>

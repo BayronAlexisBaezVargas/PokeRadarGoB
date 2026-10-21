@@ -519,7 +519,7 @@ main.week-main-page {
     justify-content: center;
     padding: 8px 12px;
     font-size: 0.8125rem;
-    min-height: 40px;
+    min-height: 44px;
   }
 
   .week-container {
@@ -544,9 +544,9 @@ main.week-main-page {
     gap: 6px;
   }
   .week-nav-btn {
-    font-size: 0.74rem;
-    padding: 6px 10px;
-    min-height: 36px;
+    font-size: 0.75rem;
+    padding: 8px 10px;
+    min-height: 44px;
   }
   .week-range-text {
     font-size: 0.82rem;

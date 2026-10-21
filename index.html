@@ -25,8 +25,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="assets/manifest.json" />
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
-<link rel="stylesheet" href="assets/css/base.css?v=1.9.5" />
-<link rel="stylesheet" href="assets/css/home.css?v=1.9.5" />
+<link rel="stylesheet" href="assets/css/base.css?v=1.9.6" />
+<link rel="stylesheet" href="assets/css/home.css?v=1.9.6" />
 </head>
 <body data-seg="all">
 
@@ -216,7 +216,7 @@
     </div>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar por nombre (ej. Gyarados)" aria-label="Buscar Pokémon por nombre" autocomplete="off">
+      <input type="search" inputmode="search" id="searchInput" placeholder="Buscar por nombre (ej. Gyarados)" aria-label="Buscar Pokémon por nombre" autocomplete="off">
     </div>
     <button id="shinyFilterBtn" class="shiny-filter-btn" aria-pressed="false" title="Filtrar Pokémon con variante variocolor">
       <span class="shiny-dot" aria-hidden="true"></span>Variocolor
@@ -226,7 +226,7 @@
 
   <section id="incursiones" class="seg-raids">
     <div class="section-title"><h2>Incursiones activas</h2></div>
-    <p class="section-sub">Jefes disponibles por nivel, incursiones sombra y combates Dinamax. Seleccione un nivel para navegar directamente.</p>
+    <p class="section-sub">Jefes disponibles por nivel, incursiones sombra y combates Dinamax. Elige un nivel para ir directo a su sección.</p>
     <nav class="tier-nav" id="tierNav" aria-label="Nivel de incursión"></nav>
     <div id="raidGroups"></div>
 
@@ -237,7 +237,7 @@
           <h3 style="font-size:1.25rem;">Próximas rotaciones en incursiones</h3>
         </div>
       </div>
-      <p class="section-sub">Jefes programados para las próximas semanas con fechas de inicio y estimación de combate.</p>
+      <p class="section-sub">Jefes confirmados para las próximas semanas con sus fechas de inicio y rangos de PC.</p>
       <div id="upcomingRaidGroups">
         <div class="sync-loader" id="upcomingLoader">
           <span class="spinner"></span> Actualizando próximas incursiones...
@@ -270,7 +270,7 @@
     <div class="modal-header">
       <div class="modal-art-wrap">
         <div class="modal-art-glow" id="modalGlow"></div>
-        <img id="modalImg" class="modal-art" src="" alt="" />
+        <img id="modalImg" class="modal-art" src="" alt="" width="92" height="92" />
       </div>
       <div class="modal-header-info">
         <div class="modal-dex-row">
@@ -316,7 +316,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.9.5</span>
+        <span class="foot-version">v1.9.6</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -347,6 +347,6 @@
 <script defer src="assets/js/season.js"></script>
 <script defer src="assets/js/app.js"></script>
 <script defer src="assets/js/location.js"></script>
-<script defer src="assets/js/nav.js?v=1.9.5"></script>
+<script defer src="assets/js/nav.js?v=1.9.6"></script>
 </body>
 </html>

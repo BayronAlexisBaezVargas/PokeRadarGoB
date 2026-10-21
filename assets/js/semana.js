@@ -215,8 +215,8 @@
     if (weekSundayHint) {
       if (week.isCurrentWeek && week.isSundayToday) {
         weekSundayHint.style.display = 'flex';
-        weekSundayHint.innerHTML = '<span>💡 <strong>Hoy es domingo.</strong> Puedes explorar la programación de la semana entrante que comienza mañana.</span>' +
-          '<button id="sundayJumpBtn" type="button">Ver próxima semana ▶</button>';
+        weekSundayHint.innerHTML = '<span><strong>Hoy es domingo.</strong> Explora la programación de la próxima semana que comienza mañana.</span>' +
+          '<button id="sundayJumpBtn" type="button">Ver próxima semana</button>';
         var jBtn = document.getElementById('sundayJumpBtn');
         if (jBtn) {
           jBtn.addEventListener('click', function(){
@@ -324,7 +324,7 @@
           var imgSrc = e.image || fallbackImg;
 
           return '<div class="event-item ' + meta.cls + '" data-map-idx="' + mapIdx + '" role="button" tabindex="0" aria-label="Ver detalles de ' + titleEs + '">' +
-            '<img src="' + imgSrc + '" class="event-icon" loading="lazy" alt="" onerror="this.onerror=null;this.src=\'' + fallbackImg + '\';">' +
+            '<img src="' + imgSrc + '" class="event-icon" width="44" height="44" loading="lazy" alt="" onerror="this.onerror=null;this.src=\'' + fallbackImg + '\';">' +
             '<div class="event-info">' +
               '<div class="event-meta-row">' +
                 '<span class="event-type-pill">' + meta.tag + '</span>' +

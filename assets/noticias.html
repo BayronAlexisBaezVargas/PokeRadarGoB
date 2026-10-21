@@ -25,8 +25,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
-<link rel="stylesheet" href="css/base.css?v=1.9.5" />
-<link rel="stylesheet" href="css/noticias.css?v=1.9.5" />
+<link rel="stylesheet" href="css/base.css?v=1.9.6" />
+<link rel="stylesheet" href="css/noticias.css?v=1.9.6" />
 </head>
 <body>
 
@@ -228,7 +228,7 @@
     </div>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-      <input type="text" id="eventSearchInput" placeholder="Buscar por nombre o Pokémon (ej. Mankey, Kyogre)" autocomplete="off">
+      <input type="search" inputmode="search" id="eventSearchInput" placeholder="Buscar por nombre o Pokémon (ej. Mankey, Kyogre)" aria-label="Buscar eventos por nombre o Pokémon" autocomplete="off">
     </div>
     <div class="type-chips" id="eventCategoryChips"></div>
   </div>
@@ -239,7 +239,7 @@
       <h2 id="eventsSectionTitle">Calendario de Eventos</h2>
       <span id="eventsCountBadge" class="tier-pill" style="font-size:.75rem;">Cargando eventos...</span>
     </div>
-    <p class="section-sub">Horarios adaptados a la zona horaria local. Seleccione una tarjeta para consultar bonificaciones y parámetros técnicos.</p>
+    <p class="section-sub">Horarios adaptados a tu zona horaria local. Toca cualquier tarjeta para ver sus bonificaciones, fechas y jefes destacados.</p>
 
     <div class="events-grid" id="eventsGrid"></div>
     
@@ -255,7 +255,7 @@
     <button type="button" class="modal-close" id="eventModalClose" aria-label="Cerrar modal">&times;</button>
 
     <div class="fec-header">
-      <img id="eventModalImg" class="fec-thumb" src="" alt="" />
+      <img id="eventModalImg" class="fec-thumb" src="" alt="" width="58" height="58" />
       <div class="fec-head-info">
         <div class="fec-badges">
           <span id="eventModalCategory" class="fec-cat-pill"></span>
@@ -298,7 +298,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.9.5</span>
+        <span class="foot-version">v1.9.6</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -329,6 +329,6 @@
 <script defer src="js/season.js"></script>
 <script defer src="js/noticias.js"></script>
 <script defer src="js/location.js"></script>
-<script defer src="js/nav.js?v=1.9.5"></script>
+<script defer src="js/nav.js?v=1.9.6"></script>
 </body>
 </html>

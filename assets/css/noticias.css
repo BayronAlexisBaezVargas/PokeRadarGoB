@@ -320,9 +320,17 @@
   outline: none;
 }
 
-.event-card:hover,
+@media (hover: hover) {
+  .event-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.45);
+    box-shadow: var(--shadow-elevated), 0 0 20px rgba(56, 189, 248, 0.15);
+  }
+  .event-card:hover .event-media-img {
+    transform: scale(1.06);
+  }
+}
 .event-card:focus-visible {
-  transform: translateY(-4px);
   border-color: rgba(56, 189, 248, 0.45);
   box-shadow: var(--shadow-elevated), 0 0 20px rgba(56, 189, 248, 0.15);
 }
@@ -720,9 +728,9 @@
   .seg-btn {
     flex: 1;
     text-align: center;
-    padding: 7px 4px;
+    padding: 8px 4px;
     font-size: 0.75rem;
-    min-height: 38px;
+    min-height: 44px;
     white-space: nowrap;
   }
 

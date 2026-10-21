@@ -449,7 +449,7 @@
       '<div class="card-header-main">' +
         '<div class="mon-avatar">' +
           '<div class="mon-avatar-glow" style="' + orbStyle(m.types) + '"></div>' +
-          '<img class="mon-img" src="' + imgSrc + '" alt="' + m.name + '" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png\';" />' +
+          '<img class="mon-img" src="' + imgSrc + '" alt="' + m.name + '" width="58" height="58" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png\';" />' +
         '</div>' +
         '<div class="card-identity">' +
           '<div class="card-meta-row">' +
@@ -661,7 +661,7 @@
       return (
         '<div class="spotlight-item" data-mon-key="'+monKey+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
           '<div class="spotlight-avatar">'+
-            '<img src="'+imgSrc+'" alt="'+m.name+'" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+dexNum+'.png\';" />'+
+            '<img src="'+imgSrc+'" alt="'+m.name+'" width="50" height="50" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+dexNum+'.png\';" />'+
           '</div>'+
           '<div class="spotlight-info">'+
             '<div class="spotlight-meta">'+
@@ -970,7 +970,7 @@
     var imgUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png';
     var monKey = registerMon(m);
     return '<div class="mini-chip" data-mon-key="'+monKey+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">' +
-      '<img class="mini-mon-img" src="'+imgUrl+'" alt="'+m.name+'" loading="lazy" />' +
+      '<img class="mini-mon-img" src="'+imgUrl+'" alt="'+m.name+'" width="28" height="28" loading="lazy" />' +
       '<span>'+m.name+'</span>' +
       (m.rare?' <em>· poco común</em>':'') +
     '</div>';

@@ -1077,7 +1077,7 @@
         row.innerHTML = `
           <div class="mon-rank">#${index+1}</div>
           <div class="mon-avatar-sm">
-            <img class="${imgClass}" src="${getMonImage(mon.img || mon.dex, mon.tag)}" loading="lazy" decoding="async" alt="${mon.name}">
+            <img class="${imgClass}" src="${getMonImage(mon.img || mon.dex, mon.tag)}" width="44" height="44" loading="lazy" decoding="async" alt="${mon.name}">
           </div>
           <div class="mon-info-sm">
             <div class="mon-name-sm">${mon.name}</div>
