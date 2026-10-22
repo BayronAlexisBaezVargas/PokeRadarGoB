@@ -373,3 +373,38 @@
     padding: 2px 6px;
   }
 }
+
+/* Return action from the raid recommendations. */
+.raid-context .raid-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  max-width: 100%;
+  padding: 12px 18px;
+  border: 1px solid rgba(56, 189, 248, .4);
+  border-radius: 12px;
+  background: rgba(56, 189, 248, .1);
+  color: var(--signal);
+  font-size: .95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background .15s ease, border-color .15s ease;
+}
+.raid-back-link svg { flex: 0 0 20px; }
+.raid-back-link span { min-width: 0; overflow-wrap: anywhere; }
+.raid-context .raid-back-link:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+@media (hover: hover) {
+  .raid-context .raid-back-link:hover {
+    background: rgba(56, 189, 248, .2);
+    border-color: var(--signal);
+  }
+}
+@media (max-width: 768px) {
+  .raid-context .raid-back-link { width: 100%; }
+}

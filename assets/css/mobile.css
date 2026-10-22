@@ -1,0 +1,167 @@
+/* Shared small-screen layout, loaded after each page's component styles. */
+@media (max-width: 768px) {
+  html { scroll-padding-top: 16px; scroll-padding-bottom: 84px; }
+  body { background-attachment: scroll; }
+  body::before, body::after { display: none; }
+  main, main.week-main-page { padding: 0 16px 28px; min-width: 0; }
+  main > *, .hero-text, .controls > *, .section-head > *, .modal-header-info {
+    min-width: 0;
+  }
+
+  /* Only the primary navigation stays fixed. Filters belong to the page. */
+  .hud { position: relative; z-index: 10; height: auto; }
+  .hud-inner, .hud-bar { height: auto; min-height: 52px; }
+  .hud-bar { padding: 10px 16px; background: transparent; backdrop-filter: none; border: 0; }
+  .hud-word { font-size: .9rem; }
+  .hud-word small { font-size: .7rem; letter-spacing: 0; }
+  .hud-status .live { display: none !important; }
+  .hud-date { padding: 0; border: 0; background: none; font-size: .7rem; }
+  .hud-date::before { display: none; }
+  .hud-nav { background: #101827; box-shadow: none; backdrop-filter: none; z-index: 100; }
+  .hud-nav-link, .hud-nav-link span { font-size: .75rem; color: #b9c5d6; }
+  .hud-nav-link.active::before { box-shadow: none; }
+  .hud-nav-link.active svg { filter: none; }
+
+  .tier-nav, .atacantes-controls, .rocket-tabs-bar, .week-toolbar-section {
+    position: static; inset: auto; z-index: auto;
+    width: 100%; max-width: 100%; margin: 12px 0 20px;
+    padding: 0; border: 0; background: transparent;
+    box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .type-filter-bar, .tier-nav, .rocket-tabs-bar, .type-chips {
+    padding: 4px 2px 10px; gap: 8px; scroll-padding-inline: 2px;
+  }
+  .type-filter-btn.active, .rocket-tab-btn.active, .seg-btn.active { box-shadow: none !important; }
+
+  .hero, .week-hero { padding: 10px 0 14px !important; gap: 8px; }
+  h1.title { font-size: clamp(1.35rem, 5.5vw, 1.8rem) !important; line-height: 1.25 !important; margin: 0 !important; }
+  .hero .hud-readouts { display: flex !important; flex-wrap: wrap; background: transparent !important; padding: 0 !important; border: 0 !important; gap: 6px 16px !important; margin: 10px 0 0; }
+  .hero .readout { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 6px; padding: 0 !important; background: transparent !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+  .hero .readout dt { font-family: var(--font-body); font-size: .75rem !important; text-transform: none; letter-spacing: 0; margin: 0; }
+  .hero .readout dd, .hero #seasonReadout dd { font-size: .8rem !important; }
+  .hero .readout dd { margin: 0; }
+  .readout { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+  .readout dt { font-size: .75rem !important; }
+  .readout dd { overflow-wrap: anywhere; }
+  .raid-page #seasonReadout { grid-column: auto !important; }
+  .section-title { flex-wrap: wrap; gap: 8px; }
+  .section-title h2 { font-size: 1.3rem; }
+  .controls { margin: 0 0 20px; padding-bottom: 10px; gap: 8px; }
+  .controls .search-wrap { min-width: 0; max-width: none; width: 100%; }
+  .search-wrap input { border-radius: 12px; }
+  .segment { border-radius: 14px; }
+  .seg-btn { font-size: .8rem; }
+  .filter-summary { grid-column: 1 / -1; gap: 8px; align-items: center; font-size: .8rem; }
+  .event-view-switch { max-width: none; margin: 8px 0 12px; }
+
+  .grid, .events-grid, .week-container, .atacantes-grid, #leadersGrid, #gruntsGrid {
+    grid-template-columns: minmax(0, 1fr) !important; gap: 14px;
+  }
+  .card, .event-card, .day-card, .leader-card, .grunt-card, .type-card {
+    min-width: 0; max-width: 100%; border-radius: 16px;
+    box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .card-name, .event-title, .mon-name-sm, .rocket-mon span, .event-name {
+    white-space: normal; overflow-wrap: anywhere; text-overflow: clip;
+  }
+  .card-meta-row { flex-wrap: wrap; }
+  .weak-pills .badge { font-size: .72rem; padding: 3px 6px; }
+  .card-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .metric-val { overflow-wrap: anywhere; }
+
+  /* Events: filters wrap, and artwork keeps a useful height. */
+  .controls:has([data-time-filter]) .segment { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
+  .event-media { aspect-ratio: 16 / 9; max-height: none; }
+  .event-content { padding: 16px; gap: 10px; }
+  .event-meta-row { flex-wrap: wrap; }
+  .event-type-pill, .event-time { white-space: normal; }
+  .week-nav-bar { border: 1px solid var(--line); border-radius: 16px; padding: 12px; background: var(--panel); box-shadow: none; backdrop-filter: none; }
+  .week-range-text { font-size: .95rem; overflow-wrap: anywhere; }
+  .event-item { padding: 10px; gap: 10px; }
+  .event-icon { background: transparent; filter: none; }
+
+  /* Rocket: readable names instead of three clipped columns. */
+  .rocket-hero { padding: 10px 0 14px !important; margin-top: 0; border: 0; background: transparent; box-shadow: none; }
+  .rocket-hero::before, .rocket-hero .kicker, .rocket-hero .lede { display: none !important; }
+  .rocket-tabs-bar { flex-wrap: wrap; overflow: visible; }
+  .phase-mons { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .rocket-mon { padding: 10px 6px; }
+  .rocket-mon img { width: 44px; height: 44px; }
+  .rocket-mon span { font-size: .78rem; line-height: 1.3; }
+  .leader-card, .grunt-card { padding: 14px; }
+  .leader-card::after { display: none; }
+  .grunt-counters { flex-wrap: wrap; }
+
+  /* Attackers: allow full names and keep damage away from the text. */
+  .mon-row { display: grid; grid-template-columns: 20px 42px minmax(0, 1fr); gap: 8px; padding: 10px 4px; }
+  .mon-name-sm { font-size: .9rem; line-height: 1.35; }
+  .mon-dps-badge { grid-column: 3; justify-self: start; }
+  .mon-tag-sm { font-size: .7rem; white-space: normal; max-width: 100%; }
+  .mon-avatar-sm { background: transparent; border: 0; }
+  .type-card::before { display: none; }
+  .raid-context { padding: 16px; }
+  .raid-context h2 { font-size: 1.2rem; overflow-wrap: anywhere; }
+
+  /* Dialogs use the viewport; scrolling cannot cut the header or close control. */
+  dialog.modal-backdrop {
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)) !important;
+    background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  dialog.modal-backdrop::backdrop { background: rgba(5, 8, 15, .72); backdrop-filter: none; }
+  .modal-box {
+    max-width: 480px !important;
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+    box-shadow: none !important; background: #101a2b !important;
+  }
+  .modal-header, .modal-body { flex-shrink: 0; }
+  .modal-header { padding: 18px 52px 16px 16px; }
+  .modal-close { width: 44px !important; height: 44px !important; min-width: 44px !important; min-height: 44px !important; }
+  .modal-title { overflow-wrap: anywhere; }
+  .modal-stat-val { font-size: 1rem; overflow-wrap: anywhere; }
+  .modal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .recommendation-link { width: 100%; text-align: center; }
+  footer { padding-inline: 16px; background: transparent; }
+  .foot-links { flex-wrap: wrap; gap: 20px; }
+  .foot-author { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 359px) {
+  main, main.week-main-page { padding-inline: 12px; }
+  .hud-bar { padding-inline: 12px; gap: 6px; }
+  .hud-mark { width: 22px; height: 22px; }
+  .hud-brand { gap: 6px; }
+  .hud-date { font-size: .65rem; }
+  .controls .search-wrap { grid-column: 1 / -1; }
+  .controls .shiny-filter-btn { grid-column: 1 / -1; justify-self: start; }
+  .modal-header { flex-wrap: wrap; }
+  .modal-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Consistent action sizes across all pages. Selection uses a tinted surface. */
+.controls .shiny-filter-btn, .controls .seg-btn, .tier-chip,
+.rocket-tab-btn, .week-nav-btn, .week-btn-today, .type-filter-btn {
+  min-height: 44px; border-radius: 12px; font-family: var(--font-body);
+  text-transform: none; letter-spacing: 0; box-shadow: none;
+}
+.controls .shiny-filter-btn { font-size: .8rem; }
+.controls .shiny-filter-btn.active { background: rgba(245,158,11,.16); color: var(--gold); box-shadow: none; }
+.raid-page .controls .search-wrap input { font-size: 16px; }
+.type-filter-panel .type-filter-bar, .type-filter-panel .type-chips { overflow: visible; flex-wrap: wrap; padding: 0; }
+@media (max-width: 768px) {
+  .hero .readout:hover { transform: none; }
+  .raid-page .controls .search-wrap { grid-column: 1; }
+  .raid-page .controls .shiny-filter-btn { grid-column: 2; padding: 8px 10px; }
+  .raid-page .type-filter-disclosure { grid-column: 1 / -1; }
+  .raid-page .filter-summary { min-height: 28px; }
+  .tier-nav { flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; padding: 0; overflow: visible; }
+  .tier-chip { padding: 8px 10px; }
+  .atacantes-controls { margin-top: 0; }
+  .raid-detail .modal-stat-val { font-size: 1.05rem; }
+  .raid-detail .modal-stat-hundo .modal-stat-val { font-size: 1.6rem; }
+  .raid-detail .modal-grid { gap: 12px; }
+  .event-item .event-meta-row { gap: 6px; }
+  .event-item .event-title { font-size: .9rem; line-height: 1.4; }
+}
+@media (max-width: 359px) {
+  .raid-detail .modal-grid { grid-template-columns: minmax(0, 1fr); }
+}

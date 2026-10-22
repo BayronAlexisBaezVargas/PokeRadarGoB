@@ -6,14 +6,14 @@
 
   // 0. PWA Cache Purge on Version Upgrade
   try {
-    var CURRENT_VERSION = '1.9.6';
+    var CURRENT_VERSION = '2.0.0';
     var storedVersion = localStorage.getItem('pokeradar_version');
     if (storedVersion !== CURRENT_VERSION) {
       localStorage.setItem('pokeradar_version', CURRENT_VERSION);
       if ('caches' in window) {
         caches.keys().then(function(names) {
           names.forEach(function(name) {
-            if (name !== 'pokego-radar-v1.9.6') {
+            if (name !== 'pokego-radar-v2.0.0') {
               caches.delete(name);
             }
           });
@@ -236,7 +236,7 @@
   var isNavigating = false;
   document.addEventListener('click', function(e) {
     var link = e.target.closest('a');
-    if (!link) return;
+    if (!link || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
 
     var href = link.getAttribute('href');
     if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank' || link.hasAttribute('download')) {
@@ -264,10 +264,6 @@
     }
     isNavigating = true;
 
-    // Preserve server query params (like IntelliJ ?_ijt=... or filters)
-    if (window.location.search && !targetUrl.search) {
-      targetUrl.search = window.location.search;
-    }
 
     e.preventDefault();
     showLoader();

@@ -561,3 +561,15 @@ main.week-main-page {
     display: inline;
   }
 }
+
+/* Calendar status is expressed in text as well as color. */
+.event-item .event-state { padding: 2px 7px; border-radius: 6px; font-size: .7rem; font-weight: 600; background: rgba(148,163,184,.1); color: var(--ink-muted); }
+.event-item[data-state="live"] .event-state { background: var(--live-bg); color: #6ee7b7; }
+.event-item[data-state="upcoming"] .event-state { background: var(--signal-bg); color: var(--signal); }
+.event-item[data-state="ended"] { border-style: dashed; }
+.event-item[data-state="ended"] .event-title { color: var(--ink-muted); }
+.event-item .event-time { font-family: var(--font-body); font-size: .8rem; line-height: 1.5; color: var(--ink-dim); margin-top: 2px; }
+.day-card.is-today { border: 2px solid var(--signal); box-shadow: none; scroll-margin-top: 16px; }
+.day-card.is-today .day-header { background: var(--signal-bg); }
+.day-card.is-past-day .day-header { color: var(--ink-muted); }
+.week-nav-tags .week-btn-today { min-height: 44px; }

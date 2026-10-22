@@ -22,7 +22,6 @@
 
   /* ============ Estado Global ============ */
   var currentWeekOffset = 0;
-  var hasAutoScrolledToday = false;
   var rawEventsList = [];
   var renderedEventsMap = [];
 
@@ -208,7 +207,7 @@
     }
 
     if (todayWeekBtn) {
-      todayWeekBtn.style.display = (currentWeekOffset === 0) ? 'none' : 'inline-flex';
+      todayWeekBtn.style.display = 'inline-flex';
     }
 
     // 2. Banner sugerencia de domingo
@@ -271,7 +270,8 @@
 
       // Construir tarjeta HTML
       var card = document.createElement('article');
-      card.className = 'day-card' + (isToday ? ' is-today' : '');
+      card.className = 'day-card' + (isToday ? ' is-today' : dayEnd < week.current ? ' is-past-day' : '');
+      if(isToday) card.setAttribute('aria-current', 'date');
 
       var headerHTML = '<header class="day-header">' +
         '<div class="day-name-wrap">' +
@@ -304,7 +304,7 @@
           } else if (eEnd >= dayStart && eEnd <= dayEnd) {
             timeStr = 'Termina ' + formatTime(eEnd) + ' hrs';
           } else {
-            timeStr = 'Activo';
+            timeStr = 'Todo el día';
           }
 
           // Guardar referencia para modal
@@ -323,14 +323,15 @@
           var fallbackImg = 'img/favicon.svg';
           var imgSrc = e.image || fallbackImg;
 
-          return '<div class="event-item ' + meta.cls + '" data-map-idx="' + mapIdx + '" role="button" tabindex="0" aria-label="Ver detalles de ' + titleEs + '">' +
+          return '<div class="event-item ' + meta.cls + '" data-start="' + eStart.getTime() + '" data-end="' + eEnd.getTime() + '" data-map-idx="' + mapIdx + '" role="button" tabindex="0" aria-label="Ver detalles de ' + titleEs + '">' +
             '<img src="' + imgSrc + '" class="event-icon" width="44" height="44" loading="lazy" alt="" onerror="this.onerror=null;this.src=\'' + fallbackImg + '\';">' +
             '<div class="event-info">' +
               '<div class="event-meta-row">' +
                 '<span class="event-type-pill">' + meta.tag + '</span>' +
-                '<span class="event-time">' + timeStr + '</span>' +
+                '<span class="event-state"></span>' +
               '</div>' +
               '<span class="event-title">' + titleEs + '</span>' +
+              '<span class="event-time">' + timeStr + '</span>' +
             '</div>' +
           '</div>';
         }).join('');
@@ -341,17 +342,20 @@
       weekContainer.appendChild(card);
     }
 
-    // Auto-scroll suave al día actual en móvil si es la semana en curso (solo la primera vez)
-    if (currentWeekOffset === 0 && weekContainer && !hasAutoScrolledToday) {
-      var todayEl = weekContainer.querySelector('.day-card.is-today');
-      if (todayEl) {
-        hasAutoScrolledToday = true;
-        setTimeout(function() {
-          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 160);
-      }
-    }
+    updateEventStates();
   }
+
+  function updateEventStates(){
+    var now = Date.now();
+    document.querySelectorAll('.event-item[data-start]').forEach(function(item){
+      var start = Number(item.dataset.start);
+      var end = Number(item.dataset.end);
+      var state = now >= end ? 'ended' : now >= start ? 'live' : 'upcoming';
+      item.dataset.state = state;
+      item.querySelector('.event-state').textContent = state === 'ended' ? 'Finalizado' : state === 'live' ? 'En curso' : 'Próximo';
+    });
+  }
+  setInterval(updateEventStates, 60000);
 
   /* ============ Navegación de Semanas ============ */
   function changeWeek(delta) {
@@ -372,10 +376,11 @@
     todayWeekBtn.addEventListener('click', function(){
       if (currentWeekOffset !== 0) {
         currentWeekOffset = 0;
-        hasAutoScrolledToday = false;
         playBeep();
         renderWeek();
       }
+      var today = weekContainer.querySelector('.is-today');
+      if(today) today.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
     });
   }
 

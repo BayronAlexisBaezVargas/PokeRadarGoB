@@ -2209,3 +2209,100 @@ footer {
   from { opacity: 0.5; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Vistas del calendario y acceso contextual desde incursiones. */
+.event-view-switch {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%; gap: 4px; padding: 4px;
+  margin: 12px 0 20px; border: 1px solid var(--line);
+  border-radius: 14px; background: var(--panel);
+}
+.event-view-switch a {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; min-width: 0; padding: 10px 14px;
+  border: 1px solid transparent; border-radius: 10px;
+  color: var(--ink-muted); background: transparent;
+  font-family: var(--font-body); font-size: .875rem; font-weight: 600;
+  line-height: 1.4; text-decoration: none;
+}
+.event-view-switch a svg { width: 18px; height: 18px; flex-shrink: 0; }
+.event-view-switch a[aria-current="page"] {
+  background: var(--signal-bg); border-color: rgba(56, 189, 248, .4);
+  color: var(--signal);
+}
+.event-view-switch a:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+@media (hover: hover) {
+  .event-view-switch a:not([aria-current="page"]):hover { background: var(--panel-2); color: var(--ink); }
+}
+.recommendation-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 10px 18px; border-radius: 12px;
+  border: 1px solid var(--signal); color: var(--signal); font-weight: 600;
+}
+.recommendation-link {
+  background: var(--signal); color: #090d16;
+}
+.recommendation-note { margin-top: 10px; font-size: .9rem; }
+.raid-context { padding: 20px; margin-bottom: 24px; border: 1px solid var(--signal); border-radius: 16px; }
+.raid-context p { margin: 12px 0; line-height: 1.6; }
+.raid-context a { color: var(--signal); text-decoration: underline; }
+[hidden] { display: none !important; }
+
+/* Shared controls and disclosures */
+.ui-button,
+.type-filter-disclosure > summary,
+.detail-disclosure > summary {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 44px; font-family: var(--font-body); font-size: .875rem;
+  font-weight: 600; line-height: 1.4; cursor: pointer;
+}
+.ui-button { justify-content: center; padding: 10px 16px; border-radius: 12px; }
+.type-filter-disclosure { grid-column: 1 / -1; width: 100%; min-width: 0; }
+.type-filter-disclosure > summary {
+  padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--panel); color: var(--ink); list-style: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary:focus-visible, .rocket-mon:focus-visible {
+  outline: 2px solid var(--signal); outline-offset: 3px;
+}
+.disclosure-chevron { flex: 0 0 18px; margin-left: auto; transition: transform .15s ease; }
+details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
+.filter-selection { margin-left: auto; color: var(--ink-muted); font-size: .8rem; font-weight: 500; }
+.filter-selection + .disclosure-chevron { margin-left: 0; }
+.type-filter-panel { padding: 14px 2px 4px; }
+.type-filter-panel p { margin: 0 0 10px; font-size: .8rem; color: var(--ink-muted); }
+.type-filter-panel .type-chips, .type-filter-panel .type-filter-bar {
+  flex-wrap: wrap; overflow: visible; gap: 8px; padding: 0; scroll-snap-type: none;
+}
+.type-filter-panel .chip, .type-filter-panel .type-filter-btn {
+  min-height: 44px; padding: 8px 12px; border-radius: 10px; font-size: .8rem;
+}
+.controls .ui-button-quiet { background: none; border-color: transparent; color: var(--ink-dim); text-decoration: underline; text-underline-offset: 3px; }
+.controls .ui-button-quiet:hover { background: var(--panel); }
+
+/* Raid detail: sections instead of nested cards */
+.detail-section { display: flex; flex-direction: column; gap: 12px; }
+.detail-section h4 { font-size: 1.05rem; }
+.detail-caption { color: var(--ink-muted); font-size: .85rem; }
+.raid-detail .modal-body { gap: 20px; }
+.raid-detail .modal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.raid-detail .modal-stat-card {
+  padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; min-width: 0;
+}
+.raid-detail .modal-stat-hundo { grid-column: 1 / -1; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.raid-detail .modal-stat-hundo .modal-stat-val { color: var(--gold); font-size: 1.6rem; }
+.raid-detail .modal-stat-label { font-family: var(--font-body); text-transform: none; letter-spacing: 0; font-size: .8rem; }
+.raid-detail .modal-stat-sub { font-size: .8rem; line-height: 1.6; }
+.raid-detail .modal-stat-val { font-size: 1.05rem; }
+.detail-disclosure > summary { list-style: none; color: var(--ink-dim); padding: 8px 0; }
+.detail-disclosure { border-top: 1px solid var(--line); }
+.detail-disclosure[open] > summary { margin-bottom: 8px; }
+.pokedex-disclosure .modal-pokedex-box { background: none; border: 0; padding: 0; }
+.raid-detail #raidRecommendations .recommendation-link { width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  @view-transition { navigation: none; }
+  .disclosure-chevron { transition: none; }
+}

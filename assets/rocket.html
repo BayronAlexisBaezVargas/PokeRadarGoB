@@ -14,8 +14,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
-<link rel="stylesheet" href="css/base.css?v=1.9.6" />
-<link rel="stylesheet" href="css/rocket.css?v=1.9.6" />
+<link rel="stylesheet" href="css/base.css?v=2.0.0" />
+<link rel="stylesheet" href="css/rocket.css?v=2.0.0" />
+<link rel="stylesheet" href="css/mobile.css?v=2.0.0" />
 </head>
 <body>
 
@@ -153,11 +154,7 @@
   </a>
   <a href="noticias.html" class="hud-nav-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-    <span>Noticias<span class="nav-text-extra"> y Eventos</span></span>
-  </a>
-  <a href="semana.html" class="hud-nav-link">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
-    <span>Semana</span>
+    <span>Eventos</span>
   </a>
   <a href="rocket.html" class="hud-nav-link active">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -180,7 +177,7 @@
 
   <section id="rocketLeaders" style="margin-top:var(--sp-4);">
     <div class="section-title"><h2>Líderes y Giovanni</h2></div>
-    <p class="section-sub">El primer Pokémon de la alineación de un líder siempre puede ser variocolor (punto amarillo).</p>
+    <p class="section-sub">El punto amarillo indica disponibilidad de variocolor según la fuente. La fase marcada como Encuentro indica qué Pokémon puedes rescatar.</p>
     
     <div class="rocket-tabs-bar" id="rocketTabsBar" aria-label="Filtro rápido de líderes">
       <button type="button" class="rocket-tab-btn active" data-leader-filter="all">Todos</button>
@@ -255,7 +252,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.9.6</span>
+        <span class="foot-version">v2.0.0</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -263,6 +260,7 @@
     <div class="foot-links">
       <div class="foot-links-group">
         <span class="foot-links-title">Fuentes de datos</span>
+        <a href="https://leekduck.com/rocket-lineups/" target="_blank" rel="noopener">Alineaciones Rocket</a>
         <a href="https://leekduck.com/raid-bosses/" target="_blank" rel="noopener">Leek Duck</a>
         <a href="https://github.com/bigfoott/ScrapedDuck" target="_blank" rel="noopener">ScrapedDuck API</a>
         <a href="https://db.pokemongohub.net/es/best/attackers-per-type" target="_blank" rel="noopener">GO Hub (Mejores Atacantes)</a>
@@ -273,8 +271,7 @@
         <span class="foot-links-title">Proyecto</span>
         <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener">GitHub</a>
         <a href="../index.html">Radar de Incursiones</a>
-        <a href="noticias.html">Noticias y Eventos</a>
-        <a href="semana.html">Resumen Semanal</a>
+        <a href="noticias.html">Eventos</a>
         <a href="rocket.html">Team GO Rocket</a>
         <a href="atacantes.html">Top Atacantes</a>
       </div>
@@ -282,9 +279,9 @@
   </div>
 </footer>
 
-<script defer src="js/audio.js"></script>
-<script defer src="js/location.js"></script>
-<script defer src="js/rocket.js"></script>
-<script defer src="js/nav.js?v=1.9.6"></script>
+<script defer src="js/audio.js?v=2.0.0"></script>
+<script defer src="js/location.js?v=2.0.0"></script>
+<script defer src="js/rocket.js?v=2.0.0"></script>
+<script defer src="js/nav.js?v=2.0.0"></script>
 </body>
 </html>

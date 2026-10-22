@@ -25,105 +25,15 @@
   /* ============ Datos: Incursiones Activas ============ */
   function mon(o){ return o; }
 
+  // La disponibilidad proviene de la fuente; nunca de listados históricos.
   var RAID_GROUPS = [
-    {
-      id:'t1', tier:'1★', title:'Incursiones 1★',
-      note:'Evento PokémonXP',
-      end:new Date(2026,7,30,20,0),
-      mons:[
-        mon({name:'Pikachu', tag:'Disfraz Cosmog', dex:'025', types:['electric'], cp:[493,536], cpBoost:[616,670], weather:['rainy']}),
-        mon({name:'Impidimp', dex:'859', types:['dark','fairy'], cp:[421,461], cpBoost:[526,576], weather:['fog','cloudy']})
-      ]
-    },
-    {
-      id:'t3', tier:'3★', title:'Incursiones 3★',
-      note:'Rotación semanal',
-      end:null,
-      mons:[
-        mon({name:'Dondozo', dex:'977', types:['water'], cp:[1530,1604], cpBoost:[1913,2005], weather:['rainy'], weak:['electric','grass'], shiny:true}),
-        mon({name:'Samurott', tag:'Forma Hisui', dex:'503', types:['water','dark'], cp:[1511,1585], cpBoost:[1889,1982], weather:['rainy','fog'], weak:['bug','electric','fairy','fighting','grass'], shiny:true}),
-        mon({name:'Lapras', tag:'Disfraz Bufanda', dex:'131', types:['water','ice'], cp:[1435,1509], cpBoost:[1794,1886], weather:['rainy','snow'], weak:['fighting','rock','electric','grass'], shiny:true})
-      ]
-    },
-    {
-      id:'t5', tier:'5★', title:'Incursiones 5★ · Legendarias',
-      note:'Titanes Legendarios',
-      end:new Date(2026,8,8,10,0),
-      mons:[
-        mon({name:'Regirock', dex:'377', types:['rock'], cp:[1703,1784], cpBoost:[2129,2230], weather:['partlycloudy'], weak:['water','grass','fighting','ground','steel'], shiny:true}),
-        mon({name:'Regice', dex:'378', types:['ice'], cp:[1703,1784], cpBoost:[2129,2230], weather:['snow'], weak:['fighting','fire','rock','steel'], shiny:true}),
-        mon({name:'Registeel', dex:'379', types:['steel'], cp:[1326,1398], cpBoost:[1658,1748], weather:['snow'], weak:['fire','fighting','ground'], shiny:true})
-      ]
-    },
-    {
-      id:'tm', tier:'MEGA', title:'Megaincursiones',
-      note:'',
-      end:new Date(2026,8,8,10,0),
-      mons:[
-        mon({name:'Gyarados', tag:'Mega', dex:'130', types:['water','dark'], cp:[1855,1937], cpBoost:[2319,2422], weather:['rainy','fog'], weak:['bug','electric','fairy','fighting','grass'], shiny:true})
-      ]
-    },
-    {
-      id:'ts', tier:'SOMBRA', title:'Incursiones Sombra',
-      note:'',
-      end:new Date(2026,8,8,20,0),
-      subgroups:[
-        { label:'1★ Sombra', mons:[
-          mon({name:'Slowpoke', tag:'Sombra', dex:'079', types:['water','psychic'], cp:[610,700], cpBoost:[763,876], weather:['rainy','windy']}),
-          mon({name:'Aipom', tag:'Sombra', dex:'190', types:['normal'], cp:[678,770], cpBoost:[848,963], weather:['partlycloudy']}),
-          mon({name:'Croagunk', tag:'Sombra', dex:'453', types:['poison','fighting'], cp:[466,544], cpBoost:[583,680], weather:['cloudy']}),
-          mon({name:'Grubbin', tag:'Sombra', dex:'736', types:['bug'], cp:[483,562], cpBoost:[604,703], weather:['rainy']})
-        ]},
-        { label:'3★ Sombra', mons:[
-          mon({name:'Snorlax', tag:'Sombra', dex:'143', types:['normal'], cp:[1696,1843], cpBoost:[2120,2304], weather:['partlycloudy']}),
-          mon({name:'Hitmontop', tag:'Sombra', dex:'237', types:['fighting'], cp:[1114,1232], cpBoost:[1393,1540], weather:['cloudy']}),
-          mon({name:'Lampent', tag:'Sombra', dex:'608', types:['ghost','fire'], cp:[871,976], cpBoost:[1089,1220], weather:['fog','sunny']})
-        ]},
-        { label:'5★ Sombra', note:'sábados y domingos', mons:[
-          mon({name:'Giratina', tag:'Sombra (Forma Alterada)', dex:'487', types:['ghost','dragon'], cp:[1782,1931], cpBoost:[2228,2414], weather:['fog','windy'], note:'Disponible exclusivamente sábados y domingos'})
-        ]}
-      ]
-    }
+    {id:'t1', tier:'1★', title:'Incursiones 1★', mons:[]},
+    {id:'t3', tier:'3★', title:'Incursiones 3★', mons:[]},
+    {id:'t5', tier:'5★', title:'Incursiones 5★ · Legendarias', mons:[]},
+    {id:'tm', tier:'MEGA', title:'Megaincursiones', mons:[]},
+    {id:'ts', tier:'SOMBRA', title:'Incursiones Sombra', subgroups:[]}
   ];
-
-  /* ============ Datos: Próximas Incursiones ============ */
   var UPCOMING_RAID_GROUPS = [];
-
-  /* ============ Datos: Silvestres ============ */
-  var WILD_GROUPS = [
-    {
-      id:'wf', title:'Apariciones frecuentes',
-      note:'Evento PokémonXP', end:new Date(2026,7,28,10,0),
-      mons:[
-        mon({name:'Ralts', dex:'280', types:['psychic'], signal:'alta'}),
-        mon({name:'Numel', dex:'322', types:['fire','ground'], signal:'alta'}),
-        mon({name:'Spheal', dex:'363', types:['ice','water'], signal:'alta'}),
-        mon({name:'Drifloon', dex:'425', types:['ghost','flying'], signal:'alta'}),
-        mon({name:'Elgyem', dex:'605', types:['psychic'], signal:'alta'}),
-        mon({name:'Sobble', dex:'816', types:['water'], signal:'alta'}),
-        mon({name:'Pawmi', dex:'921', types:['electric'], signal:'alta'})
-      ]
-    },
-    {
-      id:'wr', title:'Apariciones poco comunes',
-      note:'Evento PokémonXP', end:new Date(2026,7,28,10,0),
-      mons:[
-        mon({name:'Deino', dex:'633', types:['dark','dragon'], signal:'baja'})
-      ]
-    }
-  ];
-
-  var UPCOMING_WILD = [
-    mon({name:'Mankey', dex:'056', types:['fighting']}),
-    mon({name:'Lickitung', dex:'108', types:['normal']}),
-    mon({name:'Totodile', dex:'158', types:['water']}),
-    mon({name:'Wooper', dex:'194', types:['water','ground']}),
-    mon({name:'Foongus', dex:'590', types:['grass','poison']}),
-    mon({name:'Froakie', dex:'656', types:['water']}),
-    mon({name:'Litten', dex:'725', types:['fire']}),
-    mon({name:'Togetic', dex:'176', types:['fairy','flying'], rare:true}),
-    mon({name:'Beldum', dex:'374', types:['steel','psychic'], rare:true})
-  ];
 
   /* ============ Helpers de color ============ */
   function hexToRgb(hex){ var h=hex.replace('#',''); var n=Number.parseInt(h,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
@@ -233,10 +143,6 @@
     if (g.mons) g.mons.forEach(ensureWeakness);
     if (g.subgroups) g.subgroups.forEach(function(sg){ if (sg.mons) sg.mons.forEach(ensureWeakness); });
   });
-  WILD_GROUPS.forEach(function(g){
-    if (g.mons) g.mons.forEach(ensureWeakness);
-    if (g.subgroups) g.subgroups.forEach(function(sg){ if (sg.mons) sg.mons.forEach(ensureWeakness); });
-  });
 
   function formatMultiplierBadges(items, linkToAtacantes){
     if(!items || !items.length){
@@ -262,32 +168,48 @@
   var MON_REGISTRY = {};
   var speciesCache = {};
 
+  // La especie comparte número de Pokédex, pero cada forma tiene ficha propia.
+  function monIdentity(m){
+    return encodeURIComponent(JSON.stringify([String(Number(m.dex)), m.name || '', m.tag || '', m.image || '']));
+  }
+
+  function pokemonApiId(m){
+    var label = norm((m.name || '') + ' ' + (m.tag || ''));
+    var imageForm = (m.image || '').match(/\.f(MEGA(?:_[XY])?|PRIMAL)\./i);
+    var megaVariant = label.match(/\b(?:x|y)\b/);
+    var form = imageForm ? imageForm[1].toLowerCase().replace('_', '-') :
+      /\bmega\b/.test(label) ? 'mega' + (megaVariant ? '-' + megaVariant[0] : '') :
+      /primigenio|primal/.test(label) ? 'primal' : '';
+    if(!form) return String(Number(m.dex));
+    var name = norm(m.name).replace(/^(mega|primal)\s+/, '').replace(/\s*\([^)]*\)/g, '').replace(/\s+[xy]$/, '').trim().replace(/\s+/g, '-');
+    return name + '-' + form;
+  }
+
   function registerMon(m){
-    var key = 'pk_' + m.dex + '_' + (m.tag || '').replace(/[^a-zA-Z0-9]/g, '_');
-    if (MON_REGISTRY[key] && MON_REGISTRY[key].cp && !m.cp) {
-      return key;
-    }
+    var key = 'pk_' + monIdentity(m);
+    if (MON_REGISTRY[key] && MON_REGISTRY[key].cp && !m.cp) return key;
     MON_REGISTRY[key] = m;
     return key;
   }
 
-  var currentOpenDex = null;
+  var currentOpenForm = null;
 
   function runTypewriter(el, text) {
     if (!el) return;
     el.textContent = text || '';
   }
 
-  function fetchPokeApiDetails(dexStr){
-    var dexNum = Number.parseInt(dexStr, 10);
-    currentOpenDex = dexNum;
+  function fetchPokeApiDetails(m){
+    var dexNum = Number.parseInt(m.dex, 10);
+    var apiId = pokemonApiId(m);
+    currentOpenForm = apiId;
     var flavorEl = document.getElementById('modalFlavor');
     var genusEl = document.getElementById('modalGenus');
     var heightEl = document.getElementById('modalHeight');
     var weightEl = document.getElementById('modalWeight');
 
-    if(speciesCache[dexNum]){
-      var cached = speciesCache[dexNum];
+    if(speciesCache[apiId]){
+      var cached = speciesCache[apiId];
       runTypewriter(flavorEl, cached.flavor || 'Sin descripción disponible en Pokédex.');
       genusEl.textContent = cached.genus ? 'Especie: ' + cached.genus : 'Especie Pokémon';
       heightEl.textContent = cached.height ? 'Altura: ' + cached.height + ' m' : '';
@@ -302,9 +224,9 @@
 
     Promise.all([
       fetch('https://pokeapi.co/api/v2/pokemon-species/' + dexNum).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
-      fetch('https://pokeapi.co/api/v2/pokemon/' + dexNum).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+      fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(apiId)).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
     ]).then(function(res){
-      if(currentOpenDex !== dexNum) return; // Evitar sobreescritura por petición desfasada
+      if(currentOpenForm !== apiId) return; // Evitar sobreescritura por petición desfasada
       var spData = res[0];
       var monData = res[1];
       var entry = { flavor: '', genus: '', height: '', weight: '' };
@@ -323,7 +245,7 @@
         if(monData.weight) entry.weight = (monData.weight / 10).toFixed(1);
       }
 
-      speciesCache[dexNum] = entry;
+      speciesCache[apiId] = entry;
 
       runTypewriter(flavorEl, entry.flavor || 'Sin descripción disponible en Pokédex.');
       genusEl.textContent = entry.genus ? 'Especie: ' + entry.genus : 'Especie Pokémon';
@@ -368,12 +290,12 @@
     var statsHTML = '';
     if(m.cp){
       statsHTML += '<div class="modal-stat-card modal-stat-hundo">' +
-        '<span class="modal-stat-label">100% IV Máximo</span>' +
-        '<span class="modal-stat-val">' + m.cp[1] + ' CP</span>' +
-        (m.cpBoost ? '<span class="modal-stat-sub" style="color:var(--signal);">Con clima · Nivel 25: ' + m.cpBoost[1] + ' CP</span>' : '<span class="modal-stat-sub">Nivel 20 estándar</span>') +
+        '<span class="modal-stat-label">PC al 100 % IV</span>' +
+        '<span class="modal-stat-val">' + m.cp[1] + ' PC</span>' +
+        (m.cpBoost ? '<span class="modal-stat-sub" style="color:var(--signal);">Con clima · Nivel 25: ' + m.cpBoost[1] + ' PC</span>' : '<span class="modal-stat-sub">Nivel 20 estándar</span>') +
       '</div>';
       statsHTML += '<div class="modal-stat-card">' +
-        '<span class="modal-stat-label">Rango CP (Captura)</span>' +
+        '<span class="modal-stat-label">Rango de PC</span>' +
         '<span class="modal-stat-val">' + m.cp[0] + ' – ' + m.cp[1] + '</span>' +
         (m.cpBoost ? '<span class="modal-stat-sub">Con clima: ' + m.cpBoost[0] + '–' + m.cpBoost[1] + '</span>' : '') +
       '</div>';
@@ -404,16 +326,28 @@
       '</div>';
     }
     modalGoStats.innerHTML = statsHTML;
+    document.getElementById('captureTitle').textContent = m.cp ? 'Captura' : 'Disponibilidad';
+    modalImg.alt = m.name + (m.tag ? ' · ' + m.tag : '');
+    modal.querySelectorAll('details').forEach(function(detail){ detail.open = false; });
 
     // Type effectiveness
     var eff = calculateEffectiveness(m.types);
+    var recommendations = document.getElementById('raidRecommendations');
+    recommendations.hidden = !m.cp || !eff.weak.length;
+    if(!recommendations.hidden){
+      var params = new URLSearchParams();
+      params.set('boss', m.name + (m.tag ? ' · ' + m.tag : ''));
+      params.set('types', eff.weak.map(function(item){ return item.type; }).join(','));
+      document.getElementById('raidAttackersLink').href = 'assets/atacantes.html?' + params.toString();
+    }
     modalWeak.innerHTML = formatMultiplierBadges(eff.weak, true);
     modalResist.innerHTML = formatMultiplierBadges(eff.resist);
 
     // Fetch live Pokédex lore
-    fetchPokeApiDetails(m.dex);
+    fetchPokeApiDetails(m);
 
     modal.showModal();
+    modal.querySelector('.modal-box').scrollTop = 0;
     document.documentElement.classList.add('modal-open');
     document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
@@ -455,54 +389,18 @@
           '<div class="card-meta-row">' +
             '<span class="dex">#' + m.dex + '</span>' +
             (m.tag ? '<span class="mon-tag-chip">' + m.tag + '</span>' : '') +
-            (m.shiny ? '<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Shiny</span>' : '') +
+            (m.shiny ? '<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Variocolor</span>' : '') +
           '</div>' +
           '<h4 class="card-name">' + m.name + '</h4>' +
           '<div class="types">' + typeBadges(m.types) + '</div>' +
         '</div>' +
       '</div>';
 
-    var bodyHTML = '';
-    if (m.cp) {
-      bodyHTML =
-        '<div class="card-metrics-grid">' +
-          '<div class="metric-box cp-box">' +
-            '<div class="metric-top"><span class="metric-lbl">RANGO CP</span></div>' +
-            '<strong class="metric-val">' + m.cp[0] + ' – ' + m.cp[1] + '</strong>' +
-            (m.cpBoost ? '<span class="metric-sub">Clima: ' + m.cpBoost[0] + ' – ' + m.cpBoost[1] + '</span>' : '') +
-          '</div>' +
-          '<div class="metric-box hundo-box">' +
-            '<div class="metric-top"><span class="metric-lbl"><span class="hundo-dot"></span>100% IV</span></div>' +
-            '<strong class="metric-val">' + m.cp[1] + ' <small>CP</small></strong>' +
-            (m.cpBoost ? '<span class="metric-sub">Clima: ' + m.cpBoost[1] + ' CP</span>' : '') +
-          '</div>' +
-        '</div>' +
-        ((m.weak && m.weak.length) ? (
-          '<div class="card-weak-block">' +
-            '<span class="weak-lbl">Débil a</span>' +
-            '<div class="weak-pills">' + typeBadges(m.weak.slice(0, 4)) + '</div>' +
-          '</div>'
-        ) : '');
-    } else {
-      var infoVal = m.signal
-        ? ('<span class="extra-val"><span class="bars ' + m.signal + '"><i></i><i></i><i></i></span>' + (m.signal === 'alta' ? 'Frecuente' : 'Raro') + '</span>')
-        : ('<strong class="metric-val" style="font-size:0.78rem;">' + (m.note ? m.note.replace('Inicia: ', '') : 'Próximamente') + '</strong>');
-      var infoLbl = m.signal ? 'APARICIÓN' : 'INICIO';
-
-      bodyHTML =
-        '<div class="card-metrics-grid">' +
-          '<div class="metric-box">' +
-            '<span class="metric-lbl">' + infoLbl + '</span>' +
-            infoVal +
-          '</div>' +
-          '<div class="metric-box">' +
-            '<span class="metric-lbl">DÉBIL A</span>' +
-            '<div class="weak-pills" style="justify-content:flex-start;margin-top:2px;">' +
-              (m.weak && m.weak.length ? typeBadges(m.weak.slice(0, 3)) : '') +
-            '</div>' +
-          '</div>' +
-        '</div>';
-    }
+    var bodyHTML = '<div class="raid-card-capture">' +
+      (m.cp ? '<div><span class="capture-label">Captura · 100 % IV</span><strong>' + m.cp[1] + ' <small>PC</small></strong></div>' +
+        (m.cpBoost ? '<div class="capture-weather"><span class="capture-label">Con clima</span><strong>' + m.cpBoost[1] + ' <small>PC</small></strong></div>' : '') :
+        '<div><span class="capture-label">Próxima rotación</span><strong class="capture-date">' + (m.note ? m.note.replace('Inicia: ', '') : 'Fecha por confirmar') + '</strong></div>') +
+      '</div><div class="raid-card-action"><span>Ver ficha y debilidades</span><span aria-hidden="true">→</span></div>';
 
     return (
       '<article class="card" style="--card-accent:' + primaryColor + ';" data-mon-key="' + monKey + '" data-name="' + searchable + '" data-types="' + m.types.join(' ') + '" data-shiny="' + (m.shiny ? '1' : '0') + '" tabindex="0" role="button" aria-label="Ver detalles de ' + m.name + '">' +
@@ -514,7 +412,7 @@
 
   function countdownText(end){
     var diff = end.getTime() - Date.now();
-    if(diff<=0) return 'Rotación en curso';
+    if(diff<=0) return 'Finalizada';
     var mins = Math.floor(diff/60000);
     var days = Math.floor(mins/1440);
     var hours = Math.floor((mins%1440)/60);
@@ -596,30 +494,6 @@
     return el;
   }
 
-  function renderWildGroup(g){
-    var el = document.createElement('div');
-    el.className = 'tier-group wild-group reveal';
-    el.id = g.id;
-    var head = document.createElement('div');
-    head.className = 'section-head';
-    head.innerHTML =
-      '<div class="section-head-left"><h3>'+g.title+'</h3></div>'+
-      '<div class="section-head-right">'+
-        (g.note?'<span>'+g.note+'</span>':'')+
-        (g.end?'<span class="countdown" data-end="'+g.end.getTime()+'">'+countdownText(g.end)+'</span>':'')+
-      '</div>';
-    el.appendChild(head);
-    var grid = document.createElement('div');
-    grid.className = 'grid';
-    grid.innerHTML = g.mons.map(cardHTML).join('');
-    el.appendChild(grid);
-    var empty = document.createElement('p');
-    empty.className = 'empty-note';
-    empty.textContent = 'Sin coincidencias en el radar.';
-    el.appendChild(empty);
-    return el;
-  }
-
   /* ============ Hero Spotlight ============ */
   function renderHeroSpotlight(){
     var spotlightEl = document.getElementById('spotlightContent');
@@ -657,7 +531,7 @@
       var monKey = registerMon(m);
       var imgSrc = getMonImage(m);
       var dexNum = Number.parseInt(m.dex, 10);
-      var cpLabel = m.cp ? ('<span style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-dim);margin-left:auto;">CP ' + m.cp[1] + '</span>') : '';
+      var cpLabel = m.cp ? ('<span style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-dim);margin-left:auto;">PC ' + m.cp[1] + '</span>') : '';
       return (
         '<div class="spotlight-item" data-mon-key="'+monKey+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
           '<div class="spotlight-avatar">'+
@@ -666,7 +540,7 @@
           '<div class="spotlight-info">'+
             '<div class="spotlight-meta">'+
               '<span class="spotlight-tier '+(item.tierClass === 'mega' ? 'mega' : '')+'">'+item.tierLabel+'</span>'+
-              (m.shiny ? '<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Variocolor</span>' : '')+
+              (m.shiny ? '<span class="spotlight-shiny" title="Posibilidad de encontrar su variante shiny"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/><path d="M20 2v4M18 4h4"/></svg>Shiny</span>' : '')+
               cpLabel +
             '</div>'+
             '<h4 class="spotlight-name">'+m.name+(m.tag ? ' <small style="font-size:.78rem;font-weight:400;color:var(--ink-dim);">('+m.tag+')</small>' : '')+'</h4>'+
@@ -707,28 +581,32 @@
 
   function cachedFetch(url, cacheKey, callback){
     try {
-      var cached = localStorage.getItem(cacheKey);
-      if(cached){
-        var parsed = JSON.parse(cached);
-        if(parsed && (Array.isArray(parsed) ? parsed.length > 0 : true)){
-          callback(parsed, true);
-        }
+      var cached = JSON.parse(localStorage.getItem(cacheKey));
+      if(cached && Array.isArray(cached) && cached.length){
+        callback(cached, true);
       }
     } catch(e){}
-
-    fetch(url)
+    var controller = new AbortController();
+    var timeout = setTimeout(function(){ controller.abort(); }, 15000);
+    return fetch(url, {signal: controller.signal})
       .then(function(res){
         if(!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
       })
       .then(function(data){
+        if(!Array.isArray(data)) throw new Error('Formato de datos inesperado');
+        callback(data, false);
+        var fetchedAt = new Date().toISOString();
         try {
           localStorage.setItem(cacheKey, JSON.stringify(data));
+          localStorage.setItem(cacheKey + '_fetchedAt', fetchedAt);
         } catch(e){}
-        callback(data, false);
       })
       .catch(function(err){
         console.warn('Network fetch error for ' + cacheKey, err);
+      })
+      .finally(function(){
+        clearTimeout(timeout);
       });
   }
 
@@ -839,7 +717,11 @@
     renderHeroSpotlight();
   }
 
-  cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json', 'pokeradar_raids_v1', applyRaidsData);
+  function refreshRaids(){
+    return cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json', 'pokeradar_raids_v1', applyRaidsData);
+  }
+  // Esperar a que filtros, observadores y referencias DOM estén inicializados.
+  Promise.resolve().then(refreshRaids);
 
   // Cargar de inmediato si hay temporada en caché
   window.updateCurrentSeasonReadout();
@@ -889,7 +771,7 @@
           var dexMatch = b.image.match(/(?:pokemon_icon_|pm)(\d+)/);
           var dex = dexMatch ? dexMatch[1] : '000';
 
-          var uniqueKey = dex + '_' + cleanName + '_' + tag;
+          var uniqueKey = monIdentity({dex:dex, name:cleanName, tag:tag, image:b.image});
           if (seenUpcoming.has(uniqueKey)) return;
           seenUpcoming.add(uniqueKey);
           var m = {
@@ -902,7 +784,7 @@
             note: 'Inicia: ' + start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
           };
           
-          var p = fetch('https://pokeapi.co/api/v2/pokemon/' + Number.parseInt(dex, 10))
+          var p = fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(pokemonApiId(m)))
             .then(function(r){ return r.ok ? r.json() : null; })
             .then(function(pd){
               if(pd && pd.types) {
@@ -959,29 +841,13 @@
       });
     }
 
-    cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json', 'pokeradar_events_v1', applyUpcomingData);
+    Promise.resolve().then(function(){ cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json', 'pokeradar_events_v1', applyUpcomingData); });
   }
-
-  var wildGroupsEl = document.getElementById('wildGroups');
-  WILD_GROUPS.forEach(function(g){ wildGroupsEl.appendChild(renderWildGroup(g)); });
-
-  document.getElementById('upcomingWild').innerHTML = UPCOMING_WILD.map(function(m){
-    var dexNum = Number.parseInt(m.dex, 10);
-    var imgUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png';
-    var monKey = registerMon(m);
-    return '<div class="mini-chip" data-mon-key="'+monKey+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">' +
-      '<img class="mini-mon-img" src="'+imgUrl+'" alt="'+m.name+'" width="28" height="28" loading="lazy" />' +
-      '<span>'+m.name+'</span>' +
-      (m.rare?' <em>· poco común</em>':'') +
-    '</div>';
-  }).join('');
 
   var totalRaids = RAID_GROUPS.reduce(function(n,g){
     return n + (g.subgroups ? g.subgroups.reduce(function(m,sg){return m+sg.mons.length;},0) : g.mons.length);
   },0);
-  var totalWild = WILD_GROUPS.reduce(function(n,g){return n+g.mons.length;},0);
   document.getElementById('statRaids').innerHTML = '<span>'+totalRaids+'</span>';
-  document.getElementById('statWild').innerHTML = '<span>'+totalWild+'</span>';
 
   var tierNavEl = document.getElementById('tierNav');
   tierNavEl.innerHTML = RAID_GROUPS.map(function(g){ return '<a href="#'+g.id+'" class="tier-chip">'+g.tier+'</a>'; }).join('') +
@@ -1001,19 +867,6 @@
     });
   });
 
-  /* Segmentos */
-  document.querySelectorAll('.seg-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.querySelectorAll('.seg-btn').forEach(function(b){
-        b.classList.remove('active');
-        b.setAttribute('aria-pressed', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-pressed', 'true');
-      document.body.setAttribute('data-seg', btn.getAttribute('data-seg'));
-    });
-  });
-
   /* Chips de tipo */
   var activeTypes = new Set();
   var typeChipsEl = document.getElementById('typeChips');
@@ -1027,8 +880,6 @@
       var list = g.subgroups ? g.subgroups.reduce(function(a,sg){return a.concat(sg.mons);},[]) : g.mons;
       list.forEach(function(m){ m.types.forEach(function(t){ used.add(t); }); });
     });
-    WILD_GROUPS.forEach(function(g){ g.mons.forEach(function(m){ m.types.forEach(function(t){ used.add(t); }); }); });
-    UPCOMING_WILD.forEach(function(m){ m.types.forEach(function(t){ used.add(t); }); });
     var order = Object.keys(TYPE_COLORS).filter(function(t){ return used.has(t); });
     typeChipsEl.innerHTML = order.map(function(t){
       var isActive = activeTypes.has(t);
@@ -1067,6 +918,16 @@
     });
   }
 
+  document.getElementById('clearFilters').addEventListener('click', function(){
+    searchInput.value = '';
+    activeTypes.clear();
+    shinyFilterBtn.classList.remove('active');
+    shinyFilterBtn.setAttribute('aria-pressed', 'false');
+    buildTypeChips();
+    filterAll();
+    searchInput.focus();
+  });
+
   function filterAll(){
     var q = norm(searchInput ? searchInput.value.trim() : '');
     var onlyShiny = shinyFilterBtn && shinyFilterBtn.classList.contains('active');
@@ -1081,7 +942,13 @@
       var anyVisible = g.querySelectorAll('.card:not(.is-hidden)').length > 0;
       g.classList.toggle('all-hidden', !anyVisible);
     });
+    var count = document.querySelectorAll('.seg-raids .card:not(.is-hidden)').length;
+    document.getElementById('resultCount').textContent = count ? count + (count === 1 ? ' resultado' : ' resultados') : 'Sin resultados. Prueba otros filtros.';
+    document.getElementById('typeFilterCount').textContent = activeTypes.size ? activeTypes.size + (activeTypes.size === 1 ? ' seleccionado' : ' seleccionados') : 'Todos';
+    document.getElementById('clearFilters').hidden = !q && !onlyShiny && activeTypes.size === 0;
   }
+
+  filterAll();
 
   /* Cuenta regresiva en vivo */
   function tickCountdowns(){

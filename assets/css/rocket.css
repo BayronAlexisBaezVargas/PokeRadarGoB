@@ -637,3 +637,16 @@
     font-size: 0.62rem;
   }
 }
+
+/* Leader summaries retain the rescue while keeping the lineup expandable. */
+details.leader-card { display: block; align-self: start; }
+.leader-card .leader-header { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; margin: 0; list-style: none; cursor: pointer; }
+.leader-card .leader-avatar { width: 44px; height: 44px; font-size: 1.25rem; box-shadow: none; text-shadow: none; }
+.leader-info { min-width: 0; }
+.leader-info .leader-encounter { display: block; margin-top: 6px; color: var(--ink-dim); font-size: .8rem; line-height: 1.4; overflow-wrap: anywhere; }
+.leader-card .leader-toggle { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--ink-muted); }
+.leader-card .leader-toggle .when-open, .leader-card[open] .leader-toggle .when-closed { display: none; }
+.leader-card[open] .leader-toggle .when-open { display: inline; }
+.leader-card .leader-toggle .disclosure-chevron { margin-left: auto; }
+.leader-card[open] .leader-lineup { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px; }
+.leader-card .leader-info h3 { font-size: 1.2rem; }

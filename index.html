@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <!--
   Radar de Campo · Pokémon GO
-  Datos de incursiones y apariciones silvestres.
+  Datos de incursiones y próximas rotaciones.
 -->
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Radar de Campo · Pokémon GO</title>
-<meta name="description" content="Incursiones activas, próximas rotaciones y apariciones silvestres en Pokémon GO." />
+<meta name="description" content="Incursiones activas y próximas rotaciones en Pokémon GO." />
 <meta name="theme-color" content="#090D16" />
 <meta name="view-transition" content="same-origin" />
 <meta property="og:title" content="Radar de Campo · Pokémon GO" />
-<meta property="og:description" content="Jefes de incursión activos, rotaciones programadas y apariciones silvestres en Pokémon GO." />
+<meta property="og:description" content="Jefes de incursión activos y rotaciones programadas en Pokémon GO." />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="es_CL" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Radar de Campo · Pokémon GO" />
-<meta name="twitter:description" content="Incursiones activas, próximas rotaciones y apariciones silvestres en Pokémon GO." />
+<meta name="twitter:description" content="Incursiones activas y próximas rotaciones en Pokémon GO." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://raw.githubusercontent.com">
@@ -25,10 +25,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="assets/manifest.json" />
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
-<link rel="stylesheet" href="assets/css/base.css?v=1.9.6" />
-<link rel="stylesheet" href="assets/css/home.css?v=1.9.6" />
+<link rel="stylesheet" href="assets/css/base.css?v=2.0.0" />
+<link rel="stylesheet" href="assets/css/home.css?v=2.0.0" />
+<link rel="stylesheet" href="assets/css/mobile.css?v=2.0.0" />
 </head>
-<body data-seg="all">
+<body class="raid-page">
 
 <div id="radar-screen-loader" class="radar-screen-loader active" aria-hidden="true">
   <div class="radar-loader-content">
@@ -152,7 +153,7 @@
         <span class="hud-word">Pokémon GO<small>Radar de campo</small></span>
       </div>
       <div class="hud-status">
-        <span class="live"><span class="live-dot"></span>EN VIVO</span>
+        <span class="live"><span class="live-dot"></span>GUÍA DE CAMPO</span>
         <span class="hud-date" id="userLocation">· Sincronizando red...</span>
       </div>
     </div>
@@ -165,11 +166,7 @@
   </a>
   <a href="assets/noticias.html" class="hud-nav-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-    <span>Noticias<span class="nav-text-extra"> y Eventos</span></span>
-  </a>
-  <a href="assets/semana.html" class="hud-nav-link">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
-    <span>Semana</span>
+    <span>Eventos</span>
   </a>
   <a href="assets/rocket.html" class="hud-nav-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -184,12 +181,11 @@
 <main>
   <section class="hero">
     <div class="hero-text">
-      <span class="kicker">En vivo</span>
-      <h1 class="title">Rotaciones e Incursiones <span class="hl">en Tiempo Real</span>.</h1>
-      <p class="lede">Jefes de incursión activos, próximas rotaciones confirmadas y especies con tasa de aparición aumentada en Pokémon GO.</p>
+      <span class="kicker">Planifica tu próxima partida</span>
+      <h1 class="title">Incursiones <span class="hl">de Pokémon GO</span>.</h1>
+      <p class="lede">Jefes de incursión activos y próximas rotaciones confirmadas en Pokémon GO.</p>
       <dl class="hud-readouts">
         <div class="readout"><dt>Jefes activos</dt><dd id="statRaids">—</dd></div>
-        <div class="readout"><dt>Silvestres activas</dt><dd id="statWild">—</dd></div>
         <div class="readout" id="seasonReadout"><dt>Temporada actual</dt><dd id="statSeason">Sincronizando...</dd></div>
       </dl>
     </div>
@@ -209,19 +205,27 @@
   </section>
 
   <div class="controls">
-    <div class="segment" role="group" aria-label="Filtrar por sección">
-      <button class="seg-btn active" data-seg="all" aria-pressed="true">Todo</button>
-      <button class="seg-btn" data-seg="raids" aria-pressed="false">Incursiones</button>
-      <button class="seg-btn" data-seg="wild" aria-pressed="false">Silvestres</button>
-    </div>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-      <input type="search" inputmode="search" id="searchInput" placeholder="Buscar por nombre (ej. Gyarados)" aria-label="Buscar Pokémon por nombre" autocomplete="off">
+      <input type="search" inputmode="search" id="searchInput" placeholder="Buscar Pokémon" aria-label="Buscar Pokémon por nombre" autocomplete="off">
     </div>
     <button id="shinyFilterBtn" class="shiny-filter-btn" aria-pressed="false" title="Filtrar Pokémon con variante variocolor">
       <span class="shiny-dot" aria-hidden="true"></span>Variocolor
     </button>
-    <div class="type-chips" id="typeChips"></div>
+    <details class="type-filter-disclosure" id="raidTypeFilter">
+      <summary><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M7 12h10M10 17h4"/></svg><span>Tipos</span><span class="filter-selection" id="typeFilterCount">Todos</span><svg class="disclosure-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+      <div class="type-filter-panel">
+        <p>Tipo del Pokémon. Puedes elegir más de uno.</p>
+        <div class="type-chips" id="typeChips" role="group" aria-label="Filtrar por tipo del Pokémon"></div>
+      </div>
+    </details>
+    <div class="filter-summary">
+      <span id="resultCount" role="status"></span>
+      <button type="button" id="clearFilters" class="ui-button clear-filters" hidden>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2.6 8.4M3 4v6h6"/></svg>
+        Limpiar filtros
+      </button>
+    </div>
   </div>
 
   <section id="incursiones" class="seg-raids">
@@ -246,25 +250,10 @@
     </div>
   </section>
 
-  <section id="silvestres" class="seg-wild">
-    <div class="section-title section-divider">
-      <h2>Apariciones silvestres activas</h2>
-    </div>
-    <p class="section-sub">Especies con frecuencia de aparición aumentada durante el periodo vigente.</p>
-    <div id="wildGroups"></div>
-    <div class="upcoming">
-      <div class="upcoming-head">
-        <span class="upcoming-tag">Rotación prevista</span>
-        <h3>Siguiente rotación silvestre</h3>
-      </div>
-      <p class="sub">Especies previstas para incorporarse en la siguiente fase de eventos silvestres:</p>
-      <div class="mini-row" id="upcomingWild"></div>
-    </div>
-  </section>
 </main>
 
 <!-- Modal de Información Rápida -->
-<dialog id="monModal" class="modal-backdrop" aria-modal="true">
+<dialog id="monModal" class="modal-backdrop raid-detail" aria-modal="true" aria-labelledby="modalName">
   <div class="modal-box">
     <button type="button" class="modal-close" id="modalClose" aria-label="Cerrar modal">&times;</button>
     <div class="modal-header">
@@ -284,20 +273,24 @@
     </div>
     
     <div class="modal-body">
-      <div id="modalGoStats" class="modal-grid"></div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Debilidades (Multiplicadores)</div>
+      <section class="detail-section" aria-labelledby="captureTitle">
+        <h4 id="captureTitle">Captura</h4>
+        <div id="modalGoStats" class="modal-grid"></div>
+      </section>
+      <section class="detail-section" aria-labelledby="combatTitle">
+        <h4 id="combatTitle">Cómo vencerlo</h4>
+        <p class="detail-caption">Usa ataques de estos tipos:</p>
         <div id="modalWeak" class="modal-badges-wrap"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Resistencias e Inmunidades</div>
-        <div id="modalResist" class="modal-badges-wrap"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Registro de Pokédex</div>
+        <div id="raidRecommendations" hidden>
+          <a id="raidAttackersLink" class="recommendation-link ui-button" href="assets/atacantes.html">Ver atacantes recomendados →</a>
+        </div>
+        <details class="detail-disclosure">
+          <summary>Ver resistencias <svg class="disclosure-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div id="modalResist" class="modal-badges-wrap"></div>
+        </details>
+      </section>
+      <details class="detail-disclosure pokedex-disclosure">
+        <summary>Pokédex <svg class="disclosure-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
         <div class="modal-pokedex-box">
           <p id="modalFlavor">Consultando datos...</p>
           <div class="modal-pokedex-meta">
@@ -306,7 +299,7 @@
             <span id="modalWeight">—</span>
           </div>
         </div>
-      </div>
+      </details>
     </div>
   </div>
 </dialog>
@@ -316,7 +309,7 @@
     <div class="foot-col">
       <p class="foot-note">Radar de Campo es una herramienta informativa independiente de uso comunitario. Información técnica compilada y sincronizada a partir de fuentes públicas (Leek Duck, ScrapedDuck API, Pokémon GO Hub y PokéAPI). Pokémon y Pokémon GO son marcas comerciales registradas de Nintendo, Creatures Inc., GAME FREAK Inc. y Niantic, Inc. Todos los derechos reservados a sus respectivos titulares.</p>
       <div class="foot-meta">
-        <span class="foot-version">v1.9.6</span>
+        <span class="foot-version">v2.0.0</span>
         <span class="foot-sep">·</span>
         <span>Desarrollado por <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener" class="foot-author">BayronAlexisBaezVargas</a></span>
       </div>
@@ -334,8 +327,7 @@
         <span class="foot-links-title">Proyecto</span>
         <a href="https://github.com/BayronAlexisBaezVargas" target="_blank" rel="noopener">GitHub</a>
         <a href="index.html">Radar de Incursiones</a>
-        <a href="assets/noticias.html">Noticias y Eventos</a>
-        <a href="assets/semana.html">Resumen Semanal</a>
+        <a href="assets/noticias.html">Eventos</a>
         <a href="assets/rocket.html">Team GO Rocket</a>
         <a href="assets/atacantes.html">Top Atacantes</a>
       </div>
@@ -343,10 +335,10 @@
   </div>
 </footer>
 
-<script defer src="assets/js/audio.js"></script>
-<script defer src="assets/js/season.js"></script>
-<script defer src="assets/js/app.js"></script>
-<script defer src="assets/js/location.js"></script>
-<script defer src="assets/js/nav.js?v=1.9.6"></script>
+<script defer src="assets/js/audio.js?v=2.0.0"></script>
+<script defer src="assets/js/season.js?v=2.0.0"></script>
+<script defer src="assets/js/app.js?v=2.0.0"></script>
+<script defer src="assets/js/location.js?v=2.0.0"></script>
+<script defer src="assets/js/nav.js?v=2.0.0"></script>
 </body>
 </html>

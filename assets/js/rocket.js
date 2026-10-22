@@ -76,75 +76,76 @@
   }
 
   /* ============ Datos del Team GO Rocket ============ */
-  var ROCKET_DATA = {
-    leaders: [
-      {
-        id: 'giovanni',
-        name: 'Giovanni',
-        role: 'El Jefe',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/53.png', // Persian as placeholder
-        lineup: [
-          { phase: 'Fase 1', mons: [{ name:'Persian', dex:53, types:['normal'] }] },
-          { phase: 'Fase 2', mons: [{ name:'Nidoking', dex:34, types:['poison','ground'] }, { name:'Rhyperior', dex:464, types:['ground','rock'] }, { name:'Garchomp', dex:445, types:['dragon','ground'] }] },
-          { phase: 'Fase 3 (Encuentro)', mons: [{ name:'Cresselia', dex:488, types:['psychic'], shiny:false }] }
-        ]
-      },
-      {
-        id: 'cliff',
-        name: 'Cliff',
-        role: 'Líder',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/66.png', // Machop
-        lineup: [
-          { phase: 'Fase 1 (Encuentro)', mons: [{ name:'Machop', dex:66, types:['fighting'], shiny:true }] },
-          { phase: 'Fase 2', mons: [{ name:'Aerodactyl', dex:142, types:['rock','flying'] }, { name:'Kingdra', dex:230, types:['water','dragon'] }, { name:'Gallade', dex:475, types:['psychic','fighting'] }] },
-          { phase: 'Fase 3', mons: [{ name:'Tyranitar', dex:248, types:['rock','dark'] }, { name:'Crobat', dex:169, types:['poison','flying'] }, { name:'Cradily', dex:346, types:['rock','grass'] }] }
-        ]
-      },
-      {
-        id: 'sierra',
-        name: 'Sierra',
-        role: 'Líder',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/328.png', // Trapinch
-        lineup: [
-          { phase: 'Fase 1 (Encuentro)', mons: [{ name:'Trapinch', dex:328, types:['ground'], shiny:true }] },
-          { phase: 'Fase 2', mons: [{ name:'Sableye', dex:302, types:['dark','ghost'] }, { name:'Honchkrow', dex:430, types:['dark','flying'] }, { name:'Milotic', dex:350, types:['water'] }] },
-          { phase: 'Fase 3', mons: [{ name:'Houndoom', dex:229, types:['dark','fire'] }, { name:'Alakazam', dex:65, types:['psychic'] }, { name:'Victreebel', dex:71, types:['grass','poison'] }] }
-        ]
-      },
-      {
-        id: 'arlo',
-        name: 'Arlo',
-        role: 'Líder',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/331.png', // Cacnea
-        lineup: [
-          { phase: 'Fase 1 (Encuentro)', mons: [{ name:'Cacnea', dex:331, types:['grass'], shiny:true }] },
-          { phase: 'Fase 2', mons: [{ name:'Charizard', dex:6, types:['fire','flying'] }, { name:'Hypno', dex:97, types:['psychic'] }, { name:'Graveler', dex:75, types:['rock','ground'] }] },
-          { phase: 'Fase 3', mons: [{ name:'Dragonite', dex:149, types:['dragon','flying'] }, { name:'Scizor', dex:212, types:['bug','steel'] }, { name:'Salamence', dex:373, types:['dragon','flying'] }] }
-        ]
-      }
-    ],
-    grunts: [
-      { type: 'water', phrase: '¡Estas aguas son traicioneras!', mons: [{name:'Magikarp', dex:129},{name:'Totodile', dex:158},{name:'Mudkip', dex:258}] },
-      { type: 'fire', phrase: '¿Sabes lo caliente que puede llegar a ser el aliento de fuego de los Pokémon?', mons: [{name:'Charmander', dex:4},{name:'Cyndaquil', dex:155},{name:'Houndour', dex:228}] },
-      { type: 'grass', phrase: '¡No nos vaciles!', mons: [{name:'Treecko', dex:252},{name:'Turtwig', dex:387},{name:'Snivy', dex:495}] },
-      { type: 'electric', phrase: '¡Prepárate para una sorpresa!', mons: [{name:'Mareep', dex:179},{name:'Shinx', dex:403},{name:'Joltik', dex:595}] },
-      { type: 'flying', phrase: '¡Mi Pokémon pájaro quiere combatir contigo!', mons: [{name:'Pidgey', dex:16},{name:'Zubat', dex:41},{name:'Starly', dex:396}] },
-      { type: 'bug', phrase: '¡Vamos, mi poderoso Pokémon bicho!', mons: [{name:'Weedle', dex:13},{name:'Scyther', dex:123},{name:'Shuckle', dex:213}] },
-      { type: 'normal', phrase: 'Normal no significa débil.', mons: [{name:'Rattata', dex:19},{name:'Meowth', dex:52},{name:'Snorlax', dex:143}] },
-      { type: 'poison', phrase: '¡En posición y listos para atacar!', mons: [{name:'Grimer', dex:88},{name:'Koffing', dex:109},{name:'Foongus', dex:590}] },
-      { type: 'ground', phrase: '¡Te haré morder el polvo!', mons: [{name:'Sandshrew', dex:27},{name:'Drilbur', dex:529},{name:'Rhyhorn', dex:111}] },
-      { type: 'rock', phrase: 'Soy fuerte como una roca.', mons: [{name:'Geodude', dex:74},{name:'Onix', dex:95},{name:'Cranidos', dex:408}] },
-      { type: 'fighting', phrase: '¡Este cuerpo musculoso no es sólo para impresionar!', mons: [{name:'Machop', dex:66},{name:'Hitmonlee', dex:106},{name:'Makuhita', dex:296}] },
-      { type: 'ice', phrase: 'El hielo te congelará de miedo.', mons: [{name:'Swinub', dex:220},{name:'Snorunt', dex:361},{name:'Snover', dex:459}] },
-      { type: 'ghost', phrase: 'Ji, ji, ji... ¡Qué miedo!', mons: [{name:'Misdreavus', dex:200},{name:'Duskull', dex:355},{name:'Litwick', dex:607}] },
-      { type: 'psychic', phrase: '¿Te asustan los psíquicos que usan un poder invisible?', mons: [{name:'Abra', dex:63},{name:'Ralts', dex:280},{name:'Gothita', dex:574}] },
-      { type: 'dragon', phrase: '¡Grrr! ¿Qué te parece eso?', mons: [{name:'Dratini', dex:147},{name:'Bagon', dex:371},{name:'Gible', dex:443}] },
-      { type: 'dark', phrase: 'Sé que los Pokémon no existen para hacer dinero... o eso creo.', mons: [{name:'Purrloin', dex:509},{name:'Houndour', dex:228},{name:'Poochyena', dex:261}] },
-      { type: 'steel', phrase: '¡No eres rival para mi voluntad de hierro!', mons: [{name:'Aron', dex:304},{name:'Beldum', dex:374},{name:'Ferroseed', dex:597}] },
-      { type: 'fairy', phrase: '¡Mira a mi Pokémon tan lindo!', mons: [{name:'Snubbull', dex:209},{name:'Ralts', dex:280},{name:'Mawile', dex:303}] },
-      { type: 'mixed', phrase: '¡Prepárate para perder! (Señuelo / Mixto)', mons: [{name:'Snorlax', dex:143},{name:'Poliwrath', dex:62},{name:'Dragonite', dex:149}] }
-    ]
-  };
+  var ROCKET_DATA = { leaders: [], grunts: [] };
+  var ROCKET_CACHE_KEY = 'pokeradar_rocket_v2';
+  var ROCKET_URL = 'https://pokelitee.github.io/leak-duck/rocket_lineups.json';
+  var GRUNT_PHRASES = {
+    "water": "¡Estas aguas son traicioneras!",
+    "fire": "¿Sabes lo caliente que puede llegar a ser el aliento de fuego de los Pokémon?",
+    "grass": "¡No nos vaciles!",
+    "electric": "¡Prepárate para una sorpresa!",
+    "flying": "¡Mi Pokémon pájaro quiere combatir contigo!",
+    "bug": "¡Vamos, mi poderoso Pokémon bicho!",
+    "normal": "Normal no significa débil.",
+    "poison": "¡En posición y listos para atacar!",
+    "ground": "¡Te haré morder el polvo!",
+    "rock": "Soy fuerte como una roca.",
+    "fighting": "¡Este cuerpo musculoso no es sólo para impresionar!",
+    "ice": "El hielo te congelará de miedo.",
+    "ghost": "Ji, ji, ji... ¡Qué miedo!",
+    "psychic": "¿Te asustan los psíquicos que usan un poder invisible?",
+    "dragon": "¡Grrr! ¿Qué te parece eso?",
+    "dark": "Sé que los Pokémon no existen para hacer dinero... o eso creo.",
+    "steel": "¡No eres rival para mi voluntad de hierro!",
+    "fairy": "¡Mira a mi Pokémon tan lindo!",
+    "mixed": "¡Prepárate para perder! (Señuelo / Mixto)"
+};
+
+  function normalizeRocketData(raw){
+    if(!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new Error('Formato Rocket inválido');
+    function pokemon(mon){
+      if(!mon || typeof mon.name !== 'string' || !mon.name.trim() || typeof mon.asset_url !== 'string') throw new Error('Pokémon incompleto');
+      var asset = new URL(mon.asset_url);
+      var match = asset.pathname.match(/pm(\d+)\./);
+      if(asset.origin !== 'https://cdn.leekduck.com' || !match) throw new Error('Imagen Rocket inválida');
+      var dex = Number(match[1]);
+      var apiId = dex;
+      if(/^Alolan /.test(mon.name)) apiId = mon.name.replace(/^Alolan /, '').toLowerCase().replace(/ /g, '-') + '-alola';
+      if(/^Galarian /.test(mon.name)) apiId = mon.name.replace(/^Galarian /, '').toLowerCase().replace(/ /g, '-') + '-galar';
+      if(/^Hisuian /.test(mon.name)) apiId = mon.name.replace(/^Hisuian /, '').toLowerCase().replace(/ /g, '-') + '-hisui';
+      if(/^Paldean /.test(mon.name)) apiId = mon.name.replace(/^Paldean /, '').toLowerCase().replace(/ /g, '-') + '-paldea';
+      return {name:mon.name, dex:dex, apiId:apiId, image:asset.href, types:[], shiny:mon.shiny_available === true};
+    }
+    function phases(rows){
+      if(!Array.isArray(rows) || rows.length !== 3) throw new Error('Faltan fases Rocket');
+      return [1, 2, 3].map(function(slot){
+        var row = rows.find(function(item){ return item.slot === slot; });
+        if(!row || !Array.isArray(row.pokemons) || !row.pokemons.length || typeof row.is_encounter !== 'boolean') throw new Error('Fase Rocket incompleta');
+        return {phase:'Fase ' + slot + (row.is_encounter ? ' (Encuentro)' : ''), mons:row.pokemons.map(pokemon), encounter:row.is_encounter};
+      });
+    }
+    var leaders = ['Giovanni', 'Cliff', 'Sierra', 'Arlo'].map(function(name){
+      return {id:name.toLowerCase(), name:name, role:name === 'Giovanni' ? 'El Jefe' : 'Líder', lineup:phases(raw[name])};
+    });
+    var grunts = Object.keys(raw).filter(function(name){ return /Grunt$/.test(name); }).map(function(name){
+      var typeMatch = name.match(/^([A-Za-z]+)-type /);
+      var type = typeMatch ? typeMatch[1].toLowerCase() : 'mixed';
+      if(type !== 'mixed' && !TYPE_LABELS[type]) throw new Error('Tipo de recluta desconocido');
+      var lineup = phases(raw[name]);
+      var encounters = [];
+      var seen = new Set();
+      lineup.filter(function(row){ return row.encounter; }).forEach(function(row){
+        row.mons.forEach(function(mon){
+          if(!seen.has(mon.name)){ encounters.push(mon); seen.add(mon.name); }
+        });
+      });
+      if(!encounters.length) throw new Error('Recluta sin encuentros');
+      var gender = /Female/.test(name) ? 'Recluta mujer' : 'Recluta hombre';
+      return {type:type, label:(TYPE_LABELS[type] || 'Mixto') + ' · ' + gender + (/Decoy/.test(name) ? ' · Señuelo' : ''), phrase:GRUNT_PHRASES[type] || GRUNT_PHRASES.mixed, mons:encounters};
+    });
+    if(grunts.length < 18) throw new Error('Listado de reclutas incompleto');
+    return {leaders:leaders, grunts:grunts};
+  }
 
   /* ============ Helpers ============ */
   function getMonImage(dex){
@@ -161,13 +162,15 @@
   var leadersGrid = document.getElementById('leadersGrid');
   
   function renderLeaders() {
+    var expanded = new Set(Array.from(leadersGrid.querySelectorAll('details[open]')).map(function(card){ return card.dataset.leader; }));
     leadersGrid.innerHTML = '';
     ROCKET_DATA.leaders.forEach(function(leader) {
-      var card = document.createElement('div');
+      var card = document.createElement('details');
+      card.open = expanded.has(leader.id);
       card.className = 'leader-card reveal';
       card.dataset.leader = leader.id;
       
-      var header = document.createElement('div');
+      var header = document.createElement('summary');
       header.className = 'leader-header';
       
       var avatar = document.createElement('div');
@@ -182,9 +185,17 @@
       nameH3.textContent = leader.name;
       info.appendChild(roleP);
       info.appendChild(nameH3);
+      var encounter = document.createElement('span');
+      encounter.className = 'leader-encounter';
+      encounter.textContent = 'Rescate: ' + leader.lineup.filter(function(phase){ return phase.encounter; }).flatMap(function(phase){ return phase.mons.map(function(mon){ return mon.name; }); }).join(', ');
+      info.appendChild(encounter);
       
       header.appendChild(avatar);
       header.appendChild(info);
+      var toggle = document.createElement('span');
+      toggle.className = 'leader-toggle';
+      toggle.innerHTML = '<span class="when-closed">Ver equipo</span><span class="when-open">Ocultar</span><svg class="disclosure-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+      header.appendChild(toggle);
       card.appendChild(header);
       
       var lineupDiv = document.createElement('div');
@@ -204,13 +215,19 @@
         
         phase.mons.forEach(function(m) {
           var monDiv = document.createElement('div');
+          monDiv.tabIndex = 0;
+          monDiv.setAttribute('role', 'button');
+          monDiv.setAttribute('aria-label', 'Ver detalles de ' + m.name);
           monDiv.className = 'rocket-mon' + (m.shiny ? ' shiny-possible' : '');
           monDiv.dataset.name = m.name;
           monDiv.dataset.dex = m.dex;
           monDiv.dataset.types = m.types.join(',');
+          monDiv.dataset.apiId = m.apiId || m.dex;
+          monDiv.dataset.image = m.image || getMonImage(m.dex);
+          monDiv.dataset.shiny = String(m.shiny === true);
           
           var img = document.createElement('img');
-          img.src = getMonImage(m.dex);
+          img.src = m.image || getMonImage(m.dex);
           img.alt = m.name;
           img.loading = 'lazy'; img.width = 48; img.height = 48;
           
@@ -256,7 +273,7 @@
       var typeSpan = document.createElement('span');
       typeSpan.className = 'grunt-type';
       typeSpan.style.color = c;
-      typeSpan.textContent = TYPE_LABELS[grunt.type] || 'Mixto';
+      typeSpan.textContent = grunt.label || TYPE_LABELS[grunt.type] || 'Mixto';
       header.appendChild(typeSpan);
 
       var eff = calculateEffectiveness([grunt.type]);
@@ -300,13 +317,19 @@
       
       grunt.mons.forEach(function(m) {
         var monDiv = document.createElement('div');
-        monDiv.className = 'rocket-mon';
+        monDiv.tabIndex = 0;
+          monDiv.setAttribute('role', 'button');
+          monDiv.setAttribute('aria-label', 'Ver detalles de ' + m.name);
+          monDiv.className = 'rocket-mon';
         monDiv.dataset.name = m.name;
         monDiv.dataset.dex = m.dex;
-        monDiv.dataset.types = grunt.type;
+        monDiv.dataset.types = '';
+        monDiv.dataset.apiId = m.apiId || m.dex;
+        monDiv.dataset.image = m.image || getMonImage(m.dex);
+        monDiv.dataset.shiny = String(m.shiny === true);
         
         var img = document.createElement('img');
-        img.src = getMonImage(m.dex);
+        img.src = m.image || getMonImage(m.dex);
         img.alt = m.name;
         img.loading = 'lazy'; img.width = 48; img.height = 48;
         
@@ -333,7 +356,8 @@
     var name = el.dataset.name;
     var dex = el.dataset.dex;
     var typesStr = el.dataset.types;
-    var types = typesStr ? typesStr.split(',') : ['normal'];
+    var types = typesStr ? typesStr.split(',') : [];
+    var apiId = el.dataset.apiId || dex;
     
     var modal = document.getElementById('monModal');
     var mName = document.getElementById('modalName');
@@ -350,8 +374,9 @@
     
     mName.textContent = name;
     mDex.textContent = 'N.° ' + dex;
-    mShiny.style.display = 'inline-flex';
-    mImg.src = getMonImage(dex);
+    mShiny.style.display = el.dataset.shiny === 'true' ? 'inline-flex' : 'none';
+    mImg.src = el.dataset.image || getMonImage(dex);
+    modal.dataset.apiId = apiId;
     
     mTypes.innerHTML = '';
     types.forEach(function(t){
@@ -381,16 +406,28 @@
     
     // Calculate Weaknesses and Resistances
     var eff = calculateEffectiveness(types);
-    mWeak.innerHTML = formatMultiplierBadges(eff.weak, true);
-    mResist.innerHTML = formatMultiplierBadges(eff.resist);
+    mWeak.textContent = 'Consultando tipos…';
+    mResist.textContent = 'Consultando tipos…';
 
     mStats.innerHTML = '<span style="font-size:.74rem;color:var(--ink-dim);font-family:var(--font-mono)">Cargando estadísticas base...</span>';
 
     // Fetch Base Stats from PokeAPI
-    fetch('https://pokeapi.co/api/v2/pokemon/' + dex)
-      .then(r => r.json())
+    fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(apiId))
+      .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(data => {
-        if(mDex.textContent !== 'N.° ' + dex) return; // Prevent race conditions
+        if(modal.dataset.apiId !== String(apiId)) return; // Prevent race conditions
+        var actualTypes = data.types.map(function(item){ return item.type.name; });
+        mTypes.replaceChildren();
+        actualTypes.forEach(function(type){
+          var badge = document.createElement('span');
+          badge.className = 'badge';
+          badge.textContent = TYPE_LABELS[type] || type;
+          badge.style.color = TYPE_COLORS[type];
+          mTypes.appendChild(badge);
+        });
+        var effectiveness = calculateEffectiveness(actualTypes);
+        mWeak.innerHTML = formatMultiplierBadges(effectiveness.weak, true);
+        mResist.innerHTML = formatMultiplierBadges(effectiveness.resist);
         var stats = {};
         data.stats.forEach(s => { stats[s.stat.name] = s.base_stat; });
         mStats.innerHTML = `
@@ -400,7 +437,10 @@
         `;
       })
       .catch(e => {
-        if(mDex.textContent === 'N.° ' + dex) mStats.innerHTML = '<span style="font-size:.74rem;color:var(--alert);font-family:var(--font-mono)">No se pudieron cargar las stats.</span>';
+        if(modal.dataset.apiId !== String(apiId)) return;
+        mWeak.textContent = 'No se pudieron consultar los tipos.';
+        mResist.textContent = 'No se pudieron consultar los tipos.';
+        mStats.innerHTML = '<span style="font-size:.74rem;color:var(--alert);font-family:var(--font-mono)">No se pudieron cargar las stats.</span>';
       });
 
     modal.showModal();
@@ -423,6 +463,13 @@
       mod.close();
     }
   }
+
+  document.body.addEventListener('keydown', function(e){
+    if((e.key === 'Enter' || e.key === ' ') && e.target.matches('.rocket-mon')){
+      e.preventDefault();
+      openRocketModal(e.target);
+    }
+  });
 
   // Bind clicks
   document.body.addEventListener('click', function(e){
@@ -455,22 +502,61 @@
     });
   }
 
-  /* ============ Init ============ */
-  setTimeout(function(){
+  function applyRocketData(raw){
+    var validated = normalizeRocketData(raw);
+    ROCKET_DATA = validated;
     renderLeaders();
     renderGrunts();
-    
-    // Intersection observer para Reveal
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
-      });
-    }, {threshold: 0.01, rootMargin: '60px'});
+    // Aplicar la búsqueda y pestaña que el usuario ya eligió.
+    document.querySelectorAll('.leader-card, .grunt-card').forEach(function(card){ card.classList.add('in'); });
+    var search = document.getElementById('gruntSearch');
+    if(search) search.dispatchEvent(new Event('input'));
+    var activeTab = document.querySelector('#rocketTabsBar .rocket-tab-btn.active');
+    if(activeTab){
+      var filter = activeTab.dataset.leaderFilter;
+      leadersGrid.querySelectorAll('.leader-card').forEach(function(card){ card.style.display = filter === 'all' || card.dataset.leader === filter ? '' : 'none'; });
+    }
+  }
 
-    document.querySelectorAll('.leader-card.reveal, .grunt-card.reveal').forEach(function(el){
-      io.observe(el);
-    });
-    
+  async function fetchRocketJson(url){
+    var controller = new AbortController();
+    var timeout = setTimeout(function(){ controller.abort(); }, 10000);
+    try {
+      var response = await fetch(url, {signal:controller.signal, cache:'no-store'});
+      if(!response.ok) throw new Error('HTTP ' + response.status);
+      var raw = await response.json();
+      normalizeRocketData(raw);
+      return raw;
+    } finally { clearTimeout(timeout); }
+  }
+
+  async function loadRocketData(){
+    var hasData = false;
+    try {
+      var saved = JSON.parse(localStorage.getItem(ROCKET_CACHE_KEY));
+      if(saved){ applyRocketData(saved); hasData = true; }
+    } catch(err){ console.info('Rocket: sin caché válida.'); }
+    // El respaldo local se consulta en paralelo y nunca reemplaza datos más nuevos.
+    var fallback = hasData ? Promise.resolve() : fetchRocketJson('data/rocket.json').then(function(raw){
+      if(!hasData){ applyRocketData(raw); hasData = true; }
+    }).catch(function(err){ console.warn('Rocket: respaldo no disponible.', err); });
+    try {
+      var raw = await fetchRocketJson(ROCKET_URL);
+      applyRocketData(raw);
+      hasData = true;
+      try { localStorage.setItem(ROCKET_CACHE_KEY, JSON.stringify(raw)); } catch(err){}
+    } catch(err){ console.warn('Rocket: usando última información válida.', err); }
+    await fallback;
+    if(!hasData){
+      leadersGrid.textContent = 'No se pudieron cargar las alineaciones. Vuelve a entrar cuando tengas conexión.';
+      gruntsGrid.textContent = 'No hay datos de reclutas disponibles.';
+    }
+  }
+
+  /* ============ Init ============ */
+  setTimeout(function(){
+    Promise.resolve().then(loadRocketData);
+
     // Búsqueda en tiempo real de reclutas por frase o Pokémon
     var gruntSearch = document.getElementById('gruntSearch');
     var gruntEmptyNote = document.getElementById('gruntEmptyNote');
@@ -498,14 +584,17 @@
         var filter = btn.getAttribute('data-leader-filter');
         tabsBar.querySelectorAll('.rocket-tab-btn').forEach(function(b) {
           b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
         });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         if (typeof window.playClickSound === 'function') window.playClickSound();
 
         var cards = leadersGrid.querySelectorAll('.leader-card');
         cards.forEach(function(card) {
           if (filter === 'all' || card.dataset.leader === filter) {
             card.style.display = '';
+            if(filter !== 'all') card.open = true;
           } else {
             card.style.display = 'none';
           }

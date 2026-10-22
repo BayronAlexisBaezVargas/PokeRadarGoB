@@ -975,6 +975,33 @@
   }
 
   
+  var counterParams = new URLSearchParams(window.location.search);
+  var counterTypes = (counterParams.get('types') || '').split(',').filter(function(type, index, types){
+    return Object.prototype.hasOwnProperty.call(TYPE_LABELS, type) && types.indexOf(type) === index;
+  });
+  var counterBoss = (counterParams.get('boss') || '').slice(0, 120);
+  var hasCounterContext = Boolean(counterBoss && counterTypes.length);
+
+  function selectAttackerType(selected, updateUrl){
+    document.getElementById('attackerFilterLabel').textContent = selected === 'recommended' ? 'Recomendados' : selected === 'all' ? 'Todos' : TYPE_LABELS[selected];
+    document.querySelectorAll('.type-filter-btn').forEach(function(btn){
+      var active = btn.getAttribute('data-type') === selected;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    });
+    document.querySelectorAll('.atacantes-grid .type-card').forEach(function(card){
+      var type = card.getAttribute('data-type');
+      var visible = selected === 'recommended' ? counterTypes.indexOf(type) !== -1 : selected === 'all' || selected === type;
+      card.classList.toggle('hidden', !visible);
+    });
+    if(updateUrl){
+      var params = new URLSearchParams(window.location.search);
+      if(selected === 'recommended') params.delete('type');
+      else params.set('type', selected);
+      window.history.replaceState(null, '', window.location.pathname + (params.size ? '?' + params.toString() : ''));
+    }
+  }
+
   function renderTypeFilters() {
     var bar = document.getElementById('typeFilterBar');
     if (!bar || bar.children.length > 0) return;
@@ -983,9 +1010,18 @@
     var allBtn = document.createElement('button');
     allBtn.className = 'type-filter-btn active';
     allBtn.setAttribute('data-type', 'all');
-    allBtn.setAttribute('role', 'tab');
+    allBtn.setAttribute('aria-pressed', 'true');
     allBtn.innerHTML = '<span class="type-filter-dot" style="background:var(--color-radar-cyan);"></span><span>Todos</span>';
     bar.appendChild(allBtn);
+    if(hasCounterContext){
+      var recommended = document.createElement('button');
+      recommended.type = 'button';
+      recommended.className = 'type-filter-btn';
+      recommended.dataset.type = 'recommended';
+      recommended.textContent = 'Recomendados';
+      recommended.setAttribute('aria-pressed', 'false');
+      bar.prepend(recommended);
+    }
 
     ATACANTES_DATA.forEach(function(td) {
       var col = TYPE_COLORS[td.type] || '#38BDF8';
@@ -993,7 +1029,7 @@
       var btn = document.createElement('button');
       btn.className = 'type-filter-btn';
       btn.setAttribute('data-type', td.type);
-      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-pressed', 'false');
       btn.innerHTML = '<span class="type-filter-dot" style="background:' + col + ';"></span><span>' + lbl + '</span>';
       bar.appendChild(btn);
     });
@@ -1002,20 +1038,9 @@
       var btn = e.target.closest('.type-filter-btn');
       if (!btn) return;
       var selected = btn.getAttribute('data-type');
-      bar.querySelectorAll('.type-filter-btn').forEach(function(b) {
-        b.classList.remove('active');
-      });
-      btn.classList.add('active');
-      if (window.history && window.history.replaceState) { window.history.replaceState(null, '', selected === 'all' ? window.location.pathname : '?type=' + selected); }
-
-      var cards = document.querySelectorAll('.atacantes-grid .type-card');
-      cards.forEach(function(c) {
-        if (selected === 'all' || c.getAttribute('data-type') === selected) {
-          c.classList.remove('hidden');
-        } else {
-          c.classList.add('hidden');
-        }
-      });
+      selectAttackerType(selected, true);
+      document.getElementById('attackerTypeFilter').open = false;
+      document.querySelector('#attackerTypeFilter summary').focus();
     });
   }
 
@@ -1249,25 +1274,15 @@
   /* ============ Init ============ */
   function startInit() {
     renderAtacantes();
-    try {
-      var params = new URLSearchParams(window.location.search);
-      var reqType = (params.get('type') || (window.location.hash ? window.location.hash.replace('#', '') : '')).toLowerCase();
-      if (reqType && TYPE_LABELS[reqType]) {
-        var bar = document.getElementById('typeFilterBar');
-        var targetBtn = bar && bar.querySelector('.type-filter-btn[data-type="' + reqType + '"]');
-        if (targetBtn) {
-          bar.querySelectorAll('.type-filter-btn').forEach(function(b) { b.classList.remove('active'); });
-          targetBtn.classList.add('active');
-          document.querySelectorAll('.atacantes-grid .type-card').forEach(function(c) {
-            if (c.getAttribute('data-type') === reqType) c.classList.remove('hidden');
-            else c.classList.add('hidden');
-          });
-          setTimeout(function() {
-            if (targetBtn.scrollIntoView) targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-          }, 80);
-        }
-      }
-    } catch (e) {}
+    if(hasCounterContext){
+      var context = document.getElementById('raidContext');
+      context.hidden = false;
+      document.getElementById('raidContextTitle').textContent = 'Atacantes contra ' + counterBoss;
+      document.getElementById('raidContextDescription').textContent = 'Tipos eficaces: ' + counterTypes.map(function(type){ return TYPE_LABELS[type]; }).join(', ') + '. Mostramos el ranking general por tipo; no una simulación contra los movimientos de este jefe.';
+    }
+    var reqType = (counterParams.get('type') || window.location.hash.replace('#', '')).toLowerCase();
+    var selected = reqType === 'all' || Object.prototype.hasOwnProperty.call(TYPE_LABELS, reqType) ? reqType : hasCounterContext ? 'recommended' : 'all';
+    selectAttackerType(selected, false);
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
