@@ -230,18 +230,22 @@
           img.src = m.image || getMonImage(m.dex);
           img.alt = m.name;
           img.loading = 'lazy'; img.width = 48; img.height = 48;
+          img.onerror = function () { this.onerror = null; this.parentElement.classList.add('image-unavailable'); };
           
           var span = document.createElement('span');
           span.textContent = m.name;
           
-          monDiv.appendChild(img);
+          var avatar = document.createElement('span');
+          avatar.className = 'rocket-mon-avatar';
+          avatar.appendChild(img);
+          monDiv.appendChild(avatar);
           monDiv.appendChild(span);
 
           if (m.shiny) {
             var shinyStar = document.createElement('span');
-            shinyStar.className = 'shiny-badge-indicator';
-            shinyStar.title = 'Posible Variocolor';
-            shinyStar.innerHTML = '<span class="shiny-dot" aria-hidden="true"></span>';
+            shinyStar.className = 'ui-badge ui-badge-shiny';
+            shinyStar.title = 'Puede aparecer en su variante Shiny';
+            shinyStar.textContent = 'Shiny';
             monDiv.appendChild(shinyStar);
           }
 
@@ -332,12 +336,23 @@
         img.src = m.image || getMonImage(m.dex);
         img.alt = m.name;
         img.loading = 'lazy'; img.width = 48; img.height = 48;
+          img.onerror = function () { this.onerror = null; this.parentElement.classList.add('image-unavailable'); };
         
         var span = document.createElement('span');
         span.textContent = m.name;
         
-        monDiv.appendChild(img);
+        var avatar = document.createElement('span');
+          avatar.className = 'rocket-mon-avatar';
+          avatar.appendChild(img);
+          monDiv.appendChild(avatar);
         monDiv.appendChild(span);
+        if (m.shiny) {
+          var shinyBadge = document.createElement('span');
+          shinyBadge.className = 'ui-badge ui-badge-shiny';
+          shinyBadge.title = 'Puede aparecer en su variante Shiny';
+          shinyBadge.textContent = 'Shiny';
+          monDiv.appendChild(shinyBadge);
+        }
         monsDiv.appendChild(monDiv);
       });
       
@@ -375,6 +390,8 @@
     mName.textContent = name;
     mDex.textContent = 'N.° ' + dex;
     mShiny.style.display = el.dataset.shiny === 'true' ? 'inline-flex' : 'none';
+    mImg.parentElement.classList.remove('image-unavailable');
+    mImg.onerror = function () { this.onerror = null; this.parentElement.classList.add('image-unavailable'); };
     mImg.src = el.dataset.image || getMonImage(dex);
     modal.dataset.apiId = apiId;
     
@@ -444,6 +461,7 @@
       });
 
     modal.showModal();
+    modal.querySelector(".modal-box").scrollTop = 0;
     document.documentElement.classList.add('modal-open');
     document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
@@ -503,6 +521,8 @@
   }
 
   function applyRocketData(raw){
+    leadersGrid.removeAttribute("aria-busy");
+    gruntsGrid.removeAttribute("aria-busy");
     var validated = normalizeRocketData(raw);
     ROCKET_DATA = validated;
     renderLeaders();
@@ -531,6 +551,8 @@
   }
 
   async function loadRocketData(){
+    RadarData.loading(leadersGrid, 'Cargando equipos Rocket…');
+    RadarData.loading(gruntsGrid, 'Cargando reclutas…');
     var hasData = false;
     try {
       var saved = JSON.parse(localStorage.getItem(ROCKET_CACHE_KEY));
@@ -548,8 +570,8 @@
     } catch(err){ console.warn('Rocket: usando última información válida.', err); }
     await fallback;
     if(!hasData){
-      leadersGrid.textContent = 'No se pudieron cargar las alineaciones. Vuelve a entrar cuando tengas conexión.';
-      gruntsGrid.textContent = 'No hay datos de reclutas disponibles.';
+      RadarData.message(leadersGrid, 'No se pudieron cargar las alineaciones. Vuelve a entrar cuando tengas conexión.');
+      RadarData.message(gruntsGrid, 'No hay datos de reclutas disponibles.');
     }
   }
 

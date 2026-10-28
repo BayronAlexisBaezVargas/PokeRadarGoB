@@ -772,3 +772,16 @@
   }
 
 }
+
+.event-category-filter { flex: 1 1 100%; }
+.event-category-filter .type-chips { gap: 8px; padding: 0; }
+.event-category-filter .type-chip { white-space: normal; text-align: left; }
+@media (max-width: 768px) {
+  .controls:has(.event-category-filter) { gap: 10px; }
+  .event-category-filter .type-filter-panel { padding: 10px 0 0; }
+  /* The current season is already displayed in the compact header. */
+  .today-banner[data-category="season"] { display: none !important; }
+}
+
+.event-boss-avatar .ui-badge-icon { position: absolute; top: -5px; right: -5px; }
+.event-status-tag.ui-status { font-family: var(--font-body); font-size: .7rem; text-transform: none; letter-spacing: 0; box-shadow: none; }

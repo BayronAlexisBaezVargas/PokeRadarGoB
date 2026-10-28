@@ -298,12 +298,12 @@ body::after {
 
 /* ==========================================================================
    Header & HUD Navigation
-   Desktop: Sticky Glassmorphic Header
+Desktop: Sticky page header with integrated navigation
    Mobile (< 768px): Top Telemetry Bar + Fixed Bottom Native Navigation Dock
    ========================================================================== */
 
 .hud {
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 50;
   width: 100%;
@@ -433,18 +433,22 @@ body::after {
 
 /* Desktop Navigation Menu */
 @media (min-width: 769px) {
+  /* Clip horizontal overflow without creating a scroll container for the header. */
+  html, body { overflow-x: clip; }
+  .hud { position: sticky; top: 0; }
   .hud-nav {
-    position: fixed;
-    top: 12px;
-    right: max(var(--sp-5), calc((100vw - 1200px) / 2 + var(--sp-5)));
-    z-index: 60;
+    position: static;
+    margin-left: auto;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 6px;
     height: 38px;
   }
+  .hud-inner { flex-wrap: wrap; }
   .hud-bar {
-    max-width: calc(100% - 460px);
+    flex: 1 1 320px;
+    max-width: none;
   }
 }
 
@@ -2305,4 +2309,93 @@ details[open] > summary .disclosure-chevron { transform: rotate(180deg); }
   html { scroll-behavior: auto; }
   @view-transition { navigation: none; }
   .disclosure-chevron { transition: none; }
+}
+
+/* Loading and unavailable data occupy the content area, never a floating notice. */
+.content-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 16px 0;
+  color: var(--ink-dim);
+  font-size: .875rem;
+  line-height: 1.6;
+}
+.content-skeleton {
+  min-height: 160px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(var(--panel-2), var(--panel-2)) 16px 20px / 58% 16px no-repeat,
+    linear-gradient(var(--panel-2), var(--panel-2)) 16px 52px / 80% 12px no-repeat,
+    linear-gradient(var(--panel-2), var(--panel-2)) 16px 78px / 65% 12px no-repeat, var(--panel);
+}
+
+/* Shared compact badges and secondary controls. */
+.ui-badge,
+.ui-status[data-state] {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  max-width: 100%; padding: 3px 7px; border: 1px solid var(--line);
+  border-radius: 7px; font-family: var(--font-body); font-size: .7rem;
+  font-weight: 600; line-height: 1.3; letter-spacing: 0; text-transform: none;
+  color: var(--ink-dim); background: var(--panel-2); white-space: nowrap;
+  box-shadow: none; backdrop-filter: none;
+}
+.ui-badge.ui-badge-shiny { color: #fcd34d; border-color: rgba(245, 158, 11, .3); background: rgba(245, 158, 11, .09); }
+.ui-badge-shiny::before,
+.shiny-symbol {
+  content: ''; display: inline-block; width: 14px; height: 14px; flex: 0 0 14px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3ZM20 1l1 2 2 1-2 1-1 2-1-2-2-1 2-1Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3ZM20 1l1 2 2 1-2 1-1 2-1-2-2-1 2-1Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.ui-badge.ui-badge-icon { width: 20px; height: 20px; min-width: 20px; padding: 2px; border-radius: 6px; }
+.ui-status[data-state="live"] { color: #6ee7b7; background: var(--live-bg); border-color: rgba(16, 185, 129, .3); }
+.ui-status[data-state="today"], .ui-status[data-state="soon"], .ui-status[data-state="upcoming"] { color: var(--signal); background: var(--signal-bg); border-color: rgba(56, 189, 248, .3); }
+.ui-status[data-state="ended"] { color: var(--ink-muted); background: rgba(148, 163, 184, .08); border-color: var(--line); }
+.ui-button-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--panel); color: var(--ink-dim); font-family: var(--font-body);
+  font-size: .85rem; font-weight: 600; line-height: 1.4; text-decoration: none;
+  text-transform: none; letter-spacing: 0; box-shadow: none; cursor: pointer;
+}
+.ui-button-secondary svg { flex-shrink: 0; }
+.ui-button-secondary:focus-visible, .modal-close:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+@media (hover: hover) {
+  .ui-button-secondary:hover { color: var(--signal); border-color: var(--signal); background: var(--signal-bg); transform: none; }
+}
+
+/* An unavailable sprite must never be replaced with a different Pokémon form. */
+.image-unavailable { position: relative; }
+.image-unavailable > img { visibility: hidden; }
+.image-unavailable::after {
+  content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 28px; height: 28px; border: 2px solid var(--ink-muted); border-radius: 50%;
+  background: radial-gradient(circle at center, var(--panel) 0 3px, var(--ink-muted) 3px 5px, transparent 5px),
+    linear-gradient(transparent 44%, var(--ink-muted) 44% 56%, transparent 56%);
+  opacity: .6; pointer-events: none;
+}
+
+/* Dialog controls remain reachable when the content scrolls. */
+.modal-box > .modal-close {
+  position: sticky; top: 10px; right: auto; align-self: flex-end; flex: 0 0 44px;
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  margin: 10px 10px -54px 0; padding: 0; border-radius: 12px;
+  background: var(--panel-2); border-color: var(--line); color: var(--ink-dim);
+  box-shadow: none; backdrop-filter: none; transform: none;
+}
+.modal-box > .modal-close:hover, .modal-box > .modal-close:active { color: var(--signal); border-color: var(--signal); background: var(--panel-2); transform: none; }
+.modal-box .modal-header, .modal-box .fec-header { padding-right: 64px; }
+.modal-dex-row, .fec-badges { flex-wrap: wrap; }
+.modal-box .modal-title, .modal-box .fec-title { white-space: normal; overflow-wrap: anywhere; text-overflow: clip; }
+.modal-box .modal-section-title { font-family: var(--font-body); font-size: .95rem; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.modal-box .modal-section-title::after { display: none; }
+.modal-box .modal-stat-card { background: transparent; border: 0; box-shadow: none; padding: 0; }
+.modal-box .modal-stat-label { font-family: var(--font-body); text-transform: none; letter-spacing: 0; }
+.modal-box .modal-stat-val { overflow-wrap: anywhere; }
+@media (max-height: 540px) {
+  dialog.modal-backdrop { padding-block: 8px !important; }
+  .modal-box { max-height: calc(100dvh - 16px) !important; }
+  .modal-art-wrap { width: 64px; height: 64px; }
+  .modal-art { width: 60px; height: 60px; }
 }

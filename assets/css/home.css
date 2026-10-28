@@ -121,24 +121,6 @@
   margin-bottom: 3px;
 }
 
-.spotlight-shiny {
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  gap: 4px;
-  padding: 3px 7px;
-  border: 1px solid rgba(245, 158, 11, .28);
-  border-radius: 7px;
-  background: rgba(245, 158, 11, .08);
-  color: #fcd34d;
-  font-family: var(--font-body);
-  font-size: .7rem;
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-.spotlight-shiny svg { flex-shrink: 0; }
-
 .spotlight-tier {
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -493,30 +475,6 @@
   border: 1px solid rgba(56, 189, 248, 0.28);
   padding: 1px 6px;
   border-radius: 4px;
-}
-
-.card-meta-row .shiny {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--gold);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  background: rgba(245, 158, 11, 0.12);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 1px 6px;
-  border-radius: 4px;
-}
-
-.card-meta-row .shiny-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 6px currentColor;
 }
 
 .card-title-row {
@@ -1100,7 +1058,6 @@
 .card .card-name { font-size: 1.15rem; }
 .card .card-meta-row { gap: 4px; }
 .card .card-meta-row .dex { display: none; }
-.card .card-meta-row .shiny { margin-left: 0; font-family: var(--font-body); font-size: .65rem; padding: 2px 6px; }
 .card .mon-tag-chip { font-family: var(--font-body); font-size: .7rem; }
 .raid-page .controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
 .raid-page .controls .search-wrap { grid-column: 1; max-width: none; }

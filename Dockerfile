@@ -4,6 +4,7 @@ FROM nginxinc/nginx-unprivileged:alpine
 # Copiar explícitamente los directorios y archivos necesarios para evitar reglas S6470 de SonarQube
 COPY assets/ /usr/share/nginx/html/assets/
 COPY index.html /usr/share/nginx/html/
+COPY sw.js /usr/share/nginx/html/
 
 # Exponer el puerto 8080 (puerto por defecto para usuarios sin privilegios)
 EXPOSE 8080

@@ -4,30 +4,7 @@
   if (window.__POKERADAR_NAV_ACTIVE__) return;
   window.__POKERADAR_NAV_ACTIVE__ = true;
 
-  // 0. PWA Cache Purge on Version Upgrade
-  try {
-    var CURRENT_VERSION = '2.0.0';
-    var storedVersion = localStorage.getItem('pokeradar_version');
-    if (storedVersion !== CURRENT_VERSION) {
-      localStorage.setItem('pokeradar_version', CURRENT_VERSION);
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          names.forEach(function(name) {
-            if (name !== 'pokego-radar-v2.0.0') {
-              caches.delete(name);
-            }
-          });
-        });
-      }
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(regs) {
-          regs.forEach(function(r) {
-            r.unregister();
-          });
-        });
-      }
-    }
-  } catch (e) {}
+  try { localStorage.setItem('pokeradar_version', '2.0.0'); } catch (err) {}
 
   // 1. Radar Full-Screen Loader Markup (Dotted Pokeball + Tactical Radar Sweep)
   var loaderHtml = '<div class="radar-loader-content">' +
@@ -210,14 +187,7 @@
 
   // Smooth dismissal on page mount
   function initLoaderDismissal() {
-    // If on atacantes.html, atacantes.js handles dismissal after JSON fetch
-    var isAtacantes = window.location.pathname.indexOf('atacantes.html') !== -1;
-    if (!isAtacantes) {
-      setTimeout(function() {
-        hideLoader();
-        endProgress();
-      }, 180);
-    }
+    setTimeout(function () { hideLoader(); endProgress(); }, 180);
   }
 
   if (document.readyState === 'loading') {
@@ -228,6 +198,7 @@
 
   // Handle browser back/forward buttons (pageshow bfcache)
   window.addEventListener('pageshow', function() {
+    isNavigating = false;
     hideLoader();
     endProgress();
   });

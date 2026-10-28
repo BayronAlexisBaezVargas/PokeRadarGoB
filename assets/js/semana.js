@@ -24,6 +24,18 @@
   var currentWeekOffset = 0;
   var rawEventsList = [];
   var renderedEventsMap = [];
+  var calendarReady = false;
+  var viewState = createViewState('events-week', function () {
+    var range = getWeekRange(currentWeekOffset);
+    return { monday: range.start.getFullYear() + '-' + (range.start.getMonth() + 1) + '-' + range.start.getDate() };
+  });
+  if (typeof viewState.saved.monday === 'string' && /^\d{4}-\d{1,2}-\d{1,2}$/.test(viewState.saved.monday)) {
+    var parts = viewState.saved.monday.split('-').map(Number);
+    var currentMonday = getWeekRange(0).start;
+    var difference = Date.UTC(parts[0], parts[1] - 1, parts[2]) - Date.UTC(currentMonday.getFullYear(), currentMonday.getMonth(), currentMonday.getDate());
+    currentWeekOffset = Math.round(difference / 604800000);
+    if (!Number.isFinite(currentWeekOffset) || Math.abs(currentWeekOffset) > 520) currentWeekOffset = 0;
+  }
 
   /* ============ Diccionario y Traductor Dinámico ============ */
   var NAME_TRANSLATIONS = {
@@ -230,6 +242,9 @@
       }
     }
 
+    if (!calendarReady) return;
+    weekContainer.removeAttribute("aria-busy");
+
     // 3. Filtrar dataset
     var activePool = filterCalendarEvents(rawEventsList);
     renderedEventsMap = [];
@@ -270,6 +285,7 @@
 
       // Construir tarjeta HTML
       var card = document.createElement('article');
+      card.dataset.viewKey = targetDay.toDateString();
       card.className = 'day-card' + (isToday ? ' is-today' : dayEnd < week.current ? ' is-past-day' : '');
       if(isToday) card.setAttribute('aria-current', 'date');
 
@@ -328,7 +344,7 @@
             '<div class="event-info">' +
               '<div class="event-meta-row">' +
                 '<span class="event-type-pill">' + meta.tag + '</span>' +
-                '<span class="event-state"></span>' +
+                '<span class="event-state ui-status"></span>' +
               '</div>' +
               '<span class="event-title">' + titleEs + '</span>' +
               '<span class="event-time">' + timeStr + '</span>' +
@@ -343,6 +359,7 @@
     }
 
     updateEventStates();
+    viewState.restore();
   }
 
   function updateEventStates(){
@@ -352,6 +369,7 @@
       var end = Number(item.dataset.end);
       var state = now >= end ? 'ended' : now >= start ? 'live' : 'upcoming';
       item.dataset.state = state;
+      item.querySelector('.event-state').dataset.state = state;
       item.querySelector('.event-state').textContent = state === 'ended' ? 'Finalizado' : state === 'live' ? 'En curso' : 'Próximo';
     });
   }
@@ -427,43 +445,18 @@
 
   /* ============ Sincronización y Carga de Datos ============ */
   function initCalendar() {
-    // 1. Carga inmediata desde localStorage (compartido con noticias.js)
-    try {
-      var cached = localStorage.getItem('pokeradar_events_v1');
-      if (cached) {
-        var parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          rawEventsList = parsed;
-          renderWeek();
-        }
+    renderWeek();
+    RadarData.load({
+      key: 'pokeradar_events_v1',
+      url: 'https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json',
+      validate: RadarData.events,
+      render: function (data) { calendarReady = true; rawEventsList = data; renderWeek(); },
+      loading: function () { RadarData.loading(weekContainer, 'Cargando agenda…'); },
+      error: function () {
+        RadarData.message(weekContainer, 'No pudimos cargar la agenda. Vuelve a entrar cuando tengas conexión.');
+        viewState.restore();
       }
-    } catch(err) {
-      console.warn('Error al cargar caché local:', err);
-    }
-
-    // 2. Fetch Stale-While-Revalidate desde el repositorio oficial
-    fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
-      .then(function(res){
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(function(data){
-        if (Array.isArray(data) && data.length > 0) {
-          rawEventsList = data;
-          try {
-            localStorage.setItem('pokeradar_events_v1', JSON.stringify(data));
-          } catch(e){}
-          renderWeek();
-        }
-      })
-      .catch(function(err){
-        console.error('Error al sincronizar ScrapedDuck events:', err);
-        if (rawEventsList.length === 0) {
-          if (weekRangeDisplay) {
-            weekRangeDisplay.textContent = 'Sin conexión de red para sincronizar eventos.';
-          }
-        }
-      });
+    });
   }
 
   initCalendar();

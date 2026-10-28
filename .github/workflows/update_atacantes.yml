@@ -22,6 +22,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Probar extractor y protección del ranking
+        run: node --test tests/update_atacantes.test.js
+
       - name: Ejecutar scraper de mejores atacantes
         run: node scripts/update_atacantes.js
 

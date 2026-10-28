@@ -75,176 +75,23 @@
     'Mega Charizard X and Mega Charizard Y in Mega Raids': 'Mega Charizard X e Y en Megaincursiones'
   };
 
-  /* ============ Dataset Curado Inicial (Carga Inmediata) ============ */
-  var FALLBACK_EVENTS = [
-    {
-      eventID: 'regi-raid-hour-aug-2026',
-      name: 'Regirock, Regice, and Registeel Raid Hour',
-      eventType: 'raid-hour',
-      link: 'https://leekduck.com/events/raidhour/',
-      image: 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg',
-      start: '2026-08-26T18:00:00.000',
-      end: '2026-08-26T19:00:00.000',
-      extraData: { raidbattles: { bosses: [{ name: 'Regirock', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/377.png', canBeShiny: true }, { name: 'Regice', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/378.png', canBeShiny: true }, { name: 'Registeel', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/379.png', canBeShiny: true }] } }
-    },
-    {
-      eventID: 'mankey-spotlight-aug-2026',
-      name: 'Mankey Spotlight Hour',
-      eventType: 'pokemon-spotlight-hour',
-      link: 'https://leekduck.com/events/pokemonspotlighthour/',
-      image: 'https://cdn.leekduck.com/assets/img/events/pokemonspotlighthour.jpg',
-      start: '2026-08-27T18:00:00.000',
-      end: '2026-08-27T19:00:00.000',
-      extraData: { generic: { perks: ['Aparición masiva de Mankey', '2× Caramelos por transferencia', 'Mankey variocolor disponible'] } }
-    },
-    {
-      eventID: 'pokemon-xp-worlds-2026',
-      name: 'PokémonXP &amp; 2026 Worlds',
-      eventType: 'event',
-      link: 'https://leekduck.com/events/pokemon-xp-2026-worlds/',
-      image: 'https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-08-25-pokemon-xp-2026-worlds/pokemon-xp-2026-worlds.jpg',
-      start: '2026-08-25T10:00:00.000',
-      end: '2026-08-30T20:00:00.000',
-      extraData: { generic: { perks: ['Pikachu con disfraz del Mundial', 'Apariciones silvestres temáticas', 'Investigaciones de campo especiales'] } }
-    },
-    {
-      eventID: 'twitch-drops-worlds-2026',
-      name: 'Twitch Drops for 2026 Pokémon World Championships',
-      eventType: 'research',
-      link: 'https://leekduck.com/events/twitch-drops-worlds-2026/',
-      image: 'https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-08-28-pokemon-world-championships-2026-timed-research-twitch-drops/2026-worlds-go-drops.jpg',
-      start: '2026-08-28T16:00:00.000Z',
-      end: '2026-08-31T03:00:00.000Z',
-      extraData: { generic: { perks: ['Investigación temporal exclusiva', 'Encuentro con Sableye / Medicham', 'Camiseta de avatar temática'] } }
-    },
-    {
-      eventID: 'dynamax-eevee-max-monday',
-      name: 'Dynamax Eevee during Max Monday',
-      eventType: 'max-mondays',
-      link: 'https://leekduck.com/events/max-mondays/',
-      image: 'https://cdn.leekduck.com/assets/img/events/max-battles-kanto.jpg',
-      start: '2026-08-31T06:00:00.000',
-      end: '2026-08-31T21:00:00.000',
-      extraData: { generic: { perks: ['Nodos Dinamax activos con Eevee', 'Partículas Max adicionales', 'Horario estelar de 18:00 a 19:00'] } }
-    },
-    {
-      eventID: 'mega-ascension-2026',
-      name: 'Mega Ascension',
-      eventType: 'event',
-      link: 'https://leekduck.com/events/mega-ascension/',
-      image: 'https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-08-31-mega-ascension/mega-ascension.jpg',
-      start: '2026-08-31T10:00:00.000',
-      end: '2026-09-04T23:59:00.000',
-      extraData: { generic: { perks: ['Mayor energía Mega en incursiones', 'Bonus de ataque en megas activas', 'Investigación especial de Megaevolución'] } }
-    },
-    {
-      eventID: 'go-fest-mega-finale-2026',
-      name: 'Pokémon GO Fest 2026: Mega Finale',
-      eventType: 'pokemon-go-fest',
-      link: 'https://leekduck.com/events/pokemon-go-fest-2026-mega-finale/',
-      image: 'https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-09-05-pokemon-go-fest-2026-mega-finale/pokemon-go-fest-2026-mega-finale.jpg',
-      start: '2026-09-05T10:00:00.000',
-      end: '2026-09-06T18:00:00.000',
-      extraData: { generic: { perks: ['Ultraentes y Legendarios en incursiones', '4 hábitats rotativos', 'Hasta 9 pases de incursión gratuitos', 'Ratio de variocolor aumentado'] } }
-    },
-    {
-      eventID: 'dynamax-ralts-max-monday',
-      name: 'Dynamax Ralts during Max Monday',
-      eventType: 'max-mondays',
-      link: 'https://leekduck.com/events/max-mondays/',
-      image: 'https://cdn.leekduck.com/assets/img/events/max-battles-kanto.jpg',
-      start: '2026-09-07T06:00:00.000',
-      end: '2026-09-07T21:00:00.000',
-      extraData: { generic: { perks: ['Ralts Dinamax en Nodos Energéticos', 'Partículas Max dobles al interactuar'] } }
-    },
-    {
-      eventID: 'season-twilight-trails',
-      name: 'Twilight Trails',
-      eventType: 'season',
-      link: 'https://leekduck.com/events/season-twilight-trails/',
-      image: 'https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-06-02-season-23-forever-forward/season-23-forever-forward.jpg',
-      start: '2026-09-08T10:00:00.000',
-      end: '2026-12-01T10:00:00.000',
-      extraData: { generic: { perks: ['Nueva temporada temática de 3 meses', 'Rotación de especies por bioma', 'Bonus de intercambio adicional diario'] } }
-    },
-    {
-      eventID: 'zacian-raid-hour',
-      name: 'Zacian (Hero of Many Battles) Raid Hour',
-      eventType: 'raid-hour',
-      link: 'https://leekduck.com/events/raidhour/',
-      image: 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg',
-      start: '2026-09-09T18:00:00.000',
-      end: '2026-09-09T19:00:00.000',
-      extraData: { raidbattles: { bosses: [{ name: 'Zacian (Hero of Many Battles)', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/888.png', canBeShiny: true }] } }
-    },
-    {
-      eventID: 'september-cd-classic',
-      name: 'September Community Day Classic',
-      eventType: 'community-day',
-      link: 'https://leekduck.com/events/community-day-september-2026/',
-      image: 'https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-08-25-pokemon-xp-2026-worlds/pokemon-xp-2026-worlds.jpg',
-      start: '2026-09-12T14:00:00.000',
-      end: '2026-09-12T17:00:00.000',
-      extraData: { generic: { perks: ['Variocolor con ratio elevado', 'Ataque élite exclusivo', '3× PX por captura', 'Incienso y cebos de 3 horas'] } }
-    },
-    {
-      eventID: 'zamazenta-raid-hour',
-      name: 'Zamazenta (Hero of Many Battles) Raid Hour',
-      eventType: 'raid-hour',
-      link: 'https://leekduck.com/events/raidhour/',
-      image: 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg',
-      start: '2026-09-16T18:00:00.000',
-      end: '2026-09-16T19:00:00.000',
-      extraData: { raidbattles: { bosses: [{ name: 'Zamazenta (Hero of Many Battles)', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/889.png', canBeShiny: true }] } }
-    },
-    {
-      eventID: 'super-mega-raid-day-sep',
-      name: 'Super Mega Raid Day',
-      eventType: 'raid-day',
-      link: 'https://leekduck.com/events/raid-day/',
-      image: 'https://cdn.leekduck.com/assets/img/events/mega-default.jpg',
-      start: '2026-09-19T14:00:00.000',
-      end: '2026-09-19T17:00:00.000',
-      extraData: { generic: { perks: ['Megaincursiones continuas en gimnasios', '5 pases de incursión diarios', 'Mayor ratio de variocolor'] } }
-    },
-    {
-      eventID: 'dynamax-legendary-birds',
-      name: 'Dynamax Articuno, Zapdos, and Moltres during Max Monday',
-      eventType: 'max-mondays',
-      link: 'https://leekduck.com/events/max-mondays/',
-      image: 'https://cdn.leekduck.com/assets/img/events/max-battles-kanto.jpg',
-      start: '2026-09-21T06:00:00.000',
-      end: '2026-09-21T21:00:00.000',
-      extraData: { generic: { perks: ['Articuno, Zapdos y Moltres Dinamax en combate', 'Mayor límite diario de Partículas Max'] } }
-    },
-    {
-      eventID: 'ultra-beasts-raids-sep',
-      name: 'Xurkitree, Pheromosa, and Buzzwole in 5-star Raid Battles',
-      eventType: 'raid-battles',
-      link: 'https://leekduck.com/events/raid-battles/',
-      image: 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg',
-      start: '2026-09-23T06:00:00.000',
-      end: '2026-09-29T22:00:00.000',
-      extraData: { raidbattles: { bosses: [{ name: 'Buzzwole', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/794.png', canBeShiny: true }, { name: 'Pheromosa', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/795.png', canBeShiny: true }, { name: 'Xurkitree', image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/796.png', canBeShiny: true }] } }
-    },
-    {
-      eventID: 'october-community-day-2026',
-      name: 'October Community Day',
-      eventType: 'community-day',
-      link: 'https://leekduck.com/events/community-day-october-2026/',
-      image: 'https://cdn.leekduck.com/assets/img/events/article-images/2026/2026-08-25-pokemon-xp-2026-worlds/pokemon-xp-2026-worlds.jpg',
-      start: '2026-10-10T14:00:00.000',
-      end: '2026-10-10T17:00:00.000',
-      extraData: { generic: { perks: ['Especie protagonista destacada', 'Ratio de variocolor aumentado', 'Ataque exclusivo', 'Bonus de captura'] } }
-    }
-  ];
-
   /* ============ Variables de Estado ============ */
   var allEvents = [];
   var activeTimeFilter = 'all';
   var selectedCategory = 'all';
   var searchQuery = '';
   var eventRegistry = {};
+  var eventsReady = false;
+  var viewState = createViewState('events-list', function () {
+    return { time: activeTimeFilter, category: selectedCategory, search: searchQuery,
+      categoriesOpen: document.getElementById('eventCategoryFilter').open };
+  });
+  var savedView = viewState.saved;
+  activeTimeFilter = ['all', 'live', 'week', 'future'].includes(savedView.time) ? savedView.time : 'all';
+  selectedCategory = typeof savedView.category === 'string' ? savedView.category : 'all';
+  searchQuery = typeof savedView.search === 'string' ? savedView.search : '';
+  document.getElementById('eventSearchInput').value = searchQuery;
+  document.getElementById('eventCategoryFilter').open = savedView.categoriesOpen === true;
 
   /* ============ Utilidades de Formato y Tiempo ============ */
   var MONTH_NAMES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -363,7 +210,7 @@
     var eTime = end ? end.getTime() : Infinity;
 
     if(now >= sTime && now <= eTime){
-      return { code: 'live', label: 'En Vivo', priority: 1 };
+      return { code: 'live', label: 'En curso', priority: 1 };
     }
 
     if(now > eTime){
@@ -490,13 +337,7 @@
     var countdown = getCountdownString(startDate, endDate);
     var perks = extractPerks(ev);
     var bosses = extractBosses(ev);
-    var randomId = '';
-    if (window.crypto && window.crypto.getRandomValues) {
-      randomId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
-    } else {
-      randomId = Date.now().toString(36);
-    }
-    var evKey = ev.eventID || ('ev_' + randomId);
+    var evKey = encodeURIComponent(ev.eventID || [ev.name, ev.start, ev.end].join('|'));
     
     eventRegistry[evKey] = {
       raw: ev,
@@ -521,14 +362,14 @@
         '<span class="event-bosses-label">Jefes:</span>' +
         bosses.map(function(b){
           return '<div class="event-boss-avatar" title="' + b.name + '">' +
-            '<img src="' + b.image + '" alt="' + b.name + '" width="28" height="28" loading="lazy" onerror="this.style.display=\'none\';" />' +
-            (b.canBeShiny ? '<span class="event-boss-shiny-dot" title="Variocolor disponible">S</span>' : '') +
+            '<img src="' + b.image + '" alt="' + b.name + '" width="28" height="28" loading="lazy" onerror="this.onerror=null;this.src=\'img/favicon.svg\';" />' +
+            (b.canBeShiny ? '<span class="ui-badge ui-badge-shiny ui-badge-icon" title="Puede aparecer en su variante Shiny" aria-label="Shiny disponible"></span>' : '') +
           '</div>';
         }).join('') +
       '</div>';
     }
 
-    var fallbackImg = 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg';
+    var fallbackImg = 'img/favicon.svg';
     var imgSrc = ev.image || fallbackImg;
 
     var excerpt = '';
@@ -545,7 +386,7 @@
           '<div class="event-media-overlay"></div>' +
           '<div class="event-tags-bar">' +
             '<span class="event-cat-tag" style="color:' + category.color + ';border-color:' + category.color + '44;">' + category.label + '</span>' +
-            '<span class="event-status-tag ' + status.code + '">' + status.label + '</span>' +
+            '<span class="event-status-tag ui-status" data-state="' + status.code + '">' + status.label + '</span>' +
           '</div>' +
         '</div>' +
         '<div class="event-content">' +
@@ -578,13 +419,15 @@
     var modalBosses = document.getElementById('eventModalBosses');
     var modalGuideLink = document.getElementById('eventModalGuideLink');
 
-    modalImg.src = item.raw.image || 'https://cdn.leekduck.com/assets/img/events/raidhour.jpg';
+    modalImg.onerror = function () { this.onerror = null; this.src = 'img/favicon.svg'; };
+    modalImg.src = item.raw.image || 'img/favicon.svg';
     modalCategory.textContent = item.category.label;
     modalCategory.style.color = item.category.color;
     modalCategory.style.borderColor = item.category.color + '55';
 
     modalStatus.textContent = item.status.label;
-    modalStatus.className = 'fec-status-pill ' + item.status.code;
+    modalStatus.className = 'ui-status';
+    modalStatus.dataset.state = item.status.code;
 
     modalTitle.textContent = item.cleanName;
 
@@ -653,7 +496,7 @@
         return '<div class="mini-chip" style="padding:4px 12px 4px 6px;">' +
           '<img class="mini-mon-img" src="' + b.image + '" alt="' + b.name + '" width="32" height="32" loading="lazy" />' +
           '<span>' + b.name + '</span>' +
-          (b.canBeShiny ? '<span class="modal-shiny-tag" style="margin-left:6px;">Variocolor</span>' : '') +
+          (b.canBeShiny ? '<span class="ui-badge ui-badge-shiny" title="Puede aparecer en su variante Shiny">Shiny</span>' : '') +
         '</div>';
       }).join('');
     } else {
@@ -669,6 +512,7 @@
     }
 
     modal.showModal();
+    modal.querySelector(".modal-box").scrollTop = 0;
     document.documentElement.classList.add('modal-open');
     document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
@@ -695,6 +539,16 @@
     var grid = document.getElementById('eventsGrid');
     var emptyMsg = document.getElementById('eventsEmptyMsg');
     var countBadge = document.getElementById('eventsCountBadge');
+    document.querySelectorAll('[data-time-filter]').forEach(function (button) {
+      var selected = button.dataset.timeFilter === activeTimeFilter;
+      button.classList.toggle('active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+    document.querySelectorAll('#eventCategoryChips button').forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.dataset.cat === selectedCategory));
+    });
+    document.getElementById('eventCategorySelection').textContent = selectedCategory === 'all' ? 'Todas' : '1 seleccionada';
+    if (!eventsReady) return;
     var q = norm(searchQuery.trim());
     var visibleCount = 0;
 
@@ -730,6 +584,7 @@
     });
 
     if(emptyMsg){
+      emptyMsg.textContent = allEvents.length ? 'No se encontraron eventos con estos filtros.' : 'No hay eventos publicados por la fuente.';
       emptyMsg.style.display = visibleCount === 0 ? 'block' : 'none';
     }
     if(countBadge){
@@ -761,6 +616,7 @@
     });
 
     if(highlight){
+      banner.dataset.category = highlight.eventType || '';
       var sDate = parseDate(highlight.start);
       var eDate = parseDate(highlight.end);
       var title = cleanTitle(highlight.name);
@@ -822,12 +678,15 @@
       return sA - sB;
     });
 
+    eventsReady = true;
+    grid.removeAttribute('aria-busy');
     eventRegistry = {};
     grid.innerHTML = sorted.map(renderEventCard).join('');
     updateHeroStats(sorted);
     updateHighlightBanner(sorted);
     buildCategoryChips(sorted);
     filterEvents();
+    viewState.restore();
 
     // Scroll reveal
     var motionOK = window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -890,40 +749,22 @@
 
   /* ============ Inicialización ============ */
   function init(){
-    // 1. Carga inmediata: intentar caché de localStorage primero, sino dataset curado
-    try {
-      var cached = localStorage.getItem('pokeradar_events_v1');
-      if(cached){
-        var parsed = JSON.parse(cached);
-        if(Array.isArray(parsed) && parsed.length > 0){
-          allEvents = parsed;
-        }
+    filterEvents();
+    RadarData.load({
+      key: 'pokeradar_events_v1',
+      url: 'https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json',
+      validate: RadarData.events,
+      render: function (data) { allEvents = data; renderAllEvents(data); },
+      loading: function () {
+        document.getElementById('eventsEmptyMsg').style.display = 'none';
+        RadarData.loading(document.getElementById('eventsGrid'), 'Cargando eventos…');
+      },
+      error: function () {
+        document.getElementById('eventsCountBadge').textContent = 'Sin datos';
+        RadarData.message(document.getElementById('eventsGrid'), 'No pudimos cargar los eventos. Vuelve a entrar cuando tengas conexión.');
+        viewState.restore();
       }
-    } catch(e){}
-
-    if(!allEvents || !allEvents.length){
-      allEvents = FALLBACK_EVENTS;
-    }
-    renderAllEvents(allEvents);
-
-    // 2. Fetch asíncrono para revalidar datos en vivo (Stale-While-Revalidate)
-    fetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json')
-      .then(function(res){
-        if(!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(function(data){
-        if(Array.isArray(data) && data.length > 0){
-          try {
-            localStorage.setItem('pokeradar_events_v1', JSON.stringify(data));
-          } catch(e){}
-          allEvents = data;
-          renderAllEvents(allEvents);
-        }
-      })
-      .catch(function(err){
-        console.info('Noticias: Usando dataset en caché o base.', err.message);
-      });
+    });
 
     // Filtros de marco temporal (Segmentos)
     document.querySelectorAll('[data-time-filter]').forEach(function(btn){

@@ -278,11 +278,9 @@
     }
 
     modalShiny.style.display = m.shiny ? 'inline-flex' : 'none';
+    modalImg.parentElement.classList.remove('image-unavailable');
     modalImg.src = getMonImage(m);
-    modalImg.onerror = function(){
-      this.onerror = null;
-      this.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png';
-    };
+    modalImg.onerror = function () { this.onerror = null; this.parentElement.classList.add('image-unavailable'); };
     modalGlow.setAttribute('style', orbStyle(m.types));
     modalTypes.innerHTML = typeBadges(m.types);
 
@@ -383,13 +381,13 @@
       '<div class="card-header-main">' +
         '<div class="mon-avatar">' +
           '<div class="mon-avatar-glow" style="' + orbStyle(m.types) + '"></div>' +
-          '<img class="mon-img" src="' + imgSrc + '" alt="' + m.name + '" width="58" height="58" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + dexNum + '.png\';" />' +
+          '<img class="mon-img" src="' + imgSrc + '" alt="' + m.name + '" width="58" height="58" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add(\'image-unavailable\');" />' +
         '</div>' +
         '<div class="card-identity">' +
           '<div class="card-meta-row">' +
             '<span class="dex">#' + m.dex + '</span>' +
             (m.tag ? '<span class="mon-tag-chip">' + m.tag + '</span>' : '') +
-            (m.shiny ? '<span class="shiny" title="Variocolor disponible"><span class="shiny-dot" aria-hidden="true"></span>Variocolor</span>' : '') +
+            (m.shiny ? '<span class="ui-badge ui-badge-shiny" title="Puede aparecer en su variante Shiny">Shiny</span>' : '') +
           '</div>' +
           '<h4 class="card-name">' + m.name + '</h4>' +
           '<div class="types">' + typeBadges(m.types) + '</div>' +
@@ -522,7 +520,7 @@
     }
 
     if(!featured.length){
-      spotlightEl.innerHTML = '<div class="spotlight-skeleton"><span>Sin jefes activos registrados</span></div>';
+      RadarData.message(spotlightEl, raidsState === 'loading' ? 'Cargando incursiones…' : 'Sin jefes activos registrados');
       return;
     }
 
@@ -535,12 +533,12 @@
       return (
         '<div class="spotlight-item" data-mon-key="'+monKey+'" tabindex="0" role="button" aria-label="Ver detalles de '+m.name+'">'+
           '<div class="spotlight-avatar">'+
-            '<img src="'+imgSrc+'" alt="'+m.name+'" width="50" height="50" loading="lazy" onerror="this.onerror=null;this.src=\'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+dexNum+'.png\';" />'+
+            '<img src="'+imgSrc+'" alt="'+m.name+'" width="50" height="50" loading="lazy" onerror="this.onerror=null;this.parentElement.classList.add(\'image-unavailable\');" />'+
           '</div>'+
           '<div class="spotlight-info">'+
             '<div class="spotlight-meta">'+
               '<span class="spotlight-tier '+(item.tierClass === 'mega' ? 'mega' : '')+'">'+item.tierLabel+'</span>'+
-              (m.shiny ? '<span class="spotlight-shiny" title="Posibilidad de encontrar su variante shiny"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/><path d="M20 2v4M18 4h4"/></svg>Shiny</span>' : '')+
+              (m.shiny ? '<span class="ui-badge ui-badge-shiny" title="Puede aparecer en su variante Shiny">Shiny</span>' : '')+
               cpLabel +
             '</div>'+
             '<h4 class="spotlight-name">'+m.name+(m.tag ? ' <small style="font-size:.78rem;font-weight:400;color:var(--ink-dim);">('+m.tag+')</small>' : '')+'</h4>'+
@@ -576,41 +574,18 @@
   var motionOK = window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var raidGroupsEl = document.getElementById('raidGroups');
+  var raidsState = 'loading';
+  var viewState = createViewState('raids', function () {
+    return { search: searchInput.value, types: Array.from(activeTypes), shiny: shinyFilterBtn.classList.contains('active'),
+      typesOpen: document.getElementById('raidTypeFilter').open };
+  });
+  var savedView = viewState.saved;
   RAID_GROUPS.forEach(function(g){ raidGroupsEl.appendChild(renderRaidGroup(g)); });
   renderHeroSpotlight();
 
-  function cachedFetch(url, cacheKey, callback){
-    try {
-      var cached = JSON.parse(localStorage.getItem(cacheKey));
-      if(cached && Array.isArray(cached) && cached.length){
-        callback(cached, true);
-      }
-    } catch(e){}
-    var controller = new AbortController();
-    var timeout = setTimeout(function(){ controller.abort(); }, 15000);
-    return fetch(url, {signal: controller.signal})
-      .then(function(res){
-        if(!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(function(data){
-        if(!Array.isArray(data)) throw new Error('Formato de datos inesperado');
-        callback(data, false);
-        var fetchedAt = new Date().toISOString();
-        try {
-          localStorage.setItem(cacheKey, JSON.stringify(data));
-          localStorage.setItem(cacheKey + '_fetchedAt', fetchedAt);
-        } catch(e){}
-      })
-      .catch(function(err){
-        console.warn('Network fetch error for ' + cacheKey, err);
-      })
-      .finally(function(){
-        clearTimeout(timeout);
-      });
-  }
-
   function applyRaidsData(data){
+    raidsState = 'ready';
+    raidGroupsEl.removeAttribute('aria-busy');
     var t1 = RAID_GROUPS.find(function(g){ return g.id === 't1'; });
     var t3 = RAID_GROUPS.find(function(g){ return g.id === 't3'; });
     var t5 = RAID_GROUPS.find(function(g){ return g.id === 't5'; });
@@ -715,10 +690,35 @@
     buildTypeChips();
     filterAll();
     renderHeroSpotlight();
+    if (!totalRaids) RadarData.message(raidGroupsEl, 'No hay jefes de incursión publicados por la fuente.');
+    viewState.restore();
   }
 
   function refreshRaids(){
-    return cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json', 'pokeradar_raids_v1', applyRaidsData);
+    return RadarData.load({
+      url: 'https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/raids.json', key: 'pokeradar_raids_v1',
+      validate: function (data) {
+        return Array.isArray(data) && data.every(function (mon) {
+          return mon && typeof mon.name === 'string' && typeof mon.image === 'string' && typeof mon.tier === 'string' &&
+            Array.isArray(mon.types) && mon.types.every(function (type) { return type && typeof type.name === 'string'; }) &&
+            (!mon.boostedWeather || (Array.isArray(mon.boostedWeather) && mon.boostedWeather.every(function (weather) { return weather && typeof weather.name === 'string'; }))) &&
+            (!mon.combatPower || ['normal', 'boosted'].every(function (kind) {
+              var range = mon.combatPower[kind];
+              return range && Number.isFinite(range.min) && Number.isFinite(range.max) && range.min <= range.max;
+            }));
+        });
+      },
+      render: applyRaidsData,
+      loading: function () { RadarData.loading(raidGroupsEl, 'Cargando incursiones…'); },
+      error: function () {
+        raidsState = 'error';
+        RadarData.message(raidGroupsEl, 'No pudimos cargar las incursiones. Vuelve a entrar cuando tengas conexión.');
+        RadarData.message(document.getElementById('spotlightContent'), 'Incursiones no disponibles.');
+        document.getElementById('statRaids').textContent = '—';
+        filterAll();
+        viewState.restore();
+      }
+    });
   }
   // Esperar a que filtros, observadores y referencias DOM estén inicializados.
   Promise.resolve().then(refreshRaids);
@@ -784,8 +784,7 @@
             note: 'Inicia: ' + start.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
           };
           
-          var p = fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(pokemonApiId(m)))
-            .then(function(r){ return r.ok ? r.json() : null; })
+          var p = RadarData.json('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(pokemonApiId(m)), function (data) { return data && Array.isArray(data.types); })
             .then(function(pd){
               if(pd && pd.types) {
                 m.types = pd.types.map(function(t){ return t.type.name; });
@@ -823,7 +822,7 @@
         });
       });
 
-      Promise.all(promises).then(function(){
+      return Promise.all(promises).then(function(){
         upcomingRaidGroupsEl.innerHTML = '';
         UPCOMING_RAID_GROUPS = [];
         if(g5.mons.length) UPCOMING_RAID_GROUPS.push(g5);
@@ -836,18 +835,28 @@
           upcomingRaidGroupsEl.appendChild(el); 
           if(typeof io !== 'undefined') { io.observe(el); }
         });
+        upcomingRaidGroupsEl.removeAttribute('aria-busy');
+        if (!UPCOMING_RAID_GROUPS.length) RadarData.message(upcomingRaidGroupsEl, 'No hay próximas rotaciones publicadas.');
         buildTypeChips();
         filterAll();
+        viewState.restore();
       });
     }
 
-    Promise.resolve().then(function(){ cachedFetch('https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json', 'pokeradar_events_v1', applyUpcomingData); });
+    Promise.resolve().then(function () {
+      RadarData.load({
+        url: 'https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/events.json', key: 'pokeradar_events_v1',
+        validate: RadarData.events, render: applyUpcomingData,
+        loading: function () { RadarData.loading(upcomingRaidGroupsEl, 'Cargando próximas rotaciones…'); },
+        error: function () { RadarData.message(upcomingRaidGroupsEl, 'No pudimos cargar las próximas rotaciones.'); }
+      });
+    });
   }
 
   var totalRaids = RAID_GROUPS.reduce(function(n,g){
     return n + (g.subgroups ? g.subgroups.reduce(function(m,sg){return m+sg.mons.length;},0) : g.mons.length);
   },0);
-  document.getElementById('statRaids').innerHTML = '<span>'+totalRaids+'</span>';
+  document.getElementById('statRaids').textContent = raidsState === 'loading' ? '—' : String(totalRaids);
 
   var tierNavEl = document.getElementById('tierNav');
   tierNavEl.innerHTML = RAID_GROUPS.map(function(g){ return '<a href="#'+g.id+'" class="tier-chip">'+g.tier+'</a>'; }).join('') +
@@ -868,7 +877,8 @@
   });
 
   /* Chips de tipo */
-  var activeTypes = new Set();
+  var activeTypes = new Set(Array.isArray(savedView.types) ? savedView.types.filter(function (type) { return Object.hasOwn(TYPE_COLORS, type); }) : []);
+  document.getElementById('raidTypeFilter').open = savedView.typesOpen === true;
   var typeChipsEl = document.getElementById('typeChips');
   function buildTypeChips(){
     var used = new Set();
@@ -906,9 +916,12 @@
 
   /* Búsqueda + filtro */
   var searchInput = document.getElementById('searchInput');
+  searchInput.value = typeof savedView.search === 'string' ? savedView.search : '';
   if(searchInput) searchInput.addEventListener('input', filterAll);
 
   var shinyFilterBtn = document.getElementById('shinyFilterBtn');
+  shinyFilterBtn.classList.toggle('active', savedView.shiny === true);
+  shinyFilterBtn.setAttribute('aria-pressed', String(savedView.shiny === true));
   if(shinyFilterBtn){
     shinyFilterBtn.addEventListener('click', function(){
       var wasActive = shinyFilterBtn.classList.contains('active');
@@ -943,7 +956,7 @@
       g.classList.toggle('all-hidden', !anyVisible);
     });
     var count = document.querySelectorAll('.seg-raids .card:not(.is-hidden)').length;
-    document.getElementById('resultCount').textContent = count ? count + (count === 1 ? ' resultado' : ' resultados') : 'Sin resultados. Prueba otros filtros.';
+    document.getElementById('resultCount').textContent = raidsState !== 'ready' && !count ? (raidsState === 'loading' ? 'Cargando…' : 'Datos no disponibles') : count ? count + (count === 1 ? ' resultado' : ' resultados') : 'Sin resultados. Prueba otros filtros.';
     document.getElementById('typeFilterCount').textContent = activeTypes.size ? activeTypes.size + (activeTypes.size === 1 ? ' seleccionado' : ' seleccionados') : 'Todos';
     document.getElementById('clearFilters').hidden = !q && !onlyShiny && activeTypes.size === 0;
   }

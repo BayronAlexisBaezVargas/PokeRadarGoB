@@ -3,14 +3,15 @@
 
   // Floating Event Card modal for semana.html events
   var modalHTML = `
-    <dialog class="modal-backdrop" id="evtModal">
-      <div class="modal-box floating-event-card" aria-modal="true" aria-labelledby="evtTitle">
+    <dialog class="modal-backdrop" id="evtModal" aria-labelledby="evtTitle">
+      <div class="modal-box floating-event-card">
         <button class="modal-close" id="evtClose" aria-label="Cerrar modal">&times;</button>
         <div class="fec-header">
           <img id="evtImg" class="fec-thumb" src="" alt="" width="58" height="58">
           <div class="fec-head-info">
             <div class="fec-badges">
               <span id="evtType" class="fec-cat-pill">TIPO DE EVENTO</span>
+              <span id="evtStatus" class="ui-status"></span>
             </div>
             <h2 id="evtTitle" class="fec-title">Nombre del Evento</h2>
             <div id="evtDates" style="font-size:0.75rem;color:var(--ink-dim);font-family:var(--font-mono);margin-top:2px;"></div>
@@ -21,7 +22,7 @@
             <span class="fec-label">Bonificaciones</span>
             <ul id="evtPerks" class="fec-perks-list"></ul>
           </div>
-          <a id="evtLink" href="#" target="_blank" rel="noopener" class="fec-action-btn" style="display:none;">
+          <a id="evtLink" href="#" target="_blank" rel="noopener" class="fec-action-btn ui-button-secondary" style="display:none;">
             <span>Ver noticia oficial</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
           </a>
@@ -51,11 +52,20 @@
     if (window.playScanSound) window.playScanSound();
 
     // Image
-    evtImg.src = e.image || '';
+    evtImg.onerror = function () { this.onerror = null; this.src = 'img/favicon.svg'; };
+    evtImg.src = e.image || 'img/favicon.svg';
     evtImg.alt = e.name || '';
 
     // Type pill
     evtType.textContent = e.heading || 'Evento';
+    var status = document.getElementById('evtStatus');
+    var now = Date.now();
+    var start = Date.parse(e.start);
+    var end = Date.parse(e.end);
+    var state = now >= end ? 'ended' : now >= start ? 'live' : 'upcoming';
+    status.hidden = !Number.isFinite(start) || !Number.isFinite(end);
+    status.dataset.state = state;
+    status.textContent = state === 'ended' ? 'Finalizado' : state === 'live' ? 'En curso' : 'Próximo';
 
     // Title
     evtTitle.textContent = e.name || 'Evento';
@@ -106,6 +116,7 @@
     }
 
     evtModal.showModal();
+    evtModal.querySelector(".modal-box").scrollTop = 0;
     document.documentElement.classList.add('modal-open');
     document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';

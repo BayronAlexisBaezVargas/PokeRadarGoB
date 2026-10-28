@@ -650,3 +650,8 @@ details.leader-card { display: block; align-self: start; }
 .leader-card .leader-toggle .disclosure-chevron { margin-left: auto; }
 .leader-card[open] .leader-lineup { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px; }
 .leader-card .leader-info h3 { font-size: 1.2rem; }
+
+.rocket-mon .ui-badge { margin-top: 2px; overflow: visible; }
+.rocket-mon .ui-badge-shiny { font-size: .7rem; }
+
+.rocket-mon .rocket-mon-avatar { display: grid; place-items: center; width: 48px; height: 48px; flex-shrink: 0; overflow: visible; }
