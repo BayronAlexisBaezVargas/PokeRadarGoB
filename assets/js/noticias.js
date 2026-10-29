@@ -430,6 +430,7 @@
     modalStatus.dataset.state = item.status.code;
 
     modalTitle.textContent = item.cleanName;
+    window.RadarCalendar.attach(modal.querySelector('.fec-body'), Object.assign({}, item.raw, {name: item.cleanName}));
 
     var sameDay = false;
     if (item.startDate && item.endDate) {

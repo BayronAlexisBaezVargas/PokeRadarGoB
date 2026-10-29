@@ -29,6 +29,8 @@ La sección **Eventos** reúne dos vistas que puedes alternar con los botones **
 
 Los horarios se ajustan a la zona horaria del dispositivo. Al alternar entre Lista y Semana se conserva el contexto de cada vista: búsqueda, categoría, estado, semana seleccionada y posición de lectura. Estos datos se guardan por pestaña durante la sesión; no requieren una cuenta.
 
+Desde la ficha de un evento en Lista o Semana puedes pulsar **Añadir al calendario (.ics)**. El archivo incluye el nombre, el inicio, el fin y el enlace a la fuente. Ábrelo o impórtalo con tu aplicación de calendario para confirmar su incorporación. La opción aparece cuando ambas fechas son válidas; es una copia del evento, sin sincronización posterior.
+
 ### Team GO Rocket
 
 En `assets/rocket.html` puedes consultar a Giovanni, Cliff, Sierra, Arlo y los reclutas.

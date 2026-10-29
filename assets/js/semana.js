@@ -328,6 +328,7 @@
           renderedEventsMap.push({
             name: titleEs,
             rawName: e.name,
+            eventID: e.eventID,
             heading: meta.tag,
             image: e.image || 'img/favicon.svg',
             link: e.link || '#',

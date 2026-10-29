@@ -69,6 +69,7 @@
 
     // Title
     evtTitle.textContent = e.name || 'Evento';
+    window.RadarCalendar.attach(evtModal.querySelector('.fec-body'), e);
 
     // Dates
     var datesStr = '';
