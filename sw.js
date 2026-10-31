@@ -1,6 +1,6 @@
 'use strict';
 const RELEASE = '2.0.0';
-const BUILD = '20261029a';
+const BUILD = '20261031a';
 const ROOT = new URL('./', self.location.href);
 const PREFIX = 'pokeradar:' + ROOT.pathname + ':';
 const CACHE_NAME = PREFIX + RELEASE + ':' + BUILD;
@@ -10,7 +10,7 @@ const STATIC_FILES = [
   'assets/manifest.json', 'assets/img/favicon.svg', 'assets/data/rocket.json', 'assets/scratch_atacantes.json'
 ];
 const CSS = ['base', 'mobile', 'home', 'noticias', 'semana', 'rocket', 'atacantes'];
-const JS = ['calendar', 'data', 'view-state', 'pwa', 'audio', 'season', 'location', 'app', 'eventModal', 'noticias', 'semana', 'rocket', 'atacantes', 'nav'];
+const JS = ['raid-share', 'attacker-compare', 'calendar', 'data', 'view-state', 'pwa', 'audio', 'season', 'location', 'app', 'eventModal', 'noticias', 'semana', 'rocket', 'atacantes', 'nav'];
 const ASSETS = ['./'].concat(STATIC_FILES,
   CSS.map(name => 'assets/css/' + name + '.css' + RESOURCE_QUERY),
   JS.map(name => 'assets/js/' + name + '.js' + RESOURCE_QUERY)

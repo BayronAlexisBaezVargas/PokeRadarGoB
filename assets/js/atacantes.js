@@ -183,6 +183,10 @@
   function openModal(row) {
     var entry = rows.get(row); if (!entry) return;
     var mon = entry.mon; var group = entry.group; lastRow = row;
+    document.getElementById('compareAttacker').onclick = function () {
+      modal.addEventListener('close', function () { RadarCompare.select(mon, group); }, {once:true});
+      closeModal();
+    };
     document.getElementById('modalName').textContent = mon.name;
     document.getElementById('modalDex').textContent = 'N.° ' + mon.dex;
     var tag = document.getElementById('modalTag'); tag.textContent = mon.tag; tag.dataset.category = mon.category;
@@ -255,7 +259,7 @@
   RadarData.load({
     key: 'pokeradar_attackers_v2', url: 'scratch_atacantes.json', validate: validate,
     render: function (value) {
-      data = value; ready = true; render();
+      data = value; ready = true; render(); RadarCompare.mount(data, TYPE_LABELS);
       var date = new Date(value[0].updatedAt);
       document.getElementById('rankingUpdated').textContent = Number.isNaN(date.getTime()) ? '' : 'Consultado el ' + date.toLocaleDateString('es');
       var methods = value[0].methodology;

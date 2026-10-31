@@ -27,20 +27,38 @@
       'END:VEVENT', 'END:VCALENDAR'].map(fold).join('\r\n') + '\r\n';
   }
   function attach(container, event) {
+    var google = container.querySelector('[data-calendar-google]');
+    if (!google) {
+      google = document.createElement('a');
+      google.className = 'fec-action-btn';
+      google.dataset.calendarGoogle = '';
+      google.textContent = 'Añadir a Google Calendar';
+      google.target = '_blank';
+      google.rel = 'noopener noreferrer';
+      container.appendChild(google);
+    }
     var anchor = container.querySelector('[data-calendar-download]');
     if (!anchor) {
       anchor = document.createElement('a');
       anchor.className = 'fec-action-btn ui-button-secondary';
       anchor.dataset.calendarDownload = '';
-      anchor.textContent = 'Añadir al calendario (.ics)';
+      anchor.textContent = 'Otros calendarios (.ics)';
       container.appendChild(anchor);
     }
     if (anchor.dataset.blobUrl) URL.revokeObjectURL(anchor.dataset.blobUrl);
     anchor.removeAttribute('href');
     delete anchor.dataset.blobUrl;
     var content = create(event);
+    google.removeAttribute('href');
+    google.style.display = content ? 'flex' : 'none';
     anchor.style.display = content ? 'flex' : 'none';
     if (!content) return;
+    var url = new URL('https://calendar.google.com/calendar/render');
+    url.searchParams.set('action', 'TEMPLATE');
+    url.searchParams.set('text', event.name || 'Evento de Pokémon GO');
+    url.searchParams.set('dates', stamp(new Date(event.start)) + '/' + stamp(new Date(event.end)));
+    url.searchParams.set('details', 'Evento de Pokémon GO' + (/^https?:\/\//i.test(event.link || '') ? '\n' + event.link : ''));
+    google.href = url.href;
     anchor.href = URL.createObjectURL(new Blob([content], {type: 'text/calendar;charset=utf-8'}));
     anchor.dataset.blobUrl = anchor.href;
     anchor.download = 'pokemon-go-evento.ics';

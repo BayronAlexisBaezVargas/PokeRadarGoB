@@ -336,6 +336,9 @@
   font-style: normal;
 }
 
+.share-raid-link { width: 100%; min-width: 0; min-height: 44px; padding: 10px; font-size: 16px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+#shareRaidStatus:empty { display: none; }
+
 .tier-group.all-hidden .grid, .tier-group.all-hidden .sub-tier {
   display: none;
 }

@@ -167,6 +167,7 @@
   /* ============ Registro de Pokémon y Modal ============ */
   var MON_REGISTRY = {};
   var speciesCache = {};
+  RadarShare.init(openMonModal);
 
   // La especie comparte número de Pokédex, pero cada forma tiene ficha propia.
   function monIdentity(m){
@@ -186,6 +187,7 @@
   }
 
   function registerMon(m){
+    RadarShare.register(m);
     var key = 'pk_' + monIdentity(m);
     if (MON_REGISTRY[key] && MON_REGISTRY[key].cp && !m.cp) return key;
     MON_REGISTRY[key] = m;
@@ -255,6 +257,7 @@
   }
 
   function openMonModal(m){
+    RadarShare.set(m);
     var modal = document.getElementById('monModal');
     var modalName = document.getElementById('modalName');
     var modalTag = document.getElementById('modalTag');
@@ -721,7 +724,7 @@
     });
   }
   // Esperar a que filtros, observadores y referencias DOM estén inicializados.
-  Promise.resolve().then(refreshRaids);
+  Promise.resolve().then(refreshRaids).finally(RadarShare.settled);
 
   // Cargar de inmediato si hay temporada en caché
   window.updateCurrentSeasonReadout();
@@ -849,7 +852,7 @@
         validate: RadarData.events, render: applyUpcomingData,
         loading: function () { RadarData.loading(upcomingRaidGroupsEl, 'Cargando próximas rotaciones…'); },
         error: function () { RadarData.message(upcomingRaidGroupsEl, 'No pudimos cargar las próximas rotaciones.'); }
-      });
+      }).finally(RadarShare.settled);
     });
   }
 

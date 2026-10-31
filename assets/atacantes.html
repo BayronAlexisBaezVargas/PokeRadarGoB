@@ -13,9 +13,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css?v=2.0.0&build=20261029a" />
-  <link rel="stylesheet" href="css/atacantes.css?v=2.0.0&build=20261029a" />
-<link rel="stylesheet" href="css/mobile.css?v=2.0.0&build=20261029a" />
+  <link rel="stylesheet" href="css/base.css?v=2.0.0&build=20261031a" />
+  <link rel="stylesheet" href="css/atacantes.css?v=2.0.0&build=20261031a" />
+<link rel="stylesheet" href="css/mobile.css?v=2.0.0&build=20261031a" />
 </head>
 <body>
 
@@ -222,6 +222,17 @@
   </details>
 
   <section>
+    <details id="attackerCompare" class="attacker-compare" hidden>
+      <summary>Comparar dos atacantes</summary>
+      <p>Opciones del mismo ranking. eDPS contempla volver al combate; DPS mide daño por segundo y TDO, daño total. No simula un jefe concreto.</p>
+      <label for="compareType">Tipo de ranking</label><select id="compareType"></select>
+      <div class="compare-selects">
+        <label>Primer atacante<select id="compareFirst"></select></label>
+        <label>Segundo atacante<select id="compareSecond"></select></label>
+      </div>
+      <div id="compareResult" aria-live="polite"></div>
+      <p>* Movimiento exclusivo: puede requerir MT élite o un evento.</p>
+    </details>
     <div id="atacantesGrid" class="atacantes-grid">
       <!-- Se inyectan las tarjetas por JS -->
     </div>
@@ -256,6 +267,7 @@
           <div><dt>TDO</dt><dd><strong id="attackerTdo">—</strong><span>Daño total estimado</span></dd></div>
         </dl>
         <p class="detail-caption">Valores del escenario de Pokémon GO Hub; pueden variar contra cada jefe.</p>
+        <button id="compareAttacker" type="button" class="ui-button ui-button-secondary">Comparar este atacante</button>
         <a id="attackerSource" class="ui-button ui-button-secondary" href="https://db.pokemongohub.net/" target="_blank" rel="noopener noreferrer">Ver ranking y configuración en GO Hub</a>
       </section>
     </div>
@@ -294,12 +306,13 @@
   </div>
 </footer>
 
-<script defer src="js/data.js?v=2.0.0&build=20261029a"></script>
-<script defer src="js/view-state.js?v=2.0.0&build=20261029a"></script>
-<script defer src="js/pwa.js?v=2.0.0&build=20261029a"></script>
-<script defer src="js/audio.js?v=2.0.0&build=20261029a"></script>
-<script defer src="js/location.js?v=2.0.0&build=20261029a"></script>
-<script defer src="js/atacantes.js?v=2.0.0&build=20261029a"></script>
-<script defer src="js/nav.js?v=2.0.0&build=20261029a"></script>
+<script defer src="js/data.js?v=2.0.0&build=20261031a"></script>
+<script defer src="js/view-state.js?v=2.0.0&build=20261031a"></script>
+<script defer src="js/pwa.js?v=2.0.0&build=20261031a"></script>
+<script defer src="js/audio.js?v=2.0.0&build=20261031a"></script>
+<script defer src="js/location.js?v=2.0.0&build=20261031a"></script>
+<script defer src="js/attacker-compare.js?v=2.0.0&build=20261031a"></script>
+<script defer src="js/atacantes.js?v=2.0.0&build=20261031a"></script>
+<script defer src="js/nav.js?v=2.0.0&build=20261031a"></script>
 </body>
 </html>

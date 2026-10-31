@@ -25,9 +25,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="manifest" href="assets/manifest.json" />
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
-<link rel="stylesheet" href="assets/css/base.css?v=2.0.0&build=20261029a" />
-<link rel="stylesheet" href="assets/css/home.css?v=2.0.0&build=20261029a" />
-<link rel="stylesheet" href="assets/css/mobile.css?v=2.0.0&build=20261029a" />
+<link rel="stylesheet" href="assets/css/base.css?v=2.0.0&build=20261031a" />
+<link rel="stylesheet" href="assets/css/home.css?v=2.0.0&build=20261031a" />
+<link rel="stylesheet" href="assets/css/mobile.css?v=2.0.0&build=20261031a" />
 </head>
 <body class="raid-page">
 
@@ -180,6 +180,7 @@
 
 
 <main>
+  <p id="sharedRaidStatus" class="content-message" role="status" hidden></p>
   <section class="hero">
     <div class="hero-text">
       <span class="kicker">Planifica tu próxima partida</span>
@@ -274,6 +275,9 @@
     </div>
     
     <div class="modal-body">
+      <button type="button" id="shareRaid" class="ui-button ui-button-secondary">Compartir incursión</button>
+      <p id="shareRaidStatus" role="status"></p>
+      <input id="shareRaidLink" class="share-raid-link" aria-label="Enlace de la incursión" readonly hidden>
       <section class="detail-section" aria-labelledby="captureTitle">
         <h4 id="captureTitle">Captura</h4>
         <div id="modalGoStats" class="modal-grid"></div>
@@ -336,13 +340,14 @@
   </div>
 </footer>
 
-<script defer src="assets/js/data.js?v=2.0.0&build=20261029a"></script>
-<script defer src="assets/js/view-state.js?v=2.0.0&build=20261029a"></script>
-<script defer src="assets/js/pwa.js?v=2.0.0&build=20261029a"></script>
-<script defer src="assets/js/audio.js?v=2.0.0&build=20261029a"></script>
-<script defer src="assets/js/season.js?v=2.0.0&build=20261029a"></script>
-<script defer src="assets/js/app.js?v=2.0.0&build=20261029a"></script>
-<script defer src="assets/js/location.js?v=2.0.0&build=20261029a"></script>
-<script defer src="assets/js/nav.js?v=2.0.0&build=20261029a"></script>
+<script defer src="assets/js/data.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/view-state.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/pwa.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/audio.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/season.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/raid-share.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/app.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/location.js?v=2.0.0&build=20261031a"></script>
+<script defer src="assets/js/nav.js?v=2.0.0&build=20261031a"></script>
 </body>
 </html>

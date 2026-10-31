@@ -19,6 +19,7 @@ En `index.html` puedes consultar los jefes de incursiones de 1★, 3★, 5★, M
 - La ficha de cada Pokémon reúne **Captura**, **Cómo vencerlo** y **Pokédex**, con debilidades, resistencias y datos de la especie.
 - Desde la ficha puedes abrir los atacantes recomendados y volver al radar.
 - Las formas, como Mega Charizard X e Y, se abren de manera independiente.
+- **Compartir incursión** abre el menú de compartir del dispositivo o copia el enlace. El enlace abre la ficha del jefe y su forma cuando sigue disponible en los datos cargados; si la rotación terminó, muestra un aviso. Si el navegador no permite copiar, ofrece el enlace para copiarlo manualmente.
 
 ### Eventos: Lista y Semana
 
@@ -29,7 +30,7 @@ La sección **Eventos** reúne dos vistas que puedes alternar con los botones **
 
 Los horarios se ajustan a la zona horaria del dispositivo. Al alternar entre Lista y Semana se conserva el contexto de cada vista: búsqueda, categoría, estado, semana seleccionada y posición de lectura. Estos datos se guardan por pestaña durante la sesión; no requieren una cuenta.
 
-Desde la ficha de un evento en Lista o Semana puedes pulsar **Añadir al calendario (.ics)**. El archivo incluye el nombre, el inicio, el fin y el enlace a la fuente. Ábrelo o impórtalo con tu aplicación de calendario para confirmar su incorporación. La opción aparece cuando ambas fechas son válidas; es una copia del evento, sin sincronización posterior.
+Desde la ficha de un evento en Lista o Semana puedes pulsar **Añadir a Google Calendar** para abrir un evento preparado con nombre, horarios y enlace, y confirmar su guardado. **Otros calendarios (.ics)** permite descargarlo para importarlo en otra aplicación. Las opciones aparecen cuando ambas fechas son válidas. Los eventos guardados son copias sin sincronización posterior.
 
 ### Team GO Rocket
 
@@ -42,6 +43,8 @@ En `assets/rocket.html` puedes consultar a Giovanni, Cliff, Sierra, Arlo y los r
 - La página busca alineaciones nuevas al entrar, valida la respuesta y conserva un respaldo local.
 
 ### Atacantes PvE
+
+**Comparar dos atacantes** permite elegir un ranking de tipo y dos opciones distintas para consultar movimientos, eDPS, DPS y TDO lado a lado. También puedes iniciar la comparación desde la ficha de un atacante. Los valores mayores se destacan por métrica; no representan un ganador universal ni una simulación contra un jefe concreto.
 
 En `assets/atacantes.html` puedes consultar los 18 rankings por tipo de [Pokémon GO Hub](https://db.pokemongohub.net/es/pokemon-list/best-per-type/fire), ordenados por **eDPS** (daño efectivo por segundo, que contempla el tiempo de caer y volver al combate).
 
@@ -140,7 +143,9 @@ La información depende de lo que publiquen las fuentes y puede tardar en reflej
 
 ### Automatización del ranking de atacantes
 
-El workflow `.github/workflows/update_atacantes.yml` está configurado para ejecutarse los domingos a las **04:00 UTC** y permite ejecución manual desde GitHub Actions. Ejecuta `scripts/update_atacantes.js` con Node.js 20 y está configurado para subir cambios del JSON a `main` cuando los hay. Su ejecución efectiva depende de la configuración y los permisos de Actions del repositorio.
+El workflow `.github/workflows/update_atacantes.yml` está configurado para ejecutarse los domingos a las **04:00 UTC** y permite ejecución manual desde GitHub Actions. Ejecuta las pruebas y después `scripts/update_atacantes.js` con Node.js 20. Guarda únicamente el JSON en la misma rama desde la que se ejecutó: una ejecución manual de `Beta-2.0.0` actualiza esa beta; el programa automático usa la rama predeterminada, `main`. La corrección automática de producción entrará en vigor cuando estos cambios se integren en `main`. Su ejecución efectiva depende de la configuración y los permisos de Actions del repositorio.
+
+Las ejecuciones de una misma rama se serializan para evitar actualizaciones simultáneas y tienen un límite de 15 minutos. Si falla el extractor o sus pruebas, no se publica el ranking y Actions informa del error.
 
 Para regenerar el archivo manualmente, con Node.js 20 o superior instalado:
 

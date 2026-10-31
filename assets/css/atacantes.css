@@ -1,4 +1,17 @@
 /* Attacker rankings: one set of controls and readable source data. */
+.attacker-compare { margin-bottom: 20px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); scroll-margin-top: 80px; }
+.attacker-compare summary { cursor: pointer; min-height: 44px; font-weight: 700; }
+.attacker-compare p { font-size: .85rem; line-height: 1.5; color: var(--ink-muted); margin: 12px 0; }
+.attacker-compare select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; margin: 6px 0 12px; font: inherit; font-size: 16px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.compare-selects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.compare-selects label { min-width: 0; }
+.attacker-compare table { table-layout: fixed; width: 100%; border-collapse: collapse; font-size: .85rem; }
+.attacker-compare caption { padding: 12px 0; text-align: left; }
+.attacker-compare th, .attacker-compare td { padding: 10px 6px; overflow-wrap: anywhere; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.attacker-compare th:first-child { width: 22%; }
+.compare-higher { color: var(--signal); }
+.compare-higher small { display: block; font-size: .7rem; }
+@media (max-width: 480px) { .compare-selects { grid-template-columns: minmax(0, 1fr); gap: 0; } }
 .atacantes-controls { display: grid; gap: 12px; margin: 0 0 16px; position: static; background: none; border: 0; }
 .attacker-search { width: 100%; max-width: none; }
 .attacker-search input { font-size: 16px; }
